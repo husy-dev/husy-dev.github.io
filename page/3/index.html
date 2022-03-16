@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/3/index.html">
+<meta property="og:url" content="https://husy-dev.github.io/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Husy">
@@ -62,7 +62,7 @@
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://husy-dev.github.io"></form>
       </div>
     </div>
   </div>
@@ -70,313 +70,6 @@
 
       <div class="outer">
         <section id="main">
-  
-    <article id="post-【leetcode】刷题笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/07/31/%E3%80%90leetcode%E3%80%91%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/" class="article-date">
-  <time class="dt-published" datetime="2019-07-31T09:11:28.000Z" itemprop="datePublished">2019-07-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/07/31/%E3%80%90leetcode%E3%80%91%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/">【leetcode】刷题笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><a target="_blank" rel="noopener" href="https://leetcode.com/submissions/detail/158747775/">1. Two Sum</a>-98.73%</p>
-<ul>
-<li><p>暴力法很容易，但其实可以通过把数据存在哈希表里，或者二叉树的数据结构里，从而使得“找”这个操作更加快速。不需要像暴利法一样遍历所有的数据。</p>
-</li>
-<li><p>C++ stl里的map是一种红黑树，其找一个值的时间复杂度是O(logn)。而哈希表找一个值的时间复杂度是一个常数。会更快。但是这些都是牺牲空间复杂度来提高杂度。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/submissions/detail/158746345/">13 Roman to integer</a> -24.45%</p>
-<p>知识点：</p>
-<ul>
-<li>unordered_map的初始化方式</li>
-<li>string可以直接用下标表示</li>
-<li>s.back()表示返回stirng s的最后一个字符.</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/flipping-an-image/description/">832. Flipping an Image</a>-无分布数据16ms</p>
-<ul>
-<li>思路就是对每一个vector的头尾进行比较分类，相同的直接各自取反。不相同的则不需要变化。<ul>
-<li>一开始我直接对int取反，其实这是错误的。因为int不是一个bit，而是32个bit。取反后再转化成signed int的形式则会变成负数。所以不用按位取反，用逻辑否。</li>
-<li><code>reverse(x.begin(),x.end())</code>可以达到反转vector的效果，但是这个处理方式并没有比我手工的快。</li>
-</ul>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/array-partition-i/description/">561. Array Partition I</a>-78.50%</p>
-<ul>
-<li>这个题的话其实仔细想一下就知道把序列排序一下，然后把偶数项加起来就可以获得最大的最小值之和。 但是的算法只是超过了70%多的人，也就是说还有更快的方法。<br>首先我们这里的排序是快排。然后循环一遍相加。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/toeplitz-matrix/description/">766. Toeplitz Matrix</a></p>
-<ul>
-<li><p>如果把这个矩阵看作的每一个看作（i，j）序列的话，就是要比较（i，j）与（i+1，j+1）……到（i+n,j+n)，这个n的边界就是看哪一个超过了这个输入向量的边界。 如果一个一个的看，一开始我直接很暴力的上三角，下三角来匹配。但这其实是人的思维。因为这样有两次for循环，性能不好。</p>
-</li>
-<li><p>再仔细观察，我其实不必每次都把整个斜线上的数都检查一遍，我可以每次两行两行的来，这样对数据的获取也容易一点。另外我观察到其实两行之间的比较就是第一行的前n-1个与第二行的第2到第n个之间的对比。根据<a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/container/vector/operator_cmp">这里</a>可知，两个vector是可以直接用&#x3D;&#x3D;来判断其元素是不是相等的。</p>
-</li>
-<li><p>std::bad_alloc’ what(): std::bad_alloc”错误。<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23444844/c-error-terminate-called-after-throwing-an-instance-of-stdbad-alloc">stackoverflow</a>上说是因为你把一个本地变量的内存地址存储起来。</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;matrix.<span class="built_in">size</span>()<span class="number">-1</span>;++i)&#123;</span><br><span class="line">            <span class="type">int</span> m = matrix[i].<span class="built_in">size</span>();</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m1</span><span class="params">(matrix[i].begin(),matrix[i].end()<span class="number">-2</span>)</span></span>; <span class="comment">//当我把这里的额end()改成begin()的形式以后，就work了</span></span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m2</span><span class="params">(matrix[i+<span class="number">1</span>].begin()+<span class="number">1</span>,matrix[i+<span class="number">1</span>].end()<span class="number">-1</span>)</span></span>;</span><br><span class="line">            <span class="keyword">if</span>(m1!=m2) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
-<p>  也就是</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;matrix.<span class="built_in">size</span>()<span class="number">-1</span>;++i)&#123;</span><br><span class="line">            <span class="type">int</span> m = matrix[i].<span class="built_in">size</span>();</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m1</span><span class="params">(matrix[i].begin(),matrix[i].begin()+m<span class="number">-1</span>)</span></span>;</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m2</span><span class="params">(matrix[i+<span class="number">1</span>].begin()+<span class="number">1</span>,matrix[i+<span class="number">1</span>].begin()+m)</span></span>;</span><br><span class="line">            <span class="keyword">if</span>(m1!=m2) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>其实这里并不是说end()不能用。而是当我们的的vector &lt;int&gt; 只有一个数的时候，end ()-2这样的表示是错误的。但是用begin()+m-1 就可以。</p>
-</li>
-<li><p>但是这样效率更低了。从超过55%降到超过37%。我想主要是新建vector m1和m2那里要复制数据（<strong>不确定是不是深拷贝，明天查。</strong>）花了时间。所以需要再改进。</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/reverse-integer/description/">7. reverse integer</a>-98.39%</p>
-<p>知识点：</p>
-<ul>
-<li>INT_MAX 和INT_MIN表示int 的最大值和最小值,这是一个确定值.</li>
-<li>%的符号。 一般来讲%在有些语言里是求模，有些语言里时求余。这两个操作有一点细微的差别,会根据语言和甚至编译器的不同而不同。</li>
-</ul>
-<blockquote>
-<p>参考C++ primer 第5版里的说法：<br>对于除法来讲，一律向0取整； 对于%求余运算来讲，m%n的值与m同符号。和n的符号无关。只需要使得 ${m \over n} \times n+m%n&#x3D;m$</p>
-</blockquote>
-<p>更为细致一点的参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/solstice/article/details/5139302">带符号整数的除法与余数</a>。</p>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-common-prefix/">14. Longest Common Prefix</a>-95.85%</p>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-parentheses/">20 Valid Parentheses</a>-95.53%</p>
-<ul>
-<li>要利用栈的特性</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-two-sorted-lists/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china">21. Merge Two Sorted Lists</a></p>
-<ul>
-<li>这里主要是联系链表的使用。一开始想在l1或者l2上直接变换，其实这样会比较复杂。在没有内存限制的情况下，可以另申请一个链表来存储。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/minimum-path-sum/description/">64. Minimum Path Sum</a></p>
-<ul>
-<li><p>一开始我的想法是从右下角往回推，但其实这是一种贪心算法，无法从全局来优化这个问题。做动态规划的时候子问题一定要代表着当前最优。</p>
-</li>
-<li><p>首先这里的矩阵长和高不一定相等，所以如果单纯的用一个变量比如dp(n)来表示minSum的话，有点不够。所以我们用dp(i,j)实际上就是一个二维数组来表示从(0，0)到(i，j)的minSum。</p>
-</li>
-<li><p>于是整个转换过程就很简单了：<br>$$<br>dp(i,j) &#x3D; min(dp(i-1,j),dp(i,j-1))+grid[i][j]<br>$$</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/palindromic-substrings/description/">647. Palindromic Substrings</a></p>
-<ul>
-<li>一开始我是这么想的，首先如果我们找到一个最长的回文，然后同时去掉两头，是不是又是一个新回文？所以如果我们知道了一个回文的长度是l，那么他就可以生成l&#x2F;2个新回文（因为我们默认每一个单独的字符都是一个回文，因此不考虑长度是奇数还是偶数）。所以问题转换为找不重叠的最长回文的个数以及其长度。但是这里有一个例外，比如我们找到一段回文是aaaaa，那么这个回文能生成的新回文数就不止2个了，而是9个。尽管我们可以分来来处理这两种情况，但应该还有更好的处理方式。</li>
-<li>如果用dp的思想，那么我们就应该找子问题。当然最直接的想法是通过字符的长度来构造，比如dp(n-1)表示n-1个字符串的回文数。但是如何通过dp(n-1)来表示dp(n)呢？<br>显然很难，我们可以这么想，我如果要知道一个n个字符的字符串的回文数，我需要哪些信息？</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/array-partition-i/description/">561. Array Partition I</a>-78.50%</p>
-<ul>
-<li>这个题的话其实仔细想一下就知道把序列排序一下，然后把偶数项加起来就可以获得最大的最小值之和。 但是的算法只是超过了70%多的人，也就是说还有更快的方法。<br>首先我们这里的排序是快排。然后循环一遍相加。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/">167. Two Sum II - Input array is sorted</a></p>
-<ul>
-<li><p>首先我们要知道vector的 <a target="_blank" rel="noopener" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/">查找</a> lower_bound会返回一个不小于某值的数。</p>
-</li>
-<li><p>思路很简单，就是找到小于target&#x2F;2.0的最大值，然后从两边开始加。大了就让左边的指针移一下，小了就让右边的指针移一下。</p>
-</li>
-<li><p>但是出现了一个错误：迭代器虽然我们知道本质是一种指针，但是它被封装成一个容器专属的数据类型，是不能直接赋值给独立的指针的。 </p>
-</li>
-<li><p>还有一个问题是，一开始我打算先找到大于target一半和小于target一般的部分，然后用两个指针来遍历。但是这样就有很多种情况要讨论，这其实就是不妥的。而且你考虑到这么分和用两个指针一个指头一个指尾的复杂度是差不多的。</p>
-</li>
-<li><p>比较这两种写法：</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; numbers, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> start = <span class="number">1</span>, end = numbers.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] != target)&#123;</span><br><span class="line">            <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] &gt; target) </span><br><span class="line">                end--;</span><br><span class="line">            <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] &lt; target)  start++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> &#123;start, end&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-<li><p>这一种要慢一点，因为每一次我们都要先判断numbers[start - 1] + numbers[end - 1] !&#x3D; target然后才进行下面的判断。</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; numbers, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> start = <span class="number">1</span>, end = numbers.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] != target)&#123;</span><br><span class="line">            <span class="keyword">if</span>(numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] &gt; target) </span><br><span class="line">                end--;</span><br><span class="line">            <span class="keyword">else</span>  start++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> &#123;start, end&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>  <a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-substring-without-repeating-characters/description/">3. Longest Substring Without Repeating Characters</a> </p>
-</li>
-<li><p>这个题思路其实很简单，就是遍历string s，然后往回找有没有出现过，出现过了就先把当前的substring长度记下来，再把substring的起始更新为第一次出现的位置后面那个字符。继续遍历。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/sqrtx/description/">69. Sqrt(x)</a></p>
-<ul>
-<li>首先要注意的是<a target="_blank" rel="noopener" href="https://coolshell.cn/articles/11466.html">整型溢出</a>。最好的注意方法是不要用乘法用除法。</li>
-<li>另一个就是<a target="_blank" rel="noopener" href="http://www.cnblogs.com/grandyang/p/6854825.html">二分查找法的应用</a>，一定要注意的是二分查找法的前提是有序。</li>
-<li>还有一种方法是<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20690553">牛顿方法</a>，虽然它的前提要求是开始循环的点要接近所求值，但是在求平方根时是无所谓的。</li>
-<li>但在<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Integer_square_root#Using_only_integer_division">求整数根值</a>的时候，初始点是从最大的来。才会有$x_n -x_{n+1}&#x3D;1$。很奇怪。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/">744. Find Smallest Letter Greater Than Target</a></p>
-<ul>
-<li>这个的话用二分法一开始我是这样的：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> l=<span class="number">0</span>,r=letters.<span class="built_in">size</span>(),m;</span><br><span class="line"><span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line">        m=l+(r-l)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(letters[m]&gt;target) r= m<span class="number">-1</span>;  <span class="comment">//注意这一条 </span></span><br><span class="line">        <span class="keyword">else</span> l=m;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> letters[r];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>这样子最后返回的是r所指向的位置，而经过上面的while可以保证此时的r+1所指向的位置是大于target的。但是有一个问题是r所指向的位置却不能保证是不是大于target的。比如考虑一个test：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">letters = [&quot;c&quot;, &quot;f&quot;, &quot;j&quot;]</span><br><span class="line">target = &quot;c&quot;</span><br><span class="line">Output: &quot;f&quot;</span><br></pre></td></tr></table></figure></li>
-<li>但是这里的输出就不是“f”,而是“c”。我们要返回的要保证大于target，其次再保证是最小的。因此我们应该在if语句那里调整一下。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-palindromic-substring/description/">5. Longest Palindromic Substring</a></p>
-<ul>
-<li>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaoli_nu/article/details/76694843">求区间中1的个数最多的数 若有多个输出最小的</a><br>有时候要反过来想，抓住能够固定的条件。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/find-all-duplicates-in-an-array/description/">442. Find All Duplicates in an Array</a></p>
-<ul>
-<li>这道题有一个特征可以利用的是1&lt;a[i]&lt;&#x3D;n(n&#x3D;size of array)。也就是说一个长为5的数组，其最大的值为5，最小的值为1。且都为正整数。</li>
-<li>可以利用这一特征，然后让nums[i]里的值当作nums的下表。如果有同样的值则会只想到nums里的同一个数，而第一次指向则改为负数，第二次指向的时候就是出现了重复值的时候，此时指向的值是负数。这个只需127ms。</li>
-<li>但我之前的思路是，一边遍历一边把数字放到hash_map<br>里去，然后一边检查hash map里有没有，一边加入。虽然hash map的find理论上只需要常数的时间，但比起前一种方法的比较大小，还是会要多费出时间。需要165ms。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/subsets/description/">78. Subsets</a></p>
-<ul>
-<li>这个题一开始出现一个memory  limited 的错误。这个错误其实很容易犯，就是在对vector做循环遍历的时候，在for的逻辑结构里我对这个vector又有了增加，于是导致那个循环条件i&lt;subset.size()一直出不去。从而一直在加。</li>
-<li>这个题的思路其实很简单，就是遇到一个数，我们就把这个数的先作为子集添加进去。然后对于每一个已经在子集里的vector都添加这个数，然后构成的新子集也添加进去。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/number-of-matching-subsequences/description/">792. Number of Matching Subsequences</a></p>
-<ul>
-<li><p>这个用暴力法肯定无法解决。查看讨论后得到一个非常巧妙的方法。主要是利用string用c_str这个转换成char数组后，最后一个元素是0。</p>
-</li>
-<li><p>有一个<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18481740/pointer-expressions-ptr-ptr-and-ptr">知识点</a>是++和*，*++p–*(++p)首先，++和*是同一个优先级，于是我们看结合性。都是从右到左，也就是都先和左边的结合，于是先++和p结合，然后*和++p结合。</p>
-</li>
-<li><p>我们可以构造出一个字典索引从a到b开头，把字典里的每一个string变成char数组放进去。然后把它看成是一个未与所求string S匹配的目录。然后一个个地遍历S的字符，从索引开始，遇到匹配的这个字符，就把这个char数组匹配的那个去掉，重新放入新的索引下。于是匹配到最后，如果都匹配完了，那么最终肯定会被放到0对应的索引下的。因为，string转char 数组最后一个字符的值是0。 </p>
-</li>
-<li><p>这个是代码：</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numMatchingSubseq</span><span class="params">(string S, vector&lt;string&gt;&amp; words)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">const</span> <span class="type">char</span>*&gt; index[<span class="number">128</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;w:words)&#123; </span><br><span class="line">            index[w[<span class="number">0</span>]].<span class="built_in">push_back</span>(w.<span class="built_in">c_str</span>());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp; s:S)&#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(index[s].<span class="built_in">size</span>()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">auto</span> i:index[s])&#123;</span><br><span class="line">                    index[*++i].<span class="built_in">push_back</span>(i);</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="comment">//index[s].clear(); 加上这个就没有runtime error了，但是算出来的结果是错的。显然逻辑上要清除这个索引，因为我们已经比较完了。</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">return</span> index[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-<li><p>参考答案发现要把index[s].clear() 放在index[*++i].push_back(i);的前面，因为有可能有一个词语是aaaa，那么它刚刚加入又被清除了。所以就有错误。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/assign-cookies/description/">455. Assign Cookies</a></p>
-<ul>
-<li>这个没什么要说的。主要是了解到一个sort的用法，它默认是按从小到大排序，如果想要从大到小，就用greater<int>作为第三个参数。事实上这个参数是一个函数模板，可以用来决定两个object哪一个比较大。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/min-cost-climbing-stairs/description/">746. Min Cost Climbing Stairs</a></p>
-<ul>
-<li><p>首先要搞清一个题意就是，对于包含n个cost的序列，我们最后的落脚点只能是在cost[n-1]和cost[n-1]，也就是倒数第一个和倒数第二个。倒数第三个是不行的。</p>
-</li>
-<li><p>看起来似乎是每次往后check两个直，并选择小的那一个就行了。但考虑一种情况[1,2,9,1],首先我们考虑1和2，选择1，然后选择2，然后选择1，最后的结果是4.但是如果我们一开始在1和2中选择2，然后就选择1，那么结果是3. </p>
-</li>
-<li><p>如果我们从后往前推呢？实质是一样的。因此我们这里无法用贪心算法。要从全局来看就要用到DP。</p>
-<ul>
-<li><p>首先思考，一个n长的cost序列，我们遍历到下标n-1，或者n-2都可以看作是结束的标志，我们只需要比较这两种遍历哪一种cost最小。而这个问题的子问题就是，一个n-1长的cost序列，我们遍历到下标n-2，或者n-3都可以看作是结束的标志……。</p>
-</li>
-<li><p>于是不难想到，如果及L(n)为n长的cost序列的最小cost和，我们能不能构建一个状态转移函数？还有一些变数，那么我们假设DP(n)为在一个包含n个cost的序列里以最后一个作为最后的落脚点的方案所能达到的最小和。那么<br>  $$<br>  \begin{align*}<br>  &amp;DP(0)&#x3D;cost[0] \\<br>  &amp;DP(1)&#x3D;cost[1] \\<br>  &amp;DP(n) &#x3D; cost[n] +min(DP(n-1), DP(n-2))<br>  \end{align*}<br>  $$</p>
-</li>
-<li><p>因为cost[n]是一定要选的，然后再来看到底是从n-1跳，还是从n-2跳。</p>
-</li>
-</ul>
-</li>
-<li><p>总结一下，就是：</p>
-<ol>
-<li>首先要知道这是一个全局最优，那么就不能用贪心算法</li>
-<li>然后要巧妙地设置好状态，这样才能把状态转移函数写得简单。最重要的就是要固定住一些变量，比如这一题里，我们就不是简单的用L(n)而是用的DP(n)就把最后的落脚点固定住了，方便后面的分析。</li>
-<li>固定住变量以后，需要在最前面的初始化里体现。也就是这题里的dp[0]和dp[1].</li>
-</ol>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/climbing-stairs/description/">70. Climbing Stairs</a></p>
-<ul>
-<li><p>这一题我们同样可以用DP，比如假设DP(n)表示上n层楼梯拥有的方法数。那么DP(n+1)就可以用DP(n)来表示,但是显然我们的某些情况还是没有固定，比如最后一步是1 step和2 step会影响到我们的推导。因此我们通过设置DP1(n)和DP2(n)来表示，前者表示n层楼里，最后一步是1 step的方法数，后者表示最后一步是2 step的方法数。那么推导就好进行了。</p>
-<p>  $$<br>  \begin{align*}<br>  &amp;DP_0(n) &#x3D; DP_1(n)+DP_2(n) \\<br>  &amp;DP_1(n) &#x3D; DP_1(n-1)+DP_2(n-1) \\<br>  &amp;DP_2(n) &#x3D; DP_1(n-2)+DP_2(n-2)<br>  \end{align*}<br>  $$</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/range-sum-query-immutable/description/">303. Range Sum Query - Immutable</a></p>
-<ul>
-<li><p>第一个想法是通过建一个表来代替频繁的计算，用内存换时间。于是NumArray初始化的时候就可以建一个二维数组 sum[i][j]就表示从i到j的和，然后在sumRange这个方法里就只需要返回这个二维数组的某个值就好。</p>
-</li>
-<li><p>用vector创建二维数组的方式是：</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; sum = <span class="keyword">new</span> vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;(len,<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">10</span>));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>但是这样其实非常的繁琐，需要用到3个for。仔细想你会发现如果我用一个一维数组sum[I]表示从i开始到最后的累加和。那么从I到j的累加和就是sum[i]-sum[j]了。</p>
-</li>
-<li><p>要注意，一个空的vector无法用下标的方式扩充vector。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/">122. Best Time to Buy and Sell Stock II</a></p>
-<ul>
-<li>这就是一个贪心算法，看起来好似很多种情况要考虑。但其实我们只需要把当天买和第二天买的差价大于0的利润全加起来就是能赚到的总和。就是一个贪心算法。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/lemonade-change/description/">860. Lemonade Change</a></p>
-<ul>
-<li>这里要注意的就是20的找零，优先使用10块。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-anagram/description/">242. Valid Anagram</a></p>
-<ul>
-<li>一个往dict里添，一个往dict里拿，如果只是顺序重排，最后dict应该是没有变动。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/number-of-1-bits/description/">191. Number of 1 Bits</a></p>
-<ul>
-<li>最简单的就是循环，然后将n一位一位地右移。 但是还有一种骚操作——<a target="_blank" rel="noopener" href="http://6460646.blog.163.com/blog/static/27779875201132893614412/">n&amp;(n-1)的妙用</a>  </li>
-<li>其实就是把二进制数第一个不为0的那一位变为0，后面的位都变为1。然后做一个与运算的话，就把第一位不为0的改成了0.那么在判断的时候就不需要一个个地遍历了，只需要遍历1的个数的次数。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/power-of-three/description/">326. Power of Three</a></p>
-<ul>
-<li>可以简单地循环，但是有一个<a target="_blank" rel="noopener" href="http://www.aichengxu.com/other/2460321.htm">数学知识</a>可以快速解决它。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/counting-bits/description/">338. Counting Bits</a></p>
-<ul>
-<li><p>首先很容易想到的是，后一个状态是可以根据前一个状态得到的。从偶数+1变成奇数后的#（1）一定会加1，而奇数+1变成偶数就有一点麻烦。它会把第一个不是1的位的后面的1都变成0，而这个第一个不是1的位变成1.前面的1我们不会变，那么我们的任务其实就是数这个奇数第一个不为1的位后面有几个1以及前面有几个1.</p>
-</li>
-<li><p>但是这依然很麻烦，不如先写几个看一下规则，假设dp(n)表示数字n的二进制包含的1的个数。那么<br>$$<br>\begin{align*}<br>&amp;dp(0) &#x3D; 0  \\<br>&amp;dp(1) &#x3D; 1   \\<br>&amp;dp(2) &#x3D; 1 &#x3D; dp(2-0)+1 \\<br>&amp;dp(3) &#x3D; 2 &#x3D; dp(3-2)+1 \\<br>&amp;dp(4) &#x3D; 1   \\<br>&amp;dp(5) &#x3D; 2 &#x3D; dp(5-4)+1 \\<br>&amp;dp(6) &#x3D; 2 &#x3D; dp(6-4)+1 \\<br>&amp;dp(7) &#x3D; 3 &#x3D; dp(7-4)+1 \\<br>&amp;dp(8) &#x3D; 1 \\<br>&amp;dp(9) &#x3D; 2 &#x3D; dp(9-8)+1  \\<br>……<br>\end{align*}<br>$$</p>
-</li>
-<li><p>那么规则就出现了。为什么是这样呢? 首先那个+1其实是对应的$dp(2_i)$的值，因为它总是1，所以我们直接+1了。</p>
-</li>
-<li><p>所以规律是$dp(n) &#x3D; dp(n-2_i)+dp(2_i)$.把$2_i$作为起始点，因为它总是以一个1后面跟若干个0结尾。那么往上加1的话，它的1的个数就很好推断。仔细体会。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/power-of-four/description/">342. Power of Four</a></p>
-<ul>
-<li><p>4的n次方可以看作是n个4的相乘，而一个数乘以4相当于往左移2位（乘以2是往左移1位，以此类推）。</p>
-</li>
-<li><p>所以只需要检查当前数的二进制只有一个1，并且在其奇数位上。</p>
-</li>
-<li><p>由于int是32位,0101010101010101010101010101写成16进制是0x55555555</p>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (num&gt;<span class="number">0</span>) &amp;&amp;((num&amp;(num<span class="number">-1</span>))==<span class="number">0</span>)&amp;&amp;((num&amp;<span class="number">0x55555555</span>)==num);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/">121. Best Time to Buy and Sell Stock</a></p>
-<ul>
-<li><p>这里的优秀解法<a target="_blank" rel="noopener" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/discuss/39038/Kadane's-Algorithm-Since-no-one-has-mentioned-about-this-so-far-:">参考</a> 也就是把这个题转变成了一个求子串最大和的问题。</p>
-</li>
-<li><p>首先要理解这个公式： $maxSum(i) &#x3D; max(maxSum(i-1)+[i],[i])$。只能是这两个值之间的一个，因为紫川要是连续的，也就是说如果不能把[i]纳入maxSum里，那么就要重新开始计maxSum。</p>
-</li>
-<li><p>然后这样遍历一次最后得到的还不是真正的max，真正的max应该是从前面的各种maxSum里选一个最大的。</p>
-</li>
-<li><p>还有一个问题是，在这个题里，maxSum要大于0。为什么要这么设置是因为，我们可以通过一个子串也不选来达到最大的子串和。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/maximum-subarray/description/">53. Maximum Subarray</a></p>
-<ul>
-<li><p>这个套路差不多，但是这里有一个不同是，这里必须至少包含一个元素。也就是说如果都是负数，那么maxSum的返回值也会是负数。</p>
-</li>
-<li><p>还有一种方法是分而治之的方法：首先我们分析，最大和的子串能出现在哪：</p>
-<ol>
-<li>前半部分</li>
-<li>后半部分</li>
-<li>跨越中间部分</li>
-</ol>
-</li>
-<li><p>那么我们只需要找到这这三者的最大子串和的最大值就是整个子串的最大值。</p>
-</li>
-<li><p>前半部分和后半部分就是递归，暂且不管。看一下横跨中间的那部分。那么很显然，要横跨，就必须把最中间的值写入。然后往左边遍历，一直在中间累加，直到出现最大。这里的二分法的迭代要注意要有结束条件。也就是当len&#x3D;0，后者len&#x3D;1 的时候要能直接返回一个值而不是继续递归。因为我们的递归是针对len&gt;1 的情况来说的。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/intersection-of-two-arrays/discuss/139344/C++-2ms">349. Intersection of Two Arrays</a></p>
-<ul>
-<li>首先介绍一个数据结构unordered_set。它保存所有不同的值，但是不保证顺序。因为它内部也是一个hashtable。只不过它的值就是它的key。</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/">26. Remove Duplicates from Sorted Array</a></p>
-<ul>
-<li>这个题很trick， 要明白cur下标和next下标的含义。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/31/%E3%80%90leetcode%E3%80%91%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/" data-id="cl0t1dcyk00158slf2aqb1j8m" data-title="【leetcode】刷题笔记" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
   
     <article id="post-经典算法-二叉树的遍历" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
@@ -426,7 +119,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/" data-id="cl0t1dcz6003i8slfceqwefoh" data-title="经典算法-二叉树的遍历" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/" data-id="cl0t1dcz6003i8slfceqwefoh" data-title="经典算法-二叉树的遍历" class="article-share-link">分享</a>
       
       
       
@@ -487,7 +180,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%B7%A6%E5%8F%B3%E6%8C%87%E9%92%88/" data-id="cl0t1dd0q003w8slfg35x1jwk" data-title="经典算法-左右指针" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%B7%A6%E5%8F%B3%E6%8C%87%E9%92%88/" data-id="cl0t1dd0q003w8slfg35x1jwk" data-title="经典算法-左右指针" class="article-share-link">分享</a>
       
       
       
@@ -549,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/29/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" data-id="cl0t1dd0r003y8slfdl374lo4" data-title="经典算法-LRU缓存机制" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2019/07/29/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" data-id="cl0t1dd0r003y8slfdl374lo4" data-title="经典算法-LRU缓存机制" class="article-share-link">分享</a>
       
       
       
@@ -667,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/29/%E3%80%90leetcode%E3%80%91%E8%85%BE%E8%AE%AF50%E9%A2%98/" data-id="cl0t1dcyl00178slf8mvdgw9f" data-title="【leetcode】腾讯50题" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2019/07/29/%E3%80%90leetcode%E3%80%91%E8%85%BE%E8%AE%AF50%E9%A2%98/" data-id="cl0t1dcyl00178slf8mvdgw9f" data-title="【leetcode】腾讯50题" class="article-share-link">分享</a>
       
       
       
@@ -808,7 +501,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="cl0t1dcxz00008slf7muz8d71" data-title="二叉树备忘录" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="cl0t1dcxz00008slf7muz8d71" data-title="二叉树备忘录" class="article-share-link">分享</a>
       
       
       
@@ -858,7 +551,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/29/4-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" data-id="cl0t1dcyu00208slfeau0ctdr" data-title="4-计算机编程技巧" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2018/07/29/4-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" data-id="cl0t1dcyu00208slfeau0ctdr" data-title="4-计算机编程技巧" class="article-share-link">分享</a>
       
       
       
@@ -949,7 +642,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/22/%E3%80%90ucore%E3%80%91lab3/" data-id="cl0t1dcyr001r8slfg2lkad2r" data-title="【ucore】lab3" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2018/07/22/%E3%80%90ucore%E3%80%91lab3/" data-id="cl0t1dcyr001r8slfg2lkad2r" data-title="【ucore】lab3" class="article-share-link">分享</a>
       
       
       
@@ -1021,7 +714,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" data-id="cl0t1dcyv00218slf4aid6jfk" data-title="3-归纳推理问题" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" data-id="cl0t1dcyv00218slf4aid6jfk" data-title="3-归纳推理问题" class="article-share-link">分享</a>
       
       
       
@@ -1095,11 +788,60 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" data-id="cl0t1dcyr001o8slffin0eftd" data-title="【ucore】lab2" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" data-id="cl0t1dcyr001o8slffin0eftd" data-title="【ucore】lab2" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2-纸牌游戏" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/07/2-%E7%BA%B8%E7%89%8C%E6%B8%B8%E6%88%8F/" class="article-date">
+  <time class="dt-published" datetime="2018-07-07T14:39:22.000Z" itemprop="datePublished">2018-07-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/07/2-%E7%BA%B8%E7%89%8C%E6%B8%B8%E6%88%8F/">2-纸牌游戏</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h2><p>情形是一个赌场，从52张牌里抽4张（通过洗牌使得每一张抽取的概率是一样的），然后你从这四个里面选一张A，庄家再从剩下的三张里选一张B。如果A &gt;B，则你赢。否则庄家赢。那么你赢的概率是多少？</p>
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><p>这里最直观的方法就是直接计算。首先因为每一张牌被抽取的概率是一样的，而且被选取的概率也是一样的，因此其实我们可以直接考虑从52张牌里选，去掉中间的抽取4张的细节。然后呢，我们一个个的来，如果A抽取的是2，则赢的概率是0，如果A抽取的是3，那么赢的概率是庄家抽的是2，即4&#x2F;51.如果A抽取的是4，那么赢的概率是庄家抽取2和3，也就是8&#x2F;51……<br>于是，0+1&#x2F;13<em>4&#x2F;51+1&#x2F;13</em>8&#x2F;51+1&#x2F;13<em>12&#x2F;51+……1&#x2F;13</em>48&#x2F;51&#x3D;（4&#x2F;（51<em>13））</em>（1+2+3+……12）&#x3D;8&#x2F;17.</p>
+<p>但是还有一种解法。在此之前，先考虑一个问题，从一万张彩票（只有一张中奖）里选一张，前一个人选完的彩票后一个人就不能选了，请问每一个人抽到中奖的那一张的概率有区别吗？答案是没有，每个人中奖的概率是一样的，无论先后。所以这里也一样，虽然庄家在玩家后面抽，看起来像是一个条件概率，但其实总体来看，庄家和玩家一样，抽到每一张的概率是一样的。于是，我们考虑这个情形的三个结果：<br>C1：A&gt;B<br>C2:  A&#x3D;B<br>C3： A&lt;B</p>
+<p>仔细体会<a target="_blank" rel="noopener" href="https://husy1994.github.io/2018/07/02/1-%E6%8A%95%E7%A1%AC%E5%B8%81%E9%97%AE%E9%A2%98/index.html">1-投硬币问题</a>的核心思想，同理可知P(C1)&#x3D;P(C3)&#x3D;x，P(C2)&#x3D;y。 那么2x+y&#x3D;1。然后我们看看P(C2) 可以算出来吗？其实就是13<em>4&#x2F;52</em>3&#x2F;51&#x3D;1&#x2F;17。于是x&#x3D;16&#x2F;17*1&#x2F;2&#x3D;8&#x2F;17.</p>
+<p>P(C2) 的计算过程是有13个相等的情况，每一种情况的概率是4&#x2F;52<em>3&#x2F;51。可能这里有人会问，不是说庄家和玩家抽到每一张的概率是一样的么？为什么这里不是4&#x2F;52</em>4&#x2F;52？因为我们前面的假设是先抽取的玩家抽到的牌是未知的，也就是没有固定，那么对于庄家来讲，它抽取到某一张的概率是一系列条件概率之和，而这里，我们的假设是玩家抽到的牌是已知的，是已经固定了的，于是它抽某一张牌的概率就只是一个简单的条件概率了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://husy-dev.github.io/2018/07/07/2-%E7%BA%B8%E7%89%8C%E6%B8%B8%E6%88%8F/" data-id="cl0t1dcyt001w8slf4whcdk2s" data-title="2-纸牌游戏" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li></ul>
 
     </footer>
   </div>
@@ -1134,7 +876,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
     </div>
   </div>
 
@@ -1144,7 +886,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 17.14px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 10px;">分布式</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
     </div>
   </div>
 
@@ -1153,7 +895,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
     </div>
   </div>
 
@@ -1166,23 +908,23 @@
       <ul>
         
           <li>
-            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus笔记</a>
           </li>
         
           <li>
             <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/16/golang%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">golang垃圾回收</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/03/golang%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%A4%87%E5%BF%98%E5%BD%95/">golang测试备忘录</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/02/defer%E8%AF%A6%E8%A7%A3/">defer详解</a>
           </li>
         
       </ul>

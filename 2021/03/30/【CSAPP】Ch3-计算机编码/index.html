@@ -4,14 +4,19 @@
   <meta charset="utf-8">
   
   
-  <title>标签: Network | Hexo</title>
+  <title>CSAPP-ch3-计算机编码 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://husy-dev.github.io/tags/Network/index.html">
+  <meta name="description" content="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;xoh6Oh&#x2F;submissions&#x2F;这道题最简单的思路是用减法，先判断是否是异号，结果要为负的，然后获取两个数的绝对值，不断相减。但是有一个问题就是上述所说的，INT_MIN的绝对值不是INT_MAX，而是INT_MAX+1。那么当a&#x3D;INT_MIN时，就需要额外操作了。  一个负数的二进制补码是怎么样的？ 为什么负数会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP-ch3-计算机编码">
+<meta property="og:url" content="https://husy-dev.github.io/2021/03/30/%E3%80%90CSAPP%E3%80%91Ch3-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A0%81/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;xoh6Oh&#x2F;submissions&#x2F;这道题最简单的思路是用减法，先判断是否是异号，结果要为负的，然后获取两个数的绝对值，不断相减。但是有一个问题就是上述所说的，INT_MIN的绝对值不是INT_MAX，而是INT_MAX+1。那么当a&#x3D;INT_MIN时，就需要额外操作了。  一个负数的二进制补码是怎么样的？ 为什么负数会">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-30T03:18:27.000Z">
+<meta property="article:modified_time" content="2022-03-16T04:12:27.455Z">
 <meta property="article:author" content="Husy">
+<meta property="article:tag" content="CSAPP">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -69,39 +74,78 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/03/24/%E3%80%90CSAPP%E3%80%91Ch11-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="archive-article-date">
-  <time class="dt-published" datetime="2018-03-24T03:26:43.000Z" itemprop="datePublished">3月 24</time>
+        <section id="main"><article id="post-【CSAPP】Ch3-计算机编码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/30/%E3%80%90CSAPP%E3%80%91Ch3-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A0%81/" class="article-date">
+  <time class="dt-published" datetime="2021-03-30T03:18:27.000Z" itemprop="datePublished">2021-03-30</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/24/%E3%80%90CSAPP%E3%80%91Ch11-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">【CSAPP】Ch11-网络编程</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      CSAPP-ch3-计算机编码
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/xoh6Oh/submissions/">https://leetcode-cn.com/problems/xoh6Oh/submissions/</a><br>这道题最简单的思路是用减法，先判断是否是异号，结果要为负的，然后获取两个数的绝对值，不断相减。但是有一个问题就是上述所说的，INT_MIN的绝对值不是INT_MAX，而是INT_MAX+1。那么当a&#x3D;INT_MIN时，就需要额外操作了。</p>
+<ol>
+<li>一个负数的二进制补码是怎么样的？</li>
+<li>为什么负数会比正数的范围大一，因此要做一些操作的时候是不是可以统一到负数范围去搞？</li>
+<li>一个二进制补码除以2的n次方是怎么表示的？</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sd631032049/article/details/72781138">https://blog.csdn.net/sd631032049/article/details/72781138</a></p>
+<ol>
+<li>详细介绍了什么是原码，反码和补码，以及为什么要这么做的原因：计算机只有加法运算（所以计算负数的时候想要用负数的反码），并且不希望每一个整数都是一一对应一个二进制编码的（反码里+0和-0的表示方式不一样，会造成很很多计算的不方便，因此用补码）。</li>
+<li>要区分出人的逻辑和计算机的逻辑，对于人来讲，数字有正负，并且规定说最高位是符号位。但是计算机CPU只能做加法，以及进位，不管是不是符号位计算机都一视同仁将它纳入计算中。所谓的原码，反码和补码都是人类推导的一种工具，计算机里只有二进制。</li>
+<li>Int8表示的范围是[-128,127]，其实很好理解，画一个横轴，以0为界限，往右边是+1（0000 0001），+2（0000 0010）….，左边是-128（没有对应的原码和反码，但在计算机里的二进制是1000 0000），-127（1000 0001）……这里-128有一些怪异，其实是之前用原码表示的-0，被映射到了-128。</li>
+<li>这里的巧妙之处还有就是在比较有符号数字的大小的时候，符号位相同，可以直接比较后面位的大小，比如-16[1000]会让-15[1001]就可以直接比较这两个二进制的大小。</li>
+<li>还有一些数学上的推理，和系统的介绍可以参考CSAPP第三章的计算机编码的表示。</li>
+</ol>
+<p>因此，涉及到正负整数的计算的时候，要注意溢出。比如，int8 a &#x3D;-128，求绝对值就不会是128。<br>后续：写一个进制转换和有符号无符号转换的alfred工具<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/97749860">https://zhuanlan.zhihu.com/p/97749860</a><br>这个位移还可以看作是乘以一个2^n次方和除以一个2的幂次方。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://husy-dev.github.io/2021/03/30/%E3%80%90CSAPP%E3%80%91Ch3-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A0%81/" data-id="cl0t217c300019alfhflu6041" data-title="CSAPP-ch3-计算机编码" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li></ul>
+
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/30/golang%E8%AF%AD%E8%A8%80%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          golang语言深度解析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/22/%E3%80%90CSAPP%E3%80%91Ch7-%E9%93%BE%E6%8E%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【csapp】Ch7-链接</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>

@@ -4,22 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>实验malloc_lab | Hexo</title>
+  <title>mit6.824课程笔记 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="实验内容这个实验就是要求我们实现自己的malloc和free函数，而不是用c标准库的。但是又不需要你太过于底层和细节，主要是堆内存的管理。至于真正对物理内存的处理，还有地址转换什么的都交给memlib.c里的函数去做。要完成的函数有： 1234int mm_init(void);void *mm_malloc(size_t size);void mm_free(void *ptr);void *m">
+  <meta name="description" content="总结课程首先从mapreduce入手，提出一种在大数据场景下的分布式处理方式。然后提出raft协议，这个协议构建的集群对于分布式系统可以提供一个基础服务，比如保存集群里的元数据。根据 raft协议主要介绍：  raft协议的选举过程，也就是leader，candidate和follower的状态转变，开发时要注意并发读写的问题。 Leader当选后，如何通过log队列来达到数据同步。leader获">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实验malloc_lab">
-<meta property="og:url" content="https://husy-dev.github.io/2018/04/29/%E3%80%90CSAPP%E3%80%91%E5%AE%9E%E9%AA%8Cmalloc-lab/index.html">
+<meta property="og:title" content="mit6.824课程笔记">
+<meta property="og:url" content="https://husy-dev.github.io/2021/01/30/mit6.824%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="实验内容这个实验就是要求我们实现自己的malloc和free函数，而不是用c标准库的。但是又不需要你太过于底层和细节，主要是堆内存的管理。至于真正对物理内存的处理，还有地址转换什么的都交给memlib.c里的函数去做。要完成的函数有： 1234int mm_init(void);void *mm_malloc(size_t size);void mm_free(void *ptr);void *m">
+<meta property="og:description" content="总结课程首先从mapreduce入手，提出一种在大数据场景下的分布式处理方式。然后提出raft协议，这个协议构建的集群对于分布式系统可以提供一个基础服务，比如保存集群里的元数据。根据 raft协议主要介绍：  raft协议的选举过程，也就是leader，candidate和follower的状态转变，开发时要注意并发读写的问题。 Leader当选后，如何通过log队列来达到数据同步。leader获">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://static.zybuluo.com/Husy/m3z21teg443nvmplvlihmvbp/Screenshot%20from%202018-07-22%2015-15-00.png">
-<meta property="article:published_time" content="2018-04-29T03:13:35.000Z">
-<meta property="article:modified_time" content="2021-04-02T09:01:28.712Z">
+<meta property="article:published_time" content="2021-01-30T03:18:27.000Z">
+<meta property="article:modified_time" content="2022-03-16T04:17:07.287Z">
 <meta property="article:author" content="Husy">
-<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="Golang">
+<meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://static.zybuluo.com/Husy/m3z21teg443nvmplvlihmvbp/Screenshot%20from%202018-07-22%2015-15-00.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,16 +75,12 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-【CSAPP】实验malloc-lab" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-mit6.824课程笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2018/04/29/%E3%80%90CSAPP%E3%80%91%E5%AE%9E%E9%AA%8Cmalloc-lab/" class="article-date">
-  <time class="dt-published" datetime="2018-04-29T03:13:35.000Z" itemprop="datePublished">2018-04-29</time>
+    <a href="/2021/01/30/mit6.824%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2021-01-30T03:18:27.000Z" itemprop="datePublished">2021-01-30</time>
 </a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a>
-  </div>
-
   </div>
   <div class="article-inner">
     
@@ -94,7 +89,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      实验malloc_lab
+      mit6.824课程笔记
     </h1>
   
 
@@ -102,49 +97,76 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><p>这个实验就是要求我们实现自己的malloc和free函数，而不是用c标准库的。但是又不需要你太过于底层和细节，主要是堆内存的管理。至于真正对物理内存的处理，还有地址转换什么的都交给memlib.c里的函数去做。<br>要完成的函数有：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">mm_init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">mm_malloc</span><span class="params">(<span class="type">size_t</span> size)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">mm_free</span><span class="params">(<span class="type">void</span> *ptr)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">mm_realloc</span><span class="params">(<span class="type">void</span> *ptr, <span class="type">size_t</span> size)</span>;</span><br></pre></td></tr></table></figure>
+        <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>课程首先从mapreduce入手，提出一种在大数据场景下的分布式处理方式。然后提出raft协议，这个协议构建的集群对于分布式系统可以提供一个基础服务，比如保存集群里的元数据。根据</p>
+<h2 id="raft协议"><a href="#raft协议" class="headerlink" title="raft协议"></a>raft协议</h2><p>主要介绍：</p>
+<ol>
+<li>raft协议的选举过程，也就是leader，candidate和follower的状态转变，开发时要注意并发读写的问题。</li>
+<li>Leader当选后，如何通过log队列来达到数据同步。leader获取到操作命令后转化成log entry复制给follower，当超过一半数量的follower都复制完毕后，才可以commit该log entry。而commit才意味着client对该分布式服务器的操作成功。<br>￼<br>继续扩展一些细节处理，比如crash recovery以及log的压缩。有一个很重要的概念是Linearizability（线性一致性），这是对分布式系统复杂操作结果的正确性的定义。用我自己的话介绍一下就是：<ol>
+<li>考虑到一个简单操作对于分布式系统来讲是一个耗时操作，并且其真正的执行顺序不依照操作的请求顺序。</li>
+<li>而一个操作的结果被另一个线程或者请求感知的时间点可以发生在该操作的任何时候，所以只要两个操作有时间上的重叠，那么操作A在任何时间点上都可能观察到操作B修改的数据。</li>
+<li>将操作抽象成原子的，如果你能找到一种顺序让它们彼此获取到的结果不相矛盾。<br>那么这个系统就是符合线性一致性的。</li>
+</ol>
+</li>
+</ol>
+<p>这就扩展到了一个细分领域，分布式系用的一致性问题，暂且不表。<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/59119088">https://zhuanlan.zhihu.com/p/59119088</a></p>
+<h2 id="Fault-Toleration"><a href="#Fault-Toleration" class="headerlink" title="Fault Toleration"></a>Fault Toleration</h2><p>￼<br>￼</p>
+<h2 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h2><p>￼<br>Zookeeper - 博客<br>通过介绍zookeeper的案例，来介绍以下几个问题的答案：</p>
+<ol>
+<li>如何设计一个独立通用的分布式协调服务给分布式业务集群使用？它的api是怎样的？</li>
+<li>别的分布式应用要怎么使用它？<br> 1. </li>
+<li>它的性能可以随着机器的增加而线性增加吗？<ol>
+<li>首先是写肯定是随着follower的增加而降低效率，因为需要保证线性一致性。</li>
+<li>但是如果可以向follower读数据的话，其负载量就可以随着follower成倍扩张。但这样一来，读到的数据就不能保证是最新的。Linearizablity是不允许过期数据的。</li>
+<li>zookeeper通过保证一种巧妙的秩序来放松对linearizability来实现负载的线性增长。<ol>
+<li>Linearizability Writes（leader接收写请求，并给它编号顺序）</li>
+<li>每一个client都接收read请求，但要等到该client本地log在该read请求之前的写请求都已经执行完毕。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="Craq"><a href="#Craq" class="headerlink" title="Craq"></a>Craq</h2><p>￼<br>￼<br>前面raft的拓扑结构是放射状的，由leader去给所有follower交互，这里leader的带宽也是一个瓶颈。craq的处理办法是，用链形的拓扑结构，leader只会同步数据给一个follower，然后follower1同步给follower2。缺点就是这个链的容灾很脆弱，链中间的一环要是crash了，后面就都无法获取到数据了。</p>
+<h2 id="frangipani"><a href="#frangipani" class="headerlink" title="frangipani"></a>frangipani</h2><p>￼<br>主要是通过介绍frangipani这个分布式</p>
+<p>文件系统的实现，来介绍下面三个概念。</p>
+<ol>
+<li><p>cache coherence。也就</p>
+</li>
+<li><p>是不同单机上的修改，如何同步到其余单机上：通过锁服务器(LS)去保护每一个文件的读写，修改先只在本地workstaion1缓存，并修改LS的记录。当有别的单机workstation2需要访问时，LS会去通知workstaion1将缓存写回分布式文件系统，从而保证workstaion2读取到的文件内容是最新的。</p>
+</li>
+<li><p>distributed transaction。</p>
+</li>
+<li><p>也就是如果一个事物的逻辑处理在不同的单机上，要如何保证操作的原子性？</p>
+<ol>
+<li>通过2PL（2-phase locking）在事务开始前获取一个事物级别的锁，然后对要处理的每一个文件对象都要获取相应的锁，直到所有操作都完成，才能依次释放每一个锁。</li>
+<li>通过2PC（2-phase commit），事务协调者（transaction coordinator，TC）给事务参与者发送一个prepare指令，询问参与者是否可以执行。如果所有参与者都返回ok，就发送一个commit，让参与者执行对应操作。这里参与者获取到prepare询问后，可以将操作先写入log，或者先写入缓存，等到commit指令为执行时就去执行，或者写会硬盘。</li>
+</ol>
+</li>
+<li><p>Crash recovery：written-ahead log，也就是在修改数据前，先将操作记录写入log，然后再操作。这样可以在crash后从log中重新执行来保证数据的一致性。<br>分布式的应用的设计思路大多都来自于上面的概念，至于具体的实现，则需要自己根据实际去优化。比如frangipani里的优化有：</p>
+</li>
+<li><p>读和写对锁的要求不一样，读不需要独占锁，写才需要独占锁；</p>
+</li>
+<li><p>将不同workstation拥有的锁的文件和其修改状态分别写在不同的文件&#x2F;机器上，这样可以减少写的冲突。</p>
+</li>
+</ol>
+<h2 id="raft和2PC"><a href="#raft和2PC" class="headerlink" title="raft和2PC"></a>raft和2PC</h2><pre><code>这里开始介绍了一个非常重要的分布式事务的概念——2PC。而raft里也有一个机制是，先把请求写进log channel，等到leader提交commit 请求后，才会真正去执行这个log的内容。看起来，这里的raft也用到了2PC这个机制。但这是错误的，这是两个完全不相关的概念。唯一相同的只是两次请求的形式。
 
-<h2 id="具体内容"><a href="#具体内容" class="headerlink" title="具体内容"></a>具体内容</h2><ol>
-<li>memlib.c的作用：不是说要自己实现malloc吗？为什么还要使用mem_lib的函数？而且mem_lib里使用了malloc。其实这里我们的实验是要求我们对内存管理有一个实现，重点在于管理。如果完完全全不用malloc的话，我们的mm.c函数还要实现找到合适的物理内存页面，并且做一个维护。而如果我们使用mem_lib的话，就可以模拟OS的物理页面管理。</li>
-<li>具体的实现可以先参考一下课本的mm.c里对空闲块的数据结构</li>
-<li>需要注意c&#x2F;C++不对数组的下表边界做检测的。具体参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/ljx_5489464/article/details/50314677">数组的下标越界与内存溢出</a>,<a target="_blank" rel="noopener" href="https://www.xuebuyuan.com/967089.html">C语言为什么不执行数组边界的有效性检查</a></li>
-<li>这里有一个我的误解。我以为不能用结构体。但其实如果直接声明定义结构体，其成员变量是放在栈上的。如果用new的话就是在堆上。所以我们在后面有更复杂的组织方法后可以采用结构体。</li>
-<li>隐式空闲链表为什么要引入序言和结尾块？书上说是消除合并时边界条件的技巧。看其在find_fit里的for循环就知道这是为了让这个for循环有一个跳出的条件，以及一个循环开始的初始化条件。</li>
-<li>对于实验源代码里的mm.c文件里的几个内存补齐代码，如下</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ALIGNMENT 8 <span class="comment">//1</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ALIGN(size) (((size) + (ALIGNMENT-1)) &amp; ~0x7) <span class="comment">//2</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SIZE_T_SIZE (ALIGN(sizeof(size_t))) <span class="comment">//3</span></span></span><br><span class="line">…… </span><br><span class="line"><span class="type">int</span> newsize = ALIGN(size + SIZE_T_SIZE); <span class="comment">//4</span></span><br></pre></td></tr></table></figure>
-<p>先参考这个<a target="_blank" rel="noopener" href="https://blog.csdn.net/jsn_ze/article/details/74011396">内存补齐算法</a>能明白1,2。对于3就是一面size_t的大小不是8的倍数，对于4其实就是把头部的大小算进去以后的对齐。为什么要这样是因为我们在书里看到的32bit长的头部是因为size_t的内部就是一个int，因此块大小就是一个int能表示的大小。这里让这种关系更加抽象，如果我们内部size_t的实现不是一个int，而是一个别的长度的数据类型。我们就需要对这个头部进行内存对齐; 为什么需要单独的先对齐，因为我们规定返回的指针是内存对齐的，而返回的指针不是指向头部，而是指向有效载荷的。<br>8. 有一个虽然不重要但是特别要注意的是：team的信息一定要全部填好，不然会出错。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul>
-<li><p>因为不能题目要求不能新建结构体等复杂的数据结构，于是对这个内存的管理全靠地址去推。我觉得直接用隐式空闲链表，也许会不错，先来试一下：<br><img src="http://static.zybuluo.com/Husy/m3z21teg443nvmplvlihmvbp/Screenshot%20from%202018-07-22%2015-15-00.png" alt="堆块的结构"></p>
-<blockquote>
-<p>Since the libc malloc always returns payload pointers that are aligned to 8 bytes, your malloc implementation should do likewise and always return 8-byte aligned pointers.<br>注意，书上是边界对齐。也就是块头部的地址是8的倍数就好。但是这里要求的是指向有效载荷起始地址的指针地址是8的倍数（虽然其实是一样的）。</p>
-</blockquote>
-</li>
-<li><p>然后考虑mm_malloc的实现，获取到的size首先要对齐，把它变成最小的8的倍数。然后加上头部计算出最后需要的内存大小newSize，然后mem_sbrk申请； 然后把头部写进去。头部地址+4就是有效载荷起始地址。</p>
-</li>
-</ul>
-<h2 id="注意的细节"><a href="#注意的细节" class="headerlink" title="注意的细节"></a>注意的细节</h2><ol>
-<li>获取到有效载荷的指针p，p-4就该块的头部，将其视作一个int，然后修改最低位的分配1为0.</li>
-<li>为了空间利用率高，我们肯定还需要合并空闲块。这里就需要看前后的块。但是显然这一种只有头部的结构看当前块的后一块是很方便的，看前一块就不方便了。因此按照书上的引入边界标记，引入脚部。只有头部可以类比于单链表，有了脚部就可以算作是双链表。</li>
-</ol>
-<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><ol>
-<li>线程安全的动态分配</li>
-</ol>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/github_35681219/article/details/52743048">什么是计算机的大小端规则？</a></li>
-<li><a target="_blank" rel="noopener" href="https://wdxtub.com/2016/04/16/thick-csapp-lab-6/">【不周山之读厚 CSAPP】VI Malloc Lab</a></li>
-<li><a target="_blank" rel="noopener" href="https://husy1994.github.io/2018/05/01/chap9-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">chap9-虚拟内存</a></li>
-</ol>
+在raft的复制里，追求的是log被多数follower接受认可，从而达到数据在多台机器上保持一致，这个集群里每个机器上的数据是一样的，至少目标是一样的。 它的作用是为了高可用（HA）。
+
+而2PC是为了解决分布式事务提出来的，它也是会向多台机器发送请求，也就是prepare，但是这里的prepare是不同的数据操作请求，此时的集群每个机器保存的数据都不一样，之所以需要两次提交，是因为事务的要求。这里的目标是数据一致性。
+</code></pre>
+<h2 id="ACID和CAP"><a href="#ACID和CAP" class="headerlink" title="ACID和CAP"></a>ACID和CAP</h2><p>ACID是数据库的一个要求，也就是Atomicity（可以执行事务），Consistency（对数据的操作不会破坏对数据的约束），isolation（可以并发请求事务）和durability（容错）。 CAP理论是分布式集群的一个评价标准，也就是Consistency，availability和Partition tolerance。这三种要求只能实现两种。</p>
+<p>这里ACID和CAP里都有一个Consistency，但其实是完全不同的维度。ACID里指对数据的修改要始终符合一定的规则，不被篡改等。而CAP里是指在同一时刻，不同机器上的数据要相同。当然这里还有一些程度上区分，根据多久能达到一致分为最终一致性等。</p>
+<h3 id="单机系统的数据同步"><a href="#单机系统的数据同步" class="headerlink" title="单机系统的数据同步"></a>单机系统的数据同步</h3><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUxODAzNDg4NQ==&amp;mid=2247486479&amp;idx=1&amp;sn=433a551c37a445d068ffbf8ac85f0346&amp;scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz=MzUxODAzNDg4NQ==&amp;mid=2247486479&amp;idx=1&amp;sn=433a551c37a445d068ffbf8ac85f0346&amp;scene=21#wechat_redirect</a><br>这里是介绍了多核CPU的缓存一致性：用MESI协议来保证。其基本思路就是：<br>    1. 写传播（Wreite Propagation)，有修改到共享变量需要广播给其余核；<br>    2.事务的串形化（Transaction Serialization)，也就是多个cpu操作对其余内核而言需要封装成原子性操作，这就引入了锁的概念（实际上这里是通过一个状态机去模拟的锁）。<br>数据同步不仅仅出现在宏观的分布式服务里，也会出现在多核的cpu计算单元里，虽然实现不同，但基本思路都是一样的。</p>
+<h2 id="Spanner"><a href="#Spanner" class="headerlink" title="Spanner"></a>Spanner</h2><p>￼<br>上面讲完了不同服务器之间数据同步，Spanner的难点在于多个Datacenter之间的数据同步，比如执行一些不同shard之间的事务操作。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://husy-dev.github.io/2018/04/29/%E3%80%90CSAPP%E3%80%91%E5%AE%9E%E9%AA%8Cmalloc-lab/" data-id="cl0t1dcy600058slfhbhkd6o5" data-title="实验malloc_lab" class="article-share-link">分享</a>
+      <a data-url="https://husy-dev.github.io/2021/01/30/mit6.824%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" data-id="cl0t217c200009alfbn9z5wdr" data-title="mit6.824课程笔记" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li></ul>
 
     </footer>
   </div>
@@ -152,19 +174,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/05/24/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/03/22/%E3%80%90CSAPP%E3%80%91Ch7-%E9%93%BE%E6%8E%A5/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
-          经典算法-动态规划
+          【csapp】Ch7-链接
         
       </div>
     </a>
   
   
-    <a href="/2018/03/27/%E3%80%90CSAPP%E3%80%91Ch12-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/01/06/golang%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">后一篇</strong>
-      <div class="article-nav-title">【CSAPP】Ch12-并发编程</div>
+      <div class="article-nav-title">golang语言笔记</div>
     </a>
   
 </nav>
