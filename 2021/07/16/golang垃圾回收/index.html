@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>golang垃圾回收 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="背景为什么计算机程序需要垃圾回收这里不再赘述了，但是作为一个开发为什么需要了解垃圾回收算法呢？要知道垃圾回收机制再设计之初就是为了让程序员可以专心写业务，不用关心太多内存的问题。所以答案显然易见，如果你不满足于调用api写业务接口，想要做一些性能优化，甚至只是想写一份优雅的业务代码，你就需要关心垃圾回收机制。当然，最重要的，面试的时候可以用来装逼。 那么，关于Golang垃圾回收程序员应该知道些什">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang垃圾回收">
+<meta property="og:url" content="http://example.com/2021/07/16/golang%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景为什么计算机程序需要垃圾回收这里不再赘述了，但是作为一个开发为什么需要了解垃圾回收算法呢？要知道垃圾回收机制再设计之初就是为了让程序员可以专心写业务，不用关心太多内存的问题。所以答案显然易见，如果你不满足于调用api写业务接口，想要做一些性能优化，甚至只是想写一份优雅的业务代码，你就需要关心垃圾回收机制。当然，最重要的，面试的时候可以用来装逼。 那么，关于Golang垃圾回收程序员应该知道些什">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-16T09:34:50.000Z">
+<meta property="article:modified_time" content="2021-10-09T02:54:55.319Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="gc">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-golang垃圾回收" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/07/16/golang%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="article-date">
+  <time class="dt-published" datetime="2021-07-16T09:34:50.000Z" itemprop="datePublished">2021-07-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      golang垃圾回收
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>为什么计算机程序需要垃圾回收这里不再赘述了，但是作为一个开发为什么需要了解垃圾回收算法呢？要知道垃圾回收机制再设计之初就是为了让程序员可以专心写业务，不用关心太多内存的问题。所以答案显然易见，如果你不满足于调用api写业务接口，想要做一些性能优化，甚至只是想写一份优雅的业务代码，你就需要关心垃圾回收机制。当然，最重要的，面试的时候可以用来装逼。</p>
+<p>那么，关于Golang垃圾回收程序员应该知道些什么？你要深入每一行代码去了解每一个细节，我当然佩服你的勇气。但我认为，主要是知道下面几点：</p>
+<ol>
+<li>垃圾回收几种思路其各自的优缺点；</li>
+<li>Golang语言的垃圾回收有什么特点，是如何做到的；</li>
+<li>我们可以从Golang的垃圾回收的设计里学习到什么？</li>
+</ol>
+<h2 id="垃圾回收的几种思路"><a href="#垃圾回收的几种思路" class="headerlink" title="垃圾回收的几种思路"></a>垃圾回收的几种思路</h2><p>主流上一种是引用计数算法，一种是标记清除算法。但是前者会有循环引用的问题，并且对每一个对象进行引用计数也是一笔不小的开支。本文主要是讲标记清除算法。</p>
+<h3 id="1-跟踪收集法"><a href="#1-跟踪收集法" class="headerlink" title="1. 跟踪收集法"></a>1. 跟踪收集法</h3><p>垃圾回收要解决的问题无非是，把不再要用的对象占用的内存销毁掉，让别的对象可以继续使用。跟踪收集法的原理就是不断地去扫描所有对象，然后进行标记（是否需要清除），然后去回收需要清除的。而我们判断是否需要清除的标准是，该对象是否有合理的路径去访问，比如被一个全局变量引用，或者被函数栈里使用。如果可达，则不能被清除。不可达了则可以被清除。具体精确的定义可以参考</p>
+<blockquote>
+<ol>
+<li>A distinguished set of roots: objects that are assumed to be reachable. Typically, these include all the objects referenced from anywhere in the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Call_stack">call stack</a> (that is, all <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Local_variable">local variables</a> and <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Parameter_(computer_science)">parameters</a> in the functions currently being invoked), and any <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Global_variable">global variables</a>.</li>
+<li>Anything referenced from a reachable object is itself reachable; more formally, reachability is a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Transitive_closure">transitive closure</a>.</li>
+</ol>
+<p><em>摘自<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Tracing_garbage_collection#Tri-color_marking">Tracing garbage collection</a></em></p>
+</blockquote>
+<h3 id="2-三色标记法"><a href="#2-三色标记法" class="headerlink" title="2. 三色标记法"></a>2. 三色标记法</h3><p>那么具体是如何实现跟踪收集的呢？其中一种比较主流的算法就是三色标记法，黑白灰实际上对应着内存对象的三种状态，白色集合里放待回收的对象和其候选人（最开始GC会把所有的内存对象都置为白色），灰色表示该对象是可达的，但是还需要扫描其各个引用。而黑色则表示该对象没有任何引用了，并且可达不能被清除。</p>
+<blockquote>
+<p>Three sets are created – <em>white</em>, <em>black</em> and <em>gray</em>:</p>
+<ul>
+<li>The white set, or <em>condemned set</em>, is the set of objects that are candidates for having their memory recycled.</li>
+<li>The black set is the set of objects that can be shown to have no outgoing references to objects in the white set, and to be reachable from the roots. Objects in the black set are not candidates for collection.</li>
+<li>The gray set contains all objects reachable from the roots but yet to be scanned for references to “white” objects. Since they are known to be reachable from the roots, they cannot be garbage-collected and will end up in the black set after being scanned.</li>
+</ul>
+<p><em>摘自<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Tracing_garbage_collection#Tri-color_marking">Tracing garbage collection</a></em></p>
+</blockquote>
+<p>大概步骤就是：</p>
+<ol>
+<li>首先将所有对象都置为白色；</li>
+<li>然后将所有全局变量和main函数栈和堆里的对象都放入灰色集合；</li>
+<li>开始扫描灰色集合里的对象是否有引用，有的话将其引用放入灰色集合，扫描完后的对象都放入黑色集合。</li>
+<li>清除掉白色集合里的对象。</li>
+</ol>
+<p>上述是一个很简单的标记清除逻辑，看起来一切都很简单。标记，然后清除。但是Golang的垃圾回收器和业务程序是并发执行的，也就是说，在GC标记和清除的过程中，程序是一直是动态地在创建对象的，对象的引用也可能在变化。那么新创建的对象应该放入什么颜色的集合呢？或者说对象的引用变化了怎么办呢？不难知道会出现多写和漏写的问题（可参考<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/777750">底层原理：垃圾回收算法是如何设计的?</a>读写屏障部分）。</p>
+<p>多写的现象是本该删除的白色对象在这一轮没有删除，但是如果下一轮该白色对象依旧保持原有的引用关系的话，下一轮的GC会将其删除，所以这个问题不伤害准确性。但是漏写问题则是将本不该删除的对象删除了，因此一定要避免。漏写情况的出现需要满足一个条件：灰色对象（在扫描前）删除了对白色对象的引用，但是黑色对象又对其进行了引用。</p>
+<p>那么只需要破坏这个条件，就可以避免这个问题。</p>
+<h3 id="3-STW与读-x2F-写屏障"><a href="#3-STW与读-x2F-写屏障" class="headerlink" title="3. STW与读&#x2F;写屏障"></a>3. STW与读&#x2F;写屏障</h3><p>解决方法有很多种。最简单的做法就是，把程序停止，让其不要继续创建新对象和修改引用了。也就是早期的串形GC，很明显，这样会影响业务程序的运行，而且因为GC的执行导致整个程序宕机的时机不可控。</p>
+<p>另一种做法就是读&#x2F;写屏障。对某对象的引用改变或者创建新的对象都会涉及左值对象的写和右值对象的读，因此，只需要对读或者对写作一层封装处理，去破坏掉上述条件，这个概念叫做读&#x2F;写屏障，它不是一种特定的算法，而是一种触发机制。垃圾回收算法可以选择对被读对象进行操作，或者是对被写对象进行操作。</p>
+<p>一种思路叫做增量更新，就是将在GC标记过程中变化的对象，无论之前是在什么集合，都立即放回灰色集合，等待下一轮GC的扫描。</p>
+<p>另一种思路叫SATB（Snapshot At The Begining），当灰色对象删除对白色对象的引用时，它将白色对象置为灰色；当黑色对象新引用一个白色对象时，将白色对象置为黑色。这样会造成浮动垃圾，也就是本该在这轮回收的对象没有回收，但是again，这不影响其正确性，只是影响效率，所以也是可以接受的。</p>
+<h3 id="4-Golang-GC"><a href="#4-Golang-GC" class="headerlink" title="4. Golang GC"></a>4. Golang GC</h3><p>终于说到本文的主角了。Golang里采用的GC是并发增量GC，其中并发和增量的目的都是为了减少STW的时间。抽象的逻辑上面已经说完了，谈到具体的实现，有几个点可以说一下。</p>
+<ol>
+<li>首先是内存分配会分有指针和无指针的对象分配，这就是为GC扫描做的优化。分配在无指针内存上的对象在扫描时可以直接变成黑色而不是灰色。</li>
+<li>GC的标记完成后，并不是立马就把不在需要的内存释放掉而是等待下次分配的时候才释放。因此GC完毕后也不是立马就可以看到程序占用的内存变小。</li>
+<li>其次是GC具体的触发时机，默认是堆内存达到原来的两倍或者每隔2分钟开始一次GC。分配的资源限制是启用CPU的1&#x2F;4来做GC。这里有一个问题就是一般业务都是用的k8s的pod部署业务，pod request里的分配的内核数一般都很小，而golang创建的process数和物理内核数是一致的。</li>
+<li>如果扫描的速度小于业务请求内存分配的速度，需要分配多的goroutine执行Mark Assist逻辑，来减缓分配速度。</li>
+<li>然后就是要清除虽然GC做了很多优化减少STW的时间，但并不是没有STW，在并发标记和清除时不需要STW，但是在GC开始时需要STW打开写屏障，结束时需要STW关闭写屏障，GC结束的STW需要计算下一次GC的时间和一些临时变量的清理。</li>
+<li>最后就是要学会查看GC的一些调试数据，以及可以解释出该现象的原因。可以看一下参考1和参考2两篇博文。</li>
+</ol>
+<h2 id="5-结论"><a href="#5-结论" class="headerlink" title="5. 结论"></a>5. 结论</h2><p>GC对应用程序的影响在两个时段：1. marking的时候，会占用一个物理线程，从而导致Go业务代码无法跑慢CPU；2. STW的时候会暂停所有的业务goroutine。</p>
+<p>GC调优的宗旨在于在有限的堆内存上获得最大的吞吐量，也就是在两次GC之间尽可能地做多一些业务操作，老生常谈的思路就是：</p>
+<ol>
+<li>减少堆的内存申请，尽量复用代码，或者尽量分配在栈中。</li>
+<li>找到一个合适的GC执行节奏，也就是决定下一次GC什么时候开始的算法，比如调整GC percentage option。</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark-the-memory-72cfc12c6976">Go: How Does the Garbage Collector Mark the Memory?</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-watch-your-application-dbef99be2c35">Go: How Does the Garbage Collector Watch Your Application?</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html">Garbage Collection In Go : Part I - Semantics</a></li>
+<li><a target="_blank" rel="noopener" href="https://making.pusher.com/go-tool-trace/">https://making.pusher.com/go-tool-trace/</a></li>
+<li><a target="_blank" rel="noopener" href="https://rakyll.medium.com/debugging-latency-in-go-1-11-9f97a7910d68">https://rakyll.medium.com/debugging-latency-in-go-1-11-9f97a7910d68</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/07/16/golang%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" data-id="cl0t1dd0z004h8slf5y9xelbb" data-title="golang垃圾回收" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/" rel="tag">gc</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          k8s实操笔记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/03/golang%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%A4%87%E5%BF%98%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">golang测试备忘录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

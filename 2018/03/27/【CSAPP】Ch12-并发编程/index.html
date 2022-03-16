@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【CSAPP】Ch12-并发编程 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="背景​    本章节主要描述了三种不同维度的并发模型—进程、I&#x2F;O多路复用和线程。 线程 它是在一个进程内的逻辑流，共享该进程的全部虚拟空间。但是呢，彼此又有自己的栈和线程上下文，并且依旧是由内核来调度。 同一个进程里，线程与线程之间的关系是对等的，不会像进程一样有父子层级关系。 线程的分离状态决定了它以什么样的方式来结束自己。如果该线程是可结合的（默认）说明它可以被其它线程收回和杀死，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CSAPP】Ch12-并发编程">
+<meta property="og:url" content="http://example.com/2018/03/27/%E3%80%90CSAPP%E3%80%91Ch12-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景​    本章节主要描述了三种不同维度的并发模型—进程、I&#x2F;O多路复用和线程。 线程 它是在一个进程内的逻辑流，共享该进程的全部虚拟空间。但是呢，彼此又有自己的栈和线程上下文，并且依旧是由内核来调度。 同一个进程里，线程与线程之间的关系是对等的，不会像进程一样有父子层级关系。 线程的分离状态决定了它以什么样的方式来结束自己。如果该线程是可结合的（默认）说明它可以被其它线程收回和杀死，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.zybuluo.com/Husy/zoyj1tu2jopi91h4mjhookhp/Screenshot%20from%202018-07-13%2020-42-16.png">
+<meta property="og:image" content="http://static.zybuluo.com/Husy/qyw4lwnfa6ou5leftjga69mj/Screenshot%20from%202018-07-13%2020-49-21.png">
+<meta property="og:image" content="http://static.zybuluo.com/Husy/f07kn5rl9q7yjp569aqbth6f/Screenshot%20from%202018-07-13%2021-22-20.png">
+<meta property="article:published_time" content="2018-03-27T15:16:11.000Z">
+<meta property="article:modified_time" content="2021-04-02T09:01:28.000Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="并发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.zybuluo.com/Husy/zoyj1tu2jopi91h4mjhookhp/Screenshot%20from%202018-07-13%2020-42-16.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-【CSAPP】Ch12-并发编程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/27/%E3%80%90CSAPP%E3%80%91Ch12-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2018-03-27T15:16:11.000Z" itemprop="datePublished">2018-03-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【CSAPP】Ch12-并发编程
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    本章节主要描述了三种不同维度的并发模型—进程、I&#x2F;O多路复用和线程。</p>
+<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><ol>
+<li>它是在一个进程内的逻辑流，共享该进程的全部虚拟空间。但是呢，彼此又有自己的栈和线程上下文，并且依旧是由内核来调度。</li>
+<li>同一个进程里，线程与线程之间的关系是对等的，不会像进程一样有父子层级关系。</li>
+<li>线程的分离状态决定了它以什么样的方式来结束自己。如果该线程是可结合的（默认）说明它可以被其它线程收回和杀死，再被其它线程杀死之前他的内存资源是不释放的。而分离状态的线程在执行完现在的程序后被系统自动回收。</li>
+<li>线程的内存模型</li>
+</ol>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><ol>
+<li>IPC机制（进程间的通信）</li>
+</ol>
+<ul>
+<li>信号是基本的IPC机制</li>
+<li>套接字接口是另一种形式</li>
+<li>管道</li>
+<li>先进先出</li>
+<li>系统V共享内存</li>
+<li>系统V信号量</li>
+</ul>
+<ol start="2">
+<li>I&#x2F;O多路复用技术</li>
+</ol>
+<ul>
+<li>基本内容就是select函数。这个的思想就是，如果我们同时有多个端口要监听呢？比如我一个服务器同时要等待客户端的连接，又要等待来自自己标准输入的数据。那么我们就可以将accept替换成select。select维护一个读的数据集，从而可以同时管理多个文件描述符的读。写也一样。</li>
+<li>有一个缺点就是，select没有使用fork来创建进程，那么一个拿上面的例子来说，一旦它连接到某个客户端就会连续会送输入行，那么这个时间里你在服务器的标准输入端输入数据你是得不到响应的。解决的方式可以是用更细粒度的多重复用，比如连接后服务器只处理一次输入行的回送。</li>
+<li>事件驱动，将逻辑流模型转化位状态机。</li>
+</ul>
+<ol start="3">
+<li>线程</li>
+</ol>
+<ul>
+<li>每个进程有自己上下文，包括TID，栈，栈指针，程序计数器，通用寄存器和条件码。但是同一个进程里的线程共享整个进程的虚拟空间（包括只读文本，也就是代码，数据，读&#x2F;写数据，堆和所有共享代码库，也共享打开的文件集合）</li>
+<li>与进程不同的是：它不遵循进程的父子层次关系来组织的，它们彼此是对等的关系。而所谓的主线程不过是第一个执行的而已。我们之前看到子进程是很难操纵父进程的，但是这里对等进程是可以彼此控制的。</li>
+<li>Posix线程(Pthreads)是在C程序中处理线程的一个标准接口。可以看到线程的代码和数据都被封装在一个线程例程(thread routine)里</li>
+<li>对于示例代码里的echoservert.c里存在的问题，由于创建了线程以后是并发执行的，所以我们并不知道它和主线程谁接着执行。那么由于创建的线程里有一个是指针赋值，而这个指针只有一个，很有可能这个指针已经指向了下一个连接了，创建的线程才完成赋值。那么有一个连接就丢失了。所以我们这里要把这个accept返回的指针要独立开来。</li>
+</ul>
+<ol start="4">
+<li><p>变量,<a target="_blank" rel="noopener" href="http://csapp.cs.cmu.edu/3e/ics3/code/conc/sharing.c">示例代码</a><br><img src="http://static.zybuluo.com/Husy/zoyj1tu2jopi91h4mjhookhp/Screenshot%20from%202018-07-13%2020-42-16.png" alt="变量"></p>
+</li>
+<li><p>并发错误</p>
+</li>
+</ol>
+<ul>
+<li>进度图<br><img src="http://static.zybuluo.com/Husy/qyw4lwnfa6ou5leftjga69mj/Screenshot%20from%202018-07-13%2020-49-21.png" alt="同步错误-进度图"></li>
+</ul>
+<ol start="6">
+<li>信号量-&gt;互斥访问</li>
+</ol>
+<ul>
+<li>P(s)检测s是非零的就减一，然后立即返回；如果s是0，就挂起当前的进程。这个检测和减一是院子的，不能被打断的。 V(s)将s加一，然后重启被P操作阻塞的进程。但是这个重启的顺序不确定。</li>
+<li>基本思想就是把共享变量和这个s联系起来。一些名词是：<br><img src="http://static.zybuluo.com/Husy/f07kn5rl9q7yjp569aqbth6f/Screenshot%20from%202018-07-13%2021-22-20.png" alt="名词解释"></li>
+</ul>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ol>
+<li><p>多线程服务器里传递Accpet返回的描述符，然后再将这个描述符给线程创建的函数。这里是通过指针来传递的，但是描述符不过是一个int，为什么也要用指针呢？我想是因为它虽然类型是一个int，但是它的存储位置等还是很有关系的，不然为什么会是一个描述符而不是一个简单的数据呢？</p>
+</li>
+<li><p>c语言里的static，全局变量，extern这些关键字还是没有搞清楚。static的变量究竟是放在哪里的？栈里吗？</p>
+</li>
+</ol>
+<h2 id="家庭作业"><a href="#家庭作业" class="headerlink" title="家庭作业"></a>家庭作业</h2><p>待补充</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/03/27/%E3%80%90CSAPP%E3%80%91Ch12-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" data-id="cl0t1dcyk00148slf14ih1851" data-title="【CSAPP】Ch12-并发编程" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/29/%E3%80%90CSAPP%E3%80%91%E5%AE%9E%E9%AA%8Cmalloc-lab/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          实验malloc_lab
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/24/%E3%80%90APUE%E3%80%91Ch8-%E8%BF%9B%E7%A8%8B%E6%A0%87%E8%AF%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【APUE】Ch8-进程标识</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

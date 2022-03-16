@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【ucore】lab1 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="实验目标这里主要是一些计算机系统的一些知识，大部分还和操作系统没什么关系。如果你有些艰难的话，还是先去看看前置课程，比如汇编语言（王爽），大名鼎鼎的CSAPP以及它的网课等等。但是话说回来，这一章有很多细节你如果搞不清楚也不太影响后面对操作系统的实验完成。 实验内容练习1：理解通过make生成执行文件的过程。这个主要是要熟悉makefile的语法，其实质就是一种简单的文本替换。这里的只需要了解到u">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【ucore】lab1">
+<meta property="og:url" content="http://example.com/2018/03/24/%E3%80%90ucore%E3%80%91lab1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实验目标这里主要是一些计算机系统的一些知识，大部分还和操作系统没什么关系。如果你有些艰难的话，还是先去看看前置课程，比如汇编语言（王爽），大名鼎鼎的CSAPP以及它的网课等等。但是话说回来，这一章有很多细节你如果搞不清楚也不太影响后面对操作系统的实验完成。 实验内容练习1：理解通过make生成执行文件的过程。这个主要是要熟悉makefile的语法，其实质就是一种简单的文本替换。这里的只需要了解到u">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-03-24T03:32:06.000Z">
+<meta property="article:modified_time" content="2021-04-02T09:01:28.000Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="ucore">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-【ucore】lab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/24/%E3%80%90ucore%E3%80%91lab1/" class="article-date">
+  <time class="dt-published" datetime="2018-03-24T03:32:06.000Z" itemprop="datePublished">2018-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【ucore】lab1
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="实验目标"><a href="#实验目标" class="headerlink" title="实验目标"></a>实验目标</h2><p>这里主要是一些计算机系统的一些知识，大部分还和操作系统没什么关系。如果你有些艰难的话，还是先去看看前置课程，比如汇编语言（王爽），大名鼎鼎的CSAPP以及它的网课等等。但是话说回来，这一章有很多细节你如果搞不清楚也不太影响后面对操作系统的实验完成。</p>
+<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><h3 id="练习1：理解通过make生成执行文件的过程。"><a href="#练习1：理解通过make生成执行文件的过程。" class="headerlink" title="练习1：理解通过make生成执行文件的过程。"></a>练习1：理解通过make生成执行文件的过程。</h3><p>这个主要是要熟悉makefile的语法，其实质就是一种简单的文本替换。这里的只需要了解到ucore.img是由kernel和bootblock组成的就行。bootblock负责启动与加载kernel，kernel就是真正的操作系统内核</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UCOREIMG	:= $(call totarget,ucore.img)</span><br><span class="line">$(UCOREIMG): $(kernel) $(bootblock)</span><br><span class="line">	$(V)dd if=/dev/zero of=$@ count=10000</span><br><span class="line">	$(V)dd if=$(bootblock) of=$@ conv=notrun</span><br><span class="line">	$(V)dd if=$(kernel) of=$@ seek=1 conv=notrunc</span><br><span class="line">$(call create_target,ucore.img)</span><br></pre></td></tr></table></figure>
+<h3 id="练习2：使用qemu执行并调试lab1中的软件。"><a href="#练习2：使用qemu执行并调试lab1中的软件。" class="headerlink" title="练习2：使用qemu执行并调试lab1中的软件。"></a>练习2：使用qemu执行并调试lab1中的软件。</h3><p>这里是为了熟悉qemu与gdb的搭配使用。如果有认真看[ucore实验环境准备]就会知道，而gdb的操作语法可以<a target="_blank" rel="noopener" href="https://www.gnu.org/software/gdb/documentation/">参考</a></p>
+<h3 id="练习3：分析bootloader进入保护模式的过程。"><a href="#练习3：分析bootloader进入保护模式的过程。" class="headerlink" title="练习3：分析bootloader进入保护模式的过程。"></a>练习3：分析bootloader进入保护模式的过程。</h3><p>为什么要进入保护模式的原因不多说，随意一本教程都有。主要的[知识点]就是保护模式下的CPU的编址与寻址。</p>
+<ol>
+<li>初始化GDT表无非是创建了一个的gdtdesc数据结构，然后用lgdt这个汇编命令将GDT的内存地址放入lgdt寄存器里。这里要注意GDT并没有直接放入寄存器，它和后面讲的TLB（Translation lookasid table）不一样，这个本质上就是一个RAM，因此它就是整个表都放在CPU里。</li>
+<li>另一个任务是进入将实模式切换为保护模式，通过将cr0寄存器PE位置1便开启了保护模式。至于后面的跳转只是为了更新cs:ip里的值，因为毕竟此时我们打开了段页式的内存访问机制。因此cs:ip的值要更新一下。</li>
+</ol>
+<h3 id="练习4：分析bootloader加载ELF格式的OS的过程。"><a href="#练习4：分析bootloader加载ELF格式的OS的过程。" class="headerlink" title="练习4：分析bootloader加载ELF格式的OS的过程。"></a>练习4：分析bootloader加载ELF格式的OS的过程。</h3><ol>
+<li><p>bootloader如何读取硬盘扇区的<br>我总觉得读一次磁盘只需要一次等待，实际上需要两次。一次等待它能够接收读取命令，发送了要读取的命令以后，再等待一次，开始读取数。</p>
+</li>
+<li><p>bootloader是如何加载ELF格式的OS？<br>这里涉及到了[链接]的一部分知识。我们至少要知道一个ELF是由一些段（section）组成的，而其ELF存放了很多如何读取这个文件的信息。比如每一个段的相对偏移啊，段的性质。<br>另一个要注意的kernel.ld文件里的这个，0x100000是作为kernel的绝对加载起始地址，因此ELF加载时重定位都是在这个基础上做偏移。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SECTIONS &#123;</span><br><span class="line">	<span class="comment">/* Load the kernel at this address: &quot;.&quot; means the current address */</span></span><br><span class="line">	. = <span class="number">0x100000</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="练习5：实现函数调用堆栈跟踪函数-（需要编程）"><a href="#练习5：实现函数调用堆栈跟踪函数-（需要编程）" class="headerlink" title="练习5：实现函数调用堆栈跟踪函数 （需要编程）"></a>练习5：实现函数调用堆栈跟踪函数 （需要编程）</h3></li>
+<li><p>这里的知识点就是考察函数调用栈[^footnote]：</p>
+</li>
+</ol>
+<ul>
+<li><p>ESP：栈指针寄存器(extended stack pointer)，永远指向系统栈最上面一个栈帧的栈顶。<strong>注意如果用push操作，esp指向的是栈里有值的第一个，而不是指向下一个存放点。</strong></p>
+</li>
+<li><p>EBP：永远指向系统栈最上面一个栈帧的底部。</p>
+</li>
+<li><p>函数栈帧：ESP和EBP之间的内存空间为当前栈帧，EBP标识了当前栈帧的底部，ESP标识了当前栈帧的顶部。</p>
+</li>
+<li><p>EIP：指向下一条待执行的指令地址。</p>
+</li>
+<li><p>函数调用大致包括以下几个步骤：</p>
+</li>
+</ul>
+<ol>
+<li>参数入栈：将参数从右向左依次压入系统栈中。</li>
+<li>返回地址入栈：也就是call指令执行的，将当前代码区调用指令的下一条指令地址(返回地址)压入栈中，然后把eip指向调用函数的第一条指令。</li>
+<li>栈帧调整：包括保存当前栈帧状态值，已备后面恢复本栈帧时使用（EBP入栈）；将当前栈帧切换到新栈帧（将ESP值装入EBP，更新栈帧底部）；给新栈帧分配空间。（把ESP减去所需空间的大小，抬高栈顶）<br>![函数调用栈][1]<br>  [1]: <a target="_blank" rel="noopener" href="http://static.zybuluo.com/Husy/xz35inr8bylhthl5mbofadow/1314ce0c49d0a1e2800e23ca3d5cdd75_r.jpg">http://static.zybuluo.com/Husy/xz35inr8bylhthl5mbofadow/1314ce0c49d0a1e2800e23ca3d5cdd75_r.jpg</a></li>
+</ol>
+<p>这里有几个地方是我之前有误解的：</p>
+<ol>
+<li><p>调用函数参数不是一个个push进去的，而是直接让esp-参数大小，使其指向栈的最顶端，然后用movl 参数把栈填满。而使用函数参数也不是我想的那样一个个按顺序pop出来，而是通过ebp寄存器再加上偏移去找，比如ebp+8就是第一个参数（从左往右数，因为入栈的时候是从右往左）。反过来想pop出来只能是放在寄存器，万一参数数量太多，寄存器不够呢？这个限制太致命了，所以不能这么做。</p>
+</li>
+<li><p>另外说到保存当前函数的栈第一直觉是保存esp，但其实我们保存的是ebp。并没有保存esp。因为我们每次都让esp赋值给ebp，实际上也是保存的esp了。</p>
+</li>
+<li><p>而着一个地方最最关键的思路就是ebp是循环指向的。如果ebp代表当前寄存器ebp的值，那么*ebp指向的是前一个帧的ebp，于是**ebp指向的就是前前个帧的ebp……这就是一种调用顺序了。</p>
+</li>
+</ol>
+<h3 id="练习6：完善中断初始化和处理-（需要编程）"><a href="#练习6：完善中断初始化和处理-（需要编程）" class="headerlink" title="练习6：完善中断初始化和处理 （需要编程）"></a>练习6：完善中断初始化和处理 （需要编程）</h3><p>我不太理解ucore为什么要在lab1里就把中断这些细节都过一遍。这样对自学非常不友好。如果你也是自学，我觉得在现阶段你只需要知道整个中断机制的处理逻辑就好，代码细节后面讲了内存管理与进程以后再慢慢来：</p>
+<ol>
+<li>中断发生时，硬件和软件互相配合。</li>
+<li>获取一个中断码在中断向量表里去找中断服务例程的入口地址。</li>
+<li>处理完以后，结果是要么结束当前进程，要么处理好了中断，接着回来执行。<br>但是，看起来好像这就是一个函数调用，其实其底层并不是。因为这两个处理程序并不是一个进程内的，不像函数调用一样有共享的堆栈。甚至可能是用户态，处理中断时需要进入内核态。因此这里更细节的东西涉及到了进程切换，系统调用等等细节。</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[^footnote]: 更详细的讲解请参考：<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22444939">https://www.zhihu.com/question/22444939</a>  和 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/594357dff57e">https://www.jianshu.com/p/594357dff57e</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/03/24/%E3%80%90ucore%E3%80%91lab1/" data-id="cl0t1dcyq001l8slf076uggv9" data-title="【ucore】lab1" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/24/%E3%80%90APUE%E3%80%91Ch8-%E8%BF%9B%E7%A8%8B%E6%A0%87%E8%AF%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【APUE】Ch8-进程标识
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/24/%E3%80%90ucore%E3%80%91%E5%BA%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【ucore】序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

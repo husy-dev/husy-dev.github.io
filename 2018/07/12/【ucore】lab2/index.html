@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【ucore】lab2 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="实验目标 首先了解如何发现系统中的物理内存； 然后了解如何建立对物理内存的初步管理，即了解连续物理内存管理； 最后了解页表相关的操作，即如何建立页表来实现虚拟内存到物理内存之间的映射，对段页式内存管理机制有一个比较全面的了解。  练习1：实现 first-fit 连续物理内存分配算法（需要编程）首先我们看一遍内存初始化的流程:首先是&#x2F;kern&#x2F;init.c&#x2F;kern_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【ucore】lab2">
+<meta property="og:url" content="http://example.com/2018/07/12/%E3%80%90ucore%E3%80%91lab2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实验目标 首先了解如何发现系统中的物理内存； 然后了解如何建立对物理内存的初步管理，即了解连续物理内存管理； 最后了解页表相关的操作，即如何建立页表来实现虚拟内存到物理内存之间的映射，对段页式内存管理机制有一个比较全面的了解。  练习1：实现 first-fit 连续物理内存分配算法（需要编程）首先我们看一遍内存初始化的流程:首先是&#x2F;kern&#x2F;init.c&#x2F;kern_">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-12T03:38:18.000Z">
+<meta property="article:modified_time" content="2021-04-02T09:01:28.714Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="OS">
+<meta property="article:tag" content="ucore">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-【ucore】lab2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" class="article-date">
+  <time class="dt-published" datetime="2018-07-12T03:38:18.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【ucore】lab2
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="实验目标"><a href="#实验目标" class="headerlink" title="实验目标"></a>实验目标</h2><ol>
+<li>首先了解如何发现系统中的物理内存；</li>
+<li>然后了解如何建立对物理内存的初步管理，即了解连续物理内存管理；</li>
+<li>最后了解页表相关的操作，即如何建立页表来实现虚拟内存到物理内存之间的映射，对段页式内存管理机制有一个比较全面的了解。</li>
+</ol>
+<h2 id="练习1：实现-first-fit-连续物理内存分配算法（需要编程）"><a href="#练习1：实现-first-fit-连续物理内存分配算法（需要编程）" class="headerlink" title="练习1：实现 first-fit 连续物理内存分配算法（需要编程）"></a>练习1：实现 first-fit 连续物理内存分配算法（需要编程）</h2><p>首先我们看一遍内存初始化的流程:<br>首先是&#x2F;kern&#x2F;init.c&#x2F;kern_init()里用pmm_init()初始化内存设置<br>pmm_init()是在kern&#x2F;mm&#x2F;pmm.c里, 主要做的事:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">init_pmm_manager</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    pmm_manager = &amp;default_pmm_manager;</span><br><span class="line">    cprintf(<span class="string">&quot;memory management: %s\n&quot;</span>, pmm_manager-&gt;name);</span><br><span class="line">    pmm_manager-&gt;init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里其实就是通过default_pmm_manager那个结构体设置好要pmm(page memory manager)的属性,比如它的名字,它分配内存用的方法,释放内存用的方法等.都在这里提供了统一的接口,我们只需要修改pmm_manager的值就好.</p>
+<p>然后就用pmm_manager里的init接口执行对应的初始化. page_init();</p>
+<p>这个函数主要是首先探测物理内存的大小,保留已经被使用的(比如硬件等),然后用pmm-&gt;init_memmap初始化空闲页的list</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">boot_alloc_page()  <span class="comment">//开始创建PDT,以及PT</span></span><br><span class="line">boot_map_segment <span class="comment">//做好PA和Va的映射.</span></span><br><span class="line">enable_paging<span class="comment">//通过改变enable page的标记通知硬件页表已经开始可以开始使用</span></span><br></pre></td></tr></table></figure>
+<p>细枝末节等后面再慢慢看.</p>
+<h3 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h3><p>我们根据default_pmm.c的注释来看看细节:</p>
+<p>首先是list_init,这个在list.h里</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">list_init</span><span class="params">(<span class="type">list_entry_t</span> *elm)</span> &#123;</span><br><span class="line">    elm-&gt;prev = elm-&gt;next = elm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个内联静态函数,和普通的初始化双链表没什么特别的.只是这里的链表单元是list_entry_t,其实也就是list_entry.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> *<span class="title">prev</span>, *<span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里不要有困惑,虽然看起来像是递归定义,实际上就是定义了两个指针作为一个结构体. 此时并没有在链表里存数据,只是单纯的构建一种前后连贯的关系.</p>
+<p>然后我们要了解这个对这个list的一些操作list_add,list_del等等.这都是普通的数据结构. 不细讲.</p>
+<p>但是这里的list_add_before和list_add_after对于这个free_area那个链来说,感觉是一样的.[TO-DO]</p>
+<p>然后我们要知道如何让这个链表转化成各种特殊结构的链表. 举个例子–le2page.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// convert list entry to page</span></span><br><span class="line">\<span class="meta">#<span class="keyword">define</span> le2page(le, member) to_struct((le), struct Page, member)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* *</span></span><br><span class="line"><span class="comment"> * to_struct - get the struct from a ptr</span></span><br><span class="line"><span class="comment"> * @ptr:    a struct pointer of member</span></span><br><span class="line"><span class="comment"> * @type:   the type of the struct this is embedded in</span></span><br><span class="line"><span class="comment"> * @member: the name of the member within the struct</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line">\<span class="meta">#<span class="keyword">define</span> to_struct(ptr, type, member) ((type *)((char *)(ptr) - offsetof(type, member)))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Return the offset of &#x27;member&#x27; relative to the beginning of a struct type */</span></span><br><span class="line">\<span class="meta">#<span class="keyword">define</span> offsetof(type, member) ((size_t)(&amp;((type *)0)-&gt;member))</span></span><br></pre></td></tr></table></figure>
+<p>这里是一个宏定义,to_struct的定义可以参考这个博客–利用宏来求结构体成员偏移值. 这个函数的作用就是当我们拿到一个地址时,我们就可以通过这个函数拿到这个地址所对应的页.</p>
+<p>default_init已经帮我们写好了,free_list就是我们上面说的list_entry这个双链表, 用来记录空闲的内存块,nr_free记录空闲内存块的个数. 所以数据结构是free_area_t是总的数据结构,用来记录整个空闲内存的情况,它通过成员list_entry来记录空闲页链表的头和nr_free记录总共有的空闲内存大小(可以看到单位是页的数量,而不是bytes). 而list_entry则是通过两个指针讲空闲内存的地址穿起来.<br>default_init_memmap也就是pmm-&gt;init_memmap接口的默认实现. 主要的作用是初始化第一个空闲内存块(由于这里还是操作系统的部署时间,此时什么应用程序都没有运行,所以此时的第一个空闲内存块就是整个应用程序可以使用的内存.) 那么就要用的页这个结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* *</span></span><br><span class="line"><span class="comment"> * struct Page - Page descriptor structures. Each Page describes one</span></span><br><span class="line"><span class="comment"> * physical page. In kern/mm/pmm.h, you can find lots of useful functions</span></span><br><span class="line"><span class="comment"> * that convert Page to other data types, such as phyical address.</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> ref;                <span class="comment">// page frame&#x27;s reference counter</span></span><br><span class="line">    <span class="type">uint32_t</span> flags;         <span class="comment">// array of flags that describe the status of the page frame</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> property;  <span class="comment">// the num of free block, used in first fit pm manager</span></span><br><span class="line">    <span class="type">list_entry_t</span> page_link;         <span class="comment">// free list link</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>初始化的过程是,首先应该根据内存大小创建好页的链表,然后把把ref都设为0,flags的PG位都设为保护模式. 然后property设为1,因为此时还只有一个free block. 随后page_link就是这个页的链表的入口.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">default_init_memmap</span><span class="params">(<span class="keyword">struct</span> Page *base, <span class="type">size_t</span> n)</span> &#123;</span><br><span class="line">    assert(n &gt; <span class="number">0</span>);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Page</span> *<span class="title">p</span> =</span> base;</span><br><span class="line">    <span class="keyword">for</span> (; p != base + n; p ++) &#123;</span><br><span class="line">        assert(PageReserved(p));</span><br><span class="line">        p-&gt;flags = p-&gt;property = <span class="number">0</span>;</span><br><span class="line">        set_page_ref(p, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    base-&gt;property = n;</span><br><span class="line">    SetPageProperty(base);</span><br><span class="line">    nr_free += n;</span><br><span class="line">    list_add(&amp;free_list, &amp;(base-&gt;page_link));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p># 在page_init的函数里调用代码是:<br>init_memmap(pa2page(begin), (end - begin) &#x2F; PGSIZE);<br>default_alloc_page这里就是我们内存分配的函数了. 我们的各种分配算法就是通过它来实现的.这个是练习一的内容.详情请看ucore-lab2-2.<br>然后我们看看页目录表和页表是如何创建的,</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// create boot_pgdir, an initial page directory(Page Directory Table, PDT)</span></span><br><span class="line">boot_pgdir = boot_alloc_page(); <span class="comment">//分配一个页面</span></span><br><span class="line"><span class="built_in">memset</span>(boot_pgdir, <span class="number">0</span>, PGSIZE);<span class="comment">// 清空这个页面</span></span><br><span class="line">boot_cr3 = PADDR(boot_pgdir); <span class="comment">//将该页面的物理地址返回给boot_cr3,其实这个物理地址就是页目录表的起始地址.这里的PADDR的代码其实就是虚拟地址-KERNBASE.因为前面entry.s里有设置pa=va-KERNBASE</span></span><br><span class="line">check_pgdir();<span class="comment">//检查页目录表</span></span><br><span class="line"><span class="keyword">static_assert</span>(KERNBASE % PTSIZE == <span class="number">0</span> &amp;&amp; KERNTOP % PTSIZE == <span class="number">0</span>);<span class="comment">//PTSIZE就是页表的大小,这里要对齐.因为我们是一个页表一个页表的创建虚拟内存,[TO-DO]</span></span><br><span class="line"><span class="comment">// recursively insert boot_pgdir in itself</span></span><br><span class="line"><span class="comment">// to form a virtual page table at virtual address VPT </span></span><br><span class="line">boot_pgdir[PDX(VPT)] = PADDR(boot_pgdir) | PTE_P | PTE_W;<span class="comment">//这里其实是让pdt的第PDX[VPT]项指向自己,来形成一个虚拟的页表我们叫VPT,事实上我们并没有再开一个页表.VPT=0xFAC00000,那么PDX[VPT]实际上就是1023,这是一个自映射的机制</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// map all physical memory to linear memory with base linear addr KERNBASE</span></span><br><span class="line"><span class="comment">//linear_addr KERNBASE~KERNBASE+KMEMSIZE = phy_addr 0~KMEMSIZE</span></span><br><span class="line"><span class="comment">//But shouldn&#x27;t use this map until enable_paging() &amp; gdt_init() finished.</span></span><br><span class="line">boot_map_segment(boot_pgdir, KERNBASE, KMEMSIZE, <span class="number">0</span>, PTE_W);<span class="comment">// 这个函数里有一个get_pte,实际上就创建了从KERBBASE映射到0二级页表.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//temporary map: </span></span><br><span class="line"><span class="comment">//virtual_addr 3G~3G+4M = linear_addr 0~4M = linear_addr 3G~3G+4M = phy_addr 0~4M </span></span><br><span class="line">boot_pgdir[<span class="number">0</span>] = boot_pgdir[PDX(KERNBASE)]; <span class="comment">//因为这时的页机制还没有打开,va=la+KERNBASE=pa+2*KERNBASE,所以需要暂时设置一下这个转换方式.方法是让va在页目录表里映射两次,从而找到对应的物理页表.</span></span><br><span class="line"></span><br><span class="line">enable_paging();<span class="comment">//打开页机制,那么此时就要用到上面的转化方式.</span></span><br><span class="line"><span class="comment">//reload gdt(third time,the last time) to map all physical memory</span></span><br><span class="line"><span class="comment">//virtual_addr 0~4G=liear_addr 0~4G</span></span><br><span class="line"><span class="comment">//then set kernel stack(ss:esp) in TSS, setup TSS in gdt, load TSS</span></span><br><span class="line">gdt_init();<span class="comment">//重新创建新的gdt</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//disable the map of virtual_addr 0~4M</span></span><br><span class="line">boot_pgdir[<span class="number">0</span>] = <span class="number">0</span>;<span class="comment">//设置好新的gdt后pa=va-KERNBASE且这个偏移来自于页机制</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//now the basic virtual memory map(see memalyout.h) is established.</span></span><br><span class="line"><span class="comment">//check the correctness of the basic virtual memory map.</span></span><br><span class="line">check_boot_pgdir();</span><br><span class="line"></span><br><span class="line">print_pgdir();</span><br><span class="line"></span><br><span class="line"><span class="comment">//-------------------------------------------------------------------------------//</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">boot_map_segment</span><span class="params">(<span class="type">pde_t</span> *pgdir, <span class="type">uintptr_t</span> la, <span class="type">size_t</span> size, <span class="type">uintptr_t</span> pa, <span class="type">uint32_t</span> perm)</span> &#123;</span><br><span class="line">    assert(PGOFF(la) == PGOFF(pa)); <span class="comment">//la和pa的偏移值应该是一样的</span></span><br><span class="line">    <span class="type">size_t</span> n = ROUNDUP(size + PGOFF(la), PGSIZE) / PGSIZE;<span class="comment">//</span></span><br><span class="line">    la = ROUNDDOWN(la, PGSIZE);</span><br><span class="line">    pa = ROUNDDOWN(pa, PGSIZE);</span><br><span class="line">    <span class="keyword">for</span> (; n &gt; <span class="number">0</span>; n --, la += PGSIZE, pa += PGSIZE) &#123;</span><br><span class="line">        <span class="type">pte_t</span> *ptep = get_pte(pgdir, la, <span class="number">1</span>);</span><br><span class="line">        assert(ptep != <span class="literal">NULL</span>);</span><br><span class="line">        *ptep = pa | PTE_P | perm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这个函数设置页表的过程是,通过get_pte设置好页目录表的内容(用alloc_page返回的page得到物理地址设置.),然后返回二级页表内容的地址,然后通过*ptep = pa | PTE_P | perm;设置好页表内容.所以页目录表里的页表起始地址以及页目录里的地址都是物理地址.</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一部分主要是两个部分,一个是物理内存页的分配和维护,一个是物理内存和虚拟地址的映射,也就是页表机制的维护.</p>
+<p>对于物理内存页,我们的做法是:<br>探测实际可用的物理内存<br>根据页的大小设置好Pages这个数组, 包含了所有页.在page_init函数里仅仅只是给每个页初始化了reserved这个属性.<br>然后我们开始设置好页目录表.<br>然后通过boot_map_segment把kernel所占用的页对应的页目录和页表设置好.因为就是把KERNBASE~KERNBASE+KMEMSIZE部分的线性地址和物理地址映射好.<br>所以我们做一个转换:<br>我们所谓的设置页目录表和页表就是让la和pa做一个映射.<br>当我们分配了一个内存页时,是先用alloc_page(),得到一个页的虚拟地址.然后根据这个虚拟地址去填写pte.<br>我们要释放一个内存页的操作就是让page的ref减1,然后把页表里的项删除.</p>
+<h2 id="遗留问题"><a href="#遗留问题" class="headerlink" title="遗留问题"></a>遗留问题</h2><ol>
+<li>default_init_memmap的调用链kern_init –&gt; pmm_init–&gt;page_init–&gt;init_memmap–&gt; pmm_manager-&gt;init_memmap,为什么要创一个init_memmap函数,然后再在这个函数里调用pmm_manager的init_memmap接口.为什么不直接在page_init里调用pmm_manager的init_memmap接口?</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" data-id="cl0t1dcyr001o8slffin0eftd" data-title="【ucore】lab2" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          3-归纳推理问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/07/2-%E7%BA%B8%E7%89%8C%E6%B8%B8%E6%88%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">2-纸牌游戏</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

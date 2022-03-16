@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>3-归纳推理问题 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="将问题简化为子问题。 题目1：screwy pirates5个海盗分100个金币，分的规则如下：  让最年长的海盗来分，如果要超过半数的（这个例子里是3个）海盗同意，就按这个规则分，否则就把这个海盗丢到海里喂鲨鱼。 假设海盗都想要分得更多的钱，并且尽量杀死海盗。那么怎么分？  解答首先我们把问题简化一下，2个海盗的话，用数字表示，数字越大，越年长。  1，2 ：  2先来分，由于他永远能得到自己的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3-归纳推理问题">
+<meta property="og:url" content="http://example.com/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="将问题简化为子问题。 题目1：screwy pirates5个海盗分100个金币，分的规则如下：  让最年长的海盗来分，如果要超过半数的（这个例子里是3个）海盗同意，就按这个规则分，否则就把这个海盗丢到海里喂鲨鱼。 假设海盗都想要分得更多的钱，并且尽量杀死海盗。那么怎么分？  解答首先我们把问题简化一下，2个海盗的话，用数字表示，数字越大，越年长。  1，2 ：  2先来分，由于他永远能得到自己的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-17T14:32:23.000Z">
+<meta property="article:modified_time" content="2021-04-02T09:01:28.000Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="quant interview">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-3-归纳推理问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2018-07-17T14:32:23.000Z" itemprop="datePublished">2018-07-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      3-归纳推理问题
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>将问题简化为子问题。</p>
+<h2 id="题目1：screwy-pirates"><a href="#题目1：screwy-pirates" class="headerlink" title="题目1：screwy pirates"></a>题目1：screwy pirates</h2><p>5个海盗分100个金币，分的规则如下：</p>
+<ol>
+<li>让最年长的海盗来分，如果要超过半数的（这个例子里是3个）海盗同意，就按这个规则分，否则就把这个海盗丢到海里喂鲨鱼。</li>
+<li>假设海盗都想要分得更多的钱，并且尽量杀死海盗。<br>那么怎么分？</li>
+</ol>
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><p>首先我们把问题简化一下，2个海盗的话，用数字表示，数字越大，越年长。</p>
+<ol>
+<li>1，2 ：  2先来分，由于他永远能得到自己的1票，也就是1&#x2F;2的人支持。所以他可以选择把所有的金币都给自己。</li>
+<li>1，2，3： 3先来分，这一轮3除了自己的一票，还需要争取到1票。争取1票的条件是把你杀死得到的金币要小于按照你的分法分到的金币。于是如果争取2的票，那么杀死3，2可以得到所有金币。那么3永远也得不到2的票。所以要争取1的票，那么杀死3，1一个金币也得不到，所以只需要给1 一个金币，1就会投你的票。</li>
+<li>1，2，3，4： 4先来分，这一轮4也依旧是要争取1票。杀死4，3可以得到99个金币，2什么也得不到，1可以得到1个金币，争取3的票需要给100个金币给3。争取2的话，只需要给1个。争取1的话给2个。所以我们争取2的票，最后得到99个金币</li>
+<li>1，2，3，4，5： 5先来分，这一轮需要争取额外的2票。考虑杀死5，4能得到99个金币，1，3一个金币也得不到，2能得到1个金币。所以争取1和3，也就是各给一个金币。自己得98个.</li>
+</ol>
+<p>所以这个答案就是给1和3各一个金币，5给自己98个。<br>那么如果是10个，11个海盗呢？我们能找到这里得规律么？<br>首先我们看到每增加一个更年长的海盗，我们的思路其实就是先考虑把这个新增加的海盗杀死剩下的海盗各自能分多少钱。自己再稍微试一下6，7，8等。其实分发就是对于最年长的海盗是第2N+1个的分法是：第1，3，5，……到2N-1个海盗各给一个金币，剩下的给自己。对于最年长的海盗是第2N个的话，分法是:第2，4，6，……2N-2个海盗各自分1个金币，剩下的给自己。</p>
+<p>可以用归纳法证明吗？很简单：</p>
+<ol>
+<li>首先列出2个海盗和3个海盗的分法。符合我们的假设。</li>
+<li>然后假设2N个海盗的分法和2N+1个海盗的分法。</li>
+<li>然后尝试推导出2N+2和2N+3个海盗的分法。<br>不多赘述。</li>
+</ol>
+<h2 id="题目2：Tiger-and-Sheep"><a href="#题目2：Tiger-and-Sheep" class="headerlink" title="题目2：Tiger and Sheep"></a>题目2：Tiger and Sheep</h2><p>100个老虎和1只羊，老虎可以吃草也可以吃羊（当然更喜欢吃羊），但是吃完羊的老虎自己会变成羊，又可以被其余老虎吃。假设老虎的第一要义是活下来，请问最初的这只羊会被吃掉吗?</p>
+<h3 id="解答-1"><a href="#解答-1" class="headerlink" title="解答"></a>解答</h3><ol>
+<li>首先考虑1个老虎，显然这只羊会被吃掉。</li>
+<li>两只老虎，老虎都会想，如果自己吃掉羊，另一只老虎就会把自己吃掉。所以老虎们都不会吃羊。</li>
+<li>三只老虎，老虎会想，如果自己吃掉羊，剩下的两个会陷入情况2，自己就不会被吃掉。因此最先想到这个的老虎会吃掉那只羊。</li>
+<li>四只老虎，老虎回想，如果自己吃掉羊，那么剩下的就会陷入情况3，从而自己会被吃掉。所以大家都不会吃羊。</li>
+</ol>
+<p>规律显而易见，如果老虎的个数是奇数，羊就会被吃掉，如果是偶数，羊就不会被吃掉。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" data-id="cl0t1dcyv00218slf4aid6jfk" data-title="3-归纳推理问题" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/22/%E3%80%90ucore%E3%80%91lab3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【ucore】lab3
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">【ucore】lab2</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>mit6.824-lab3 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. 实验概述lab3开始了raft的应用部分，主要是写一个简单的分布式存储数据库，其数据主要是存储在各个kvserver的内存map中。lab3A要完成的是Put，Append和Get功能，lab3B要完成的是数据快照及日志压缩的逻辑。 2. lab3A2.1 从client一次请求全流程 client向server发起请求； 如果该server对应的raft状态机不是leader，就直接返回W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mit6.824-lab3">
+<meta property="og:url" content="http://example.com/2020/11/10/mit6-824-lab3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. 实验概述lab3开始了raft的应用部分，主要是写一个简单的分布式存储数据库，其数据主要是存储在各个kvserver的内存map中。lab3A要完成的是Put，Append和Get功能，lab3B要完成的是数据快照及日志压缩的逻辑。 2. lab3A2.1 从client一次请求全流程 client向server发起请求； 如果该server对应的raft状态机不是leader，就直接返回W">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-10T02:59:32.000Z">
+<meta property="article:modified_time" content="2021-04-05T08:01:26.000Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="raft">
+<meta property="article:tag" content="distributed">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-mit6-824-lab3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/10/mit6-824-lab3/" class="article-date">
+  <time class="dt-published" datetime="2020-11-10T02:59:32.000Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mit6-824/">mit6.824</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      mit6.824-lab3
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-实验概述"><a href="#1-实验概述" class="headerlink" title="1. 实验概述"></a>1. 实验概述</h2><p>lab3开始了raft的应用部分，主要是写一个简单的分布式存储数据库，其数据主要是存储在各个kvserver的内存map中。lab3A要完成的是Put，Append和Get功能，lab3B要完成的是数据快照及日志压缩的逻辑。</p>
+<h2 id="2-lab3A"><a href="#2-lab3A" class="headerlink" title="2. lab3A"></a>2. lab3A</h2><h2 id="2-1-从client一次请求全流程"><a href="#2-1-从client一次请求全流程" class="headerlink" title="2.1 从client一次请求全流程"></a>2.1 从client一次请求全流程</h2><ol>
+<li>client向server发起请求；</li>
+<li>如果该server对应的raft状态机不是leader，就直接返回WrongLeader错误给client；</li>
+<li>如果该server对应的raft状态机是leader状态，就接收这个请求，将其写入自己的logs里，然后进行同步，等该raft commit；</li>
+<li>等到raft把该logEntry送入applyCh的时候，server会收到该logEntry一一执行（也就是给本地map做一些增删改查的操作），然后再把结果返回给client。</li>
+</ol>
+<h2 id="2-2-几个核心问题"><a href="#2-2-几个核心问题" class="headerlink" title="2.2 几个核心问题"></a>2.2 几个核心问题</h2><ol>
+<li>client对server的请求是直接从0开始轮循，如果请求返回WrongLeader，则直接+1下一个；</li>
+<li>所有的请求都需要被commit，然后从applyCh里获取到执行了，才能返回给client；</li>
+<li>要考虑网络的不可靠性。比如rpc请求发送了也执行了，但是返回时失败了。那么client一定时间内没收到response的策略肯定是重试，那么此时server要保证一次请求的幂等性。不能让命令重复操作。策略是：因为我们保证client是单线程的，那么一个请求没有完成是不会再请求另一个的。所以可以给每一个client的每一个不同的request指定一个自增id，在kvserver端去检查是否已经执行了。</li>
+<li>因为从接收到请求到获取到结果实际上是异步操作，那么要如何通知到接收请求的函数该请求已经执行完毕可以返回结果了呢？策略是：比较容易想到的是对于每一个从applyCh里接收到的logEntry，它在raft集群里的log index是确定且唯一的，那么可以对每一个log index创建一个channel用于server内部response的接收和发送。但有一个风险点：logA请求从start函数获取到了index，创建了channel，但是最后这个log commit失败了，该index被别的logB请求覆盖掉了，那么此时可能有两个地方在读取这个channel，但只有一个地方写，并且只会写一个。这种方法不好保证写入channel的数据会被正确的logB请求读取到，那么就会产生错误的返回。一个解决办法是，从channel中读取到response的时候，检查一下是否是自己的请求回应，如果不是，重新写回channel以供别的channel去读。</li>
+<li>对于一个请求，如何确定它？ 用clientID+seq</li>
+<li>TestBasic3A和TestConcurrent3A比较好解决，就是按照说明来，也不需要给去重；记得给本地存储data的map的读写加锁就好</li>
+<li>TestUnreliable3A这个实验引入了网络的不稳定，raft的不稳定可以不管，lab2已经解决了，这里的不稳定有两个地方：a.底层raft随时有可能重新选举，更改了leader，那么发送给了old term leader的logEntry要怎么处理？b.上层client的调用会出现超时错误，这里有处理逻辑吗？<br>A. 看一下labrpc.go代码就知道，unreliable的影响有两个，一个是request没有发出去，一个是发出去了，对raft等有作用了，但没有收到状态为ok的reply的。<br>B. 这里就需要我们注意不要重复apply 相同的logEntry。这个检测是在commit阶段做呢还是在apply LogEntry阶段去做呢？ 如果不做重复检验，直接start，最后在apply的时候检验重复，会造成Log的冗余，但如果在commit阶段就做，可能有一个request没有commit成功，但是因为已经被提交过了，所以不会再次被提交。</li>
+<li>有一个要注意的是，不能在LogEntry apply了以后，才去申请锁，然后去读data map，这样是不符合线性逻辑的。因为get如果比put早提交，就应该只读到put操作以前的数据，但是这里申请锁去读data map很有可能已经执行了别的put操作了。</li>
+<li>如何维护一份数据，记录已经执行过的seq的client命令？<br>A. 最暴力的是保存一份map，记录下每一个seq命令是否执行。<br>B. 只记录当前最大的seq，这是建立在同一个clerk只会被串行执行命令的假设下。（论文里是这样假设的）</li>
+<li>Linearizable的含义：并发的请求与获得response之间的时间差内，能够观察到的数据结果都是ok的。所以尽管一个Get先执行，但是获取到的是后执行的put命令执行完的结果，这也是ok的。</li>
+<li>关于超时错误，一般来讲是因为发送的leader过期了迟迟没有commit，因此最好也是继续轮询，而不是重试。</li>
+<li>关于snapshot，需要存储raft的state防止宕机重启后可以恢复，另一方面也要存储kvserver的data数据，从而可以压缩log，防止占用的内存无限扩大。</li>
+</ol>
+<h2 id="3-lab3B"><a href="#3-lab3B" class="headerlink" title="3. lab3B"></a>3. lab3B</h2><p>快照功能是为了解决log太长的问题。有两个线索，第一个是对于每一个raft来讲，他要独立地进行快照，裁剪log。第二个是当leader发现某个followe的log落后太多（nextIndex比lastIncludeIndex还要小），那么先不发AppendEntry RPC，而是发送InstallSnapshot RPC。</p>
+<h2 id="3-1-几个核心问题"><a href="#3-1-几个核心问题" class="headerlink" title="3.1 几个核心问题"></a>3.1 几个核心问题</h2><ol>
+<li>什么时候检测log的大小？</li>
+<li>appendEntry时如果prevLog对不上要快速回退，这里就会有一个问题，如果follower的LastIncludeIndex比较小，那么leader去取的时候是会取不到的，这个时候的策略应该是不要管follower的reply传过来的，因为说明此时follower的log已经过期很久了，lastIncludeIndex追不上了。</li>
+<li>有一个错误是applyChan要做成缓冲的，否则只要kv去压缩快照就会要获取rf的锁，但是rf再applyLog处会抢到锁然后卡住，最后会形成死锁。一个宗旨还是，不要用锁去锁耗时阻塞操作。</li>
+<li>InstallSanpshot的RPC调用也需要一系列的判断，比如term比如是否是最新的（通过比较LastInclude和LastApplied等等）</li>
+<li>raft存储当前状态的时候也要存储LastIncludIndex和LastIncludeTerm。</li>
+<li>如何去提醒server提交的log已经被apply了，有几种方式<br>A. Server的请求不断去轮训raft的lastappliedIndex，等到比自己的收到的index大的时候，比较一下该log与自己提交的是不是一致，然后就可以判断了。缺点是需要系统对lastAppliedIndex会多了很多读写，而这个读写是加锁的，这就会造成系统效率不高。<br>B. 整个server维护一个map[index]chan，对于每一个提交的log的index都有一个chan去写协作，applyLog以后就往对应的index里发送一条消息，而server端会阻塞在读这条消息。但有一个问题是，如果我有两个client发送消息，A提交log获取到的index是10，但是这条消息没有被commit，紧接着Client-B也提交了一个log，获得的index也是10，此时该server的raft执行下标为10的log，给chan发送消息，A先收到，会导致A去检查发现不符合，B一直收不到请求，但是其实已经成功了。有一种解决办法是，引入超时机制，然后呢，再加入重复检测，在apply阶段遇到了已经执行过的seq就不再执行，直接返回，给chan写通知。<br>C. 如果直接在command里加一份chan，作为apply结果的返回channel，有一个问题是，其实每一个index理论上只有一个读，但是apply会有很多个写，因为follower也需要apply log，但只有leader需要读chan。</li>
+<li>各司其职：由于请求是kvserver传向raft，因此只能在kvserver里检测log是否太大；logSize超过了以后，将kvserver的data结果序列化发送给raft，再由raft去持久化.</li>
+<li>活锁问题：</li>
+</ol>
+<ul>
+<li>现象：TestSnapshotRecover3B的测试有时候会出现两个raft轮流竞选leader，没有其余raft的log打印。这个问题的根源应该在于另外3个raft被锁住了没有进展也接收不了投票请求，从而导致没锁的两个开始疯狂竞选。仔细观察日志，发现另外三个在最后的Get操作前有一次snapshot操作。首先，我们调用start，然后appendLogEntry会拿到一个raft的锁，然后在释放前要执行完applyMsg的逻辑。而applyMsg的逻辑里有和kvserver交互的，如果此时kvserver检查发现需要snapshot后，就会让raft执行snapshot，而这个snapshot也需要raft的锁。此时就锁住了。<br>• 所以还是一个原则，有任何耗时操作都要注意，是否应该放入锁中。无论是rpc调用还是对外部系统的请求；<br>• 其二是对于并发请求的变量，要时刻注意锁带来的原子性。比如getAgreeCh哪里。</li>
+<li>因此，这个applyMsg需要开协程完成。但又要注意apply如果开协程，那么执行时的状态和当时调用applyMsg的状态不一致了，很有可能导致重复执行。因此要把当时的状态传进去，然后里面再加一个锁来看。</li>
+<li>如果对snapshot开启goroutine，很容易造成一种现象就是，</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/10/mit6-824-lab3/" data-id="cl0t1ddce00688slf6u3t4v9h" data-title="mit6.824-lab3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/raft/" rel="tag">raft</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/10/mit6-824-guide/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          mit6.824-guide
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/07/31/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">经典算法-快慢指针</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

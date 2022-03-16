@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>二叉树备忘录 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="概念解释 深度：边的条数，是以一个结点来讲的。 高度：整个树的最大深度，从叶结点往上数 等价二叉搜索树：若两颗搜索树的中序遍历序列相同，就说它们彼此等价。 数据局部性原理：（包含时间局部性和空间局部性） 刚刚被访问的数据很有可能不久就会被再次访问 将被访问的下一元素，极有可能就处于不久之前被访问的某个元素附近。    大纲介绍 为什么要引入二叉搜索树？ 因为线性结构要么静态查找很方便，动态删除插入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树备忘录">
+<meta property="og:url" content="http://example.com/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="概念解释 深度：边的条数，是以一个结点来讲的。 高度：整个树的最大深度，从叶结点往上数 等价二叉搜索树：若两颗搜索树的中序遍历序列相同，就说它们彼此等价。 数据局部性原理：（包含时间局部性和空间局部性） 刚刚被访问的数据很有可能不久就会被再次访问 将被访问的下一元素，极有可能就处于不久之前被访问的某个元素附近。    大纲介绍 为什么要引入二叉搜索树？ 因为线性结构要么静态查找很方便，动态删除插入">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-24T03:37:26.000Z">
+<meta property="article:modified_time" content="2021-10-09T02:57:00.296Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-【数据结构】二叉树备忘录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2019-03-24T03:37:26.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      二叉树备忘录
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="概念解释"><a href="#概念解释" class="headerlink" title="概念解释"></a>概念解释</h2><ol>
+<li>深度：边的条数，是以一个结点来讲的。</li>
+<li>高度：整个树的最大深度，从叶结点往上数</li>
+<li>等价二叉搜索树：若两颗搜索树的中序遍历序列相同，就说它们彼此等价。</li>
+<li>数据局部性原理：（包含时间局部性和空间局部性）<ul>
+<li>刚刚被访问的数据很有可能不久就会被再次访问</li>
+<li>将被访问的下一元素，极有可能就处于不久之前被访问的某个元素附近。</li>
+</ul>
+</li>
+</ol>
+<h2 id="大纲介绍"><a href="#大纲介绍" class="headerlink" title="大纲介绍"></a>大纲介绍</h2><ol>
+<li>为什么要引入二叉搜索树？<br> 因为线性结构要么静态查找很方便，动态删除插入不方便（比如序列）。要么动态插入删除方便，静态查找不方便（比如list）。于是就引出二叉搜索树这种半线性结构，在这两种操作之间达到均衡。</li>
+<li>为什么要引入平衡二叉树？<br> 因为二叉搜索树的形态很多，最坏的时候可以退化成一个序列。这样就毫无意义，因为很多操作的时间复杂度都与树高度的线性相关。于是为了保证树的高度不会太坏,我们引入一个平衡因子的指标。从而定义平衡二叉树。理想状态下当然是树的高度达到$\lfloor log_2 n \lfloor $也就是完全二叉树。</li>
+<li>为什么引入适当平衡？<br> 完全二叉树的要求未免太过严格，为了维持住这种形态所带来的重构的开销很有可能得不偿失。因此我们引入适当平衡——将树的高度不是绝对的等于$\lfloor log_2 n \lfloor $，而是渐进意义下的不超过$ O(log_2 n) $。于是,我们就可以介绍这一类型的树了：包括AVL，伸展树，红黑树，KD-树都是这一类型的变种。至于鼎鼎有名的B-树其实是完全二叉树的一种，因为她的外部结点的高度永远是一致的。</li>
+<li>那么各种树的优缺点和解决了什么问题呢？</li>
+</ol>
+<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h2><h3 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h3><ol>
+<li>要求：<ul>
+<li>除了叶结点，每个结点最多2个子结点</li>
+<li>左结点比其父结点要小，右结点比其父结点要大</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>这种规则的引入实际上就给搜索提供了遍历，本质上变成了一种二分法的搜索。</li>
+<li>另一方面，插入也变得简单。因为它的底层实现是一个链表，从而就不需要像序列一样有大规模的拷贝。</li>
+</ul>
+</li>
+</ol>
+<h2 id="（高度）平衡二叉树–-gt-B-树"><a href="#（高度）平衡二叉树–-gt-B-树" class="headerlink" title="（高度）平衡二叉树–&gt;B-树"></a>（高度）平衡二叉树–&gt;B-树</h2><ol>
+<li>思想就是把一个结点变为一个对象序列。用来解决数据量比较大的查找。</li>
+<li>背后的原理：<ul>
+<li>不同容量之间的读写速度是不一样的，内存里读取和磁盘里读取大概相差五个数量级</li>
+<li>在磁盘里读1b和读1kb的时间是差不多的，所以我们尽量一次多读一点。利用缓存实际上可以加快我们的速度</li>
+<li>对于数据量比较大，计算机是无法一次性把数据都放入内存的时候，于是在内存找不到的时候就去磁盘里找</li>
+<li>CPU的数据读取并不是一个字节一个字节，现代操作系统下，为了加快速度，它找到了就会加载一个页大小（通常是4KB）的数据放入它的缓存体系中。</li>
+<li>于是如果按照普通的一个结点一个抽象的数据对象（比如10Bytes），由于我们的树是一个链表，是通过new来获取创建的，它在磁盘和内存中的分布都是没有规律的。那么它周围的结点（父结点，子结点等等)不一定会一起读进内存。于是我们就需要频繁的从磁盘里读。而根据数据局部性原理，这样就会大大降低效率。</li>
+<li>但是，如果我们把一棵合适规模的子树（一般就是一个页大小）放在一个序列里，序列在内存或者磁盘里是顺序存放的。于是CPU每次读一个结点就读到了整个彼此逻辑上有联系的对象，于是就减少了对磁盘的读取次数。</li>
+<li>而另一方面，CPU对内存的读取速度之快，使得在4kb数据下对序列进行遍历所带来的开销微不足道。由于数据量之小，在这里我们甚至不采用查找的一些高级算法。</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>所以B-树的意义在于降低I&#x2F;O次数，虽然比较次数不会降低，渐进意义上的时间复杂度也不会降低。但是因为I&#x2F;O次数的降低使得整体查询时间的降低。</li>
+<li>外部结点是指叶结点的数值为NULl并不存在的孩子结点，B树的高度是相对于外部结点而言。引入外部结点的原因是可以对应于不同层次的存储结构。比如在内存的b树的外部结点是磁盘上的b树。</li>
+<li>B树的外部结点的深度一概一样。</li>
+<li>B树的阶次，m阶B树的内部结点<ul>
+<li>上限：有不超过m-1个的关键码，不超过m的分支。</li>
+<li>下限：根节点是大于2个分支；其余内部结点的分支是大于 向上取整的（m&#x2F;2)个</li>
+</ul>
+</li>
+<li>插入 -&gt;上溢 -&gt; 分裂 唯有分裂到了根节点才会导致树的高度增加</li>
+<li>删除 -&gt;下溢 -&gt; 合并或者旋转 唯有合并到了根结点导致树的高度减小</li>
+<li>值得注意的是：对于插入，永远是对叶结点的插入，因为把非叶结点都可以看做是一个范围，一个值是无法和一个范围匹配的。只有叶结点表示的是一个独立的值。而删除的话，有可能遇到的删除是删除非叶结点里的数，思路是可以<a target="_blank" rel="noopener" href="https://www.cnblogs.com/nullzx/p/8729425.html">参考</a>。B树的高度增加一定是由于分裂到根了，这样也就保证了b树的外部结点的深度一致。</li>
+<li>N个内部结点就有N+1个外部结点</li>
+</ul>
+</li>
+</ol>
+<h3 id="（适度）平衡二叉树"><a href="#（适度）平衡二叉树" class="headerlink" title="（适度）平衡二叉树"></a>（适度）平衡二叉树</h3><h4 id="AVL树"><a href="#AVL树" class="headerlink" title="AVL树"></a>AVL树</h4><ol>
+<li>要求：<ul>
+<li>本身首先是一棵二叉搜索树。</li>
+<li>平衡条件：每个结点的左右子树的高度之差的绝对值（平衡因子）最多为1。</li>
+</ul>
+</li>
+<li>特点:<ul>
+<li>如果因为插入删除导致平衡条件被破坏，我们可以通过单旋和双旋（这里涉及到等价二叉搜索树的概念，可以看下文参考）来重获平衡。</li>
+<li>这样就保证了二叉搜索树不会退化为一个序列。</li>
+</ul>
+</li>
+</ol>
+<h4 id="伸展树"><a href="#伸展树" class="headerlink" title="伸展树"></a>伸展树</h4><ol>
+<li>要求： <ul>
+<li>伸展树则利用了数据局部性原理，对于二叉搜索树来讲，我们只需要将刚被访问的结点，及时地“转移”至树根附近m，就可以加速后面的操作。</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>虽然它并没有一开始就要求平衡因子为1，但是不管哪一种初始结构，通过一个所谓的双层循环，不断地把所求的结点移到根结点。最后我们的树总是会处于一种高度平衡的状态。</li>
+<li>优点在于它体现了数据局部性的特征，并且通过双层伸展可以将当前查找结点上升到根节点的分摊成本降低至log(n),这和上面的avl的维持适度平衡需要的时间复杂度是差不多的。为什么单层伸展比双层伸展效率低呢？因为双层伸展把数的高度减小了</li>
+</ul>
+</li>
+</ol>
+<h4 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h4><ol>
+<li>要求<ol>
+<li>根结点和所有外部结点都是黑色</li>
+<li>红色结点的孩子都是黑色——&gt;也就是红色结点的孩子和父亲都是黑色</li>
+<li>外部结点到根的黑色结点数量是一致的。</li>
+</ol>
+</li>
+<li>红黑树在很多情况下，不妨先把它看作一个4阶B树，对我们逻辑理解有很大帮助。比如<ul>
+<li>一个红黑树通过提升就是一棵4阶B树。其黑高度就是一颗4阶B树的高度，也就是log(n)，于是考虑到红结点无法相邻，那么这个红黑树的高度最高也就是红结点间接插入黑结点中，也就是2倍log(n)的高度。由此可以证明红黑树的高度在渐进意义下也是log(n)</li>
+</ul>
+</li>
+<li>双红缺陷 与双黑缺陷</li>
+<li>其最大优点是: 它使得树的重构复杂度降为常数。</li>
+</ol>
+<h2 id="重要结论"><a href="#重要结论" class="headerlink" title="重要结论"></a>重要结论</h2><ol>
+<li>红黑树多用在内部排序，即全放在内存中的，微软STL的map和set的内部实现就是红黑树。B树多用在内存里放不下，大部分数据存储在外存上时。因为B树层数少，因此可以确保每次操作，读取磁盘的次数尽可能的少。在数据较小，可以完全放到内存中时，红黑树的时间复杂度比B树低。反之，数据量较大，外存中占主要部分时，B树因其读磁盘次数少，而具有更快的速度。</li>
+<li>STL里的map个set就是用的红黑树。而mysql里就是用的B+树。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="cl0t1dcxz00008slf7muz8d71" data-title="二叉树备忘录" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/07/29/%E3%80%90leetcode%E3%80%91%E8%85%BE%E8%AE%AF50%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【leetcode】腾讯50题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/29/4-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">4-计算机编程技巧</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

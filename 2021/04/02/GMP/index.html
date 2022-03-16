@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>goroutine详解 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. Goroutine的堆栈输出说明 ​    大部分都很容易理解，主要是说明一下其中红色框框里的数据是什么。参考Understanding Go panic output和Stack Traces In Go 主要结论如下：  如果是一个有接收者的函数调用，先是接收者的一个数据打印； 然后以此是从左到右的参数的结构打印。 最后是返回值的结构打印。 最多打印十个字段，多了的就截断了。  ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="goroutine详解">
+<meta property="og:url" content="http://example.com/2021/04/02/GMP/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. Goroutine的堆栈输出说明 ​    大部分都很容易理解，主要是说明一下其中红色框框里的数据是什么。参考Understanding Go panic output和Stack Traces In Go 主要结论如下：  如果是一个有接收者的函数调用，先是接收者的一个数据打印； 然后以此是从左到右的参数的结构打印。 最后是返回值的结构打印。 最多打印十个字段，多了的就截断了。  ​">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/Users/husyhu/Library/Mobile%20Documents/com~apple~CloudDocs/husy1994.github.io/source/_posts/image-20210324142746220.png">
+<meta property="article:published_time" content="2021-04-02T06:46:41.000Z">
+<meta property="article:modified_time" content="2021-11-02T06:43:25.361Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/husyhu/Library/Mobile%20Documents/com~apple~CloudDocs/husy1994.github.io/source/_posts/image-20210324142746220.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-GMP" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/02/GMP/" class="article-date">
+  <time class="dt-published" datetime="2021-04-02T06:46:41.000Z" itemprop="datePublished">2021-04-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      goroutine详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Goroutine的堆栈输出说明"><a href="#1-Goroutine的堆栈输出说明" class="headerlink" title="1. Goroutine的堆栈输出说明"></a>1. Goroutine的堆栈输出说明</h2><p><img src="/Users/husyhu/Library/Mobile%20Documents/com~apple~CloudDocs/husy1994.github.io/source/_posts/image-20210324142746220.png" alt="image-20210324142746220"></p>
+<p>​    大部分都很容易理解，主要是说明一下其中红色框框里的数据是什么。参考<a target="_blank" rel="noopener" href="https://www.joeshaw.org/understanding-go-panic-output/">Understanding Go panic output</a>和<a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2015/01/stack-traces-in-go.html">Stack Traces In Go</a> 主要结论如下：</p>
+<ol>
+<li>如果是一个有接收者的函数调用，先是接收者的一个数据打印；</li>
+<li>然后以此是从左到右的参数的结构打印。</li>
+<li>最后是返回值的结构打印。</li>
+<li>最多打印十个字段，多了的就截断了。</li>
+</ol>
+<p>​    要注意的是，不同类型的数据打印的数量和方式不一样。比如int类型就是一个简单的十六进制数字，就是其值本身。而string类型要打印两个字段，第一个是该字段长度，第二个是指向字符串的指针。等等，这些可以去查看具体的类型定义来查看。</p>
+<p>​    另外，<code>groutine 1[chan receive]</code>里的chan receive是一系列枚举值，在go语言里的类型为waitReason，用于描述goroutine挂起的原因。具体的定义如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> waitReason <span class="type">uint8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	waitReasonZero                  waitReason = <span class="literal">iota</span> <span class="comment">// &quot;&quot;</span></span><br><span class="line">	waitReasonGCAssistMarking                         <span class="comment">// &quot;GC assist marking&quot;</span></span><br><span class="line">	waitReasonIOWait                                  <span class="comment">// &quot;IO wait&quot;</span></span><br><span class="line">	waitReasonChanReceiveNilChan                      <span class="comment">// &quot;chan receive (nil chan)&quot;</span></span><br><span class="line">	waitReasonChanSendNilChan                         <span class="comment">// &quot;chan send (nil chan)&quot;</span></span><br><span class="line">	waitReasonDumpingHeap                             <span class="comment">// &quot;dumping heap&quot;</span></span><br><span class="line">	waitReasonGarbageCollection                       <span class="comment">// &quot;garbage collection&quot;</span></span><br><span class="line">	waitReasonGarbageCollectionScan                   <span class="comment">// &quot;garbage collection scan&quot;</span></span><br><span class="line">	waitReasonPanicWait                               <span class="comment">// &quot;panicwait&quot;</span></span><br><span class="line">	waitReasonSelect                                  <span class="comment">// &quot;select&quot;</span></span><br><span class="line">	waitReasonSelectNoCases                           <span class="comment">// &quot;select (no cases)&quot;</span></span><br><span class="line">	waitReasonGCAssistWait                            <span class="comment">// &quot;GC assist wait&quot;</span></span><br><span class="line">	waitReasonGCSweepWait                             <span class="comment">// &quot;GC sweep wait&quot;</span></span><br><span class="line">	waitReasonGCScavengeWait                          <span class="comment">// &quot;GC scavenge wait&quot;</span></span><br><span class="line">	waitReasonChanReceive                             <span class="comment">// &quot;chan receive&quot;</span></span><br><span class="line">	waitReasonChanSend                                <span class="comment">// &quot;chan send&quot;</span></span><br><span class="line">	waitReasonFinalizerWait                           <span class="comment">// &quot;finalizer wait&quot;</span></span><br><span class="line">	waitReasonForceGGIdle                             <span class="comment">// &quot;force gc (idle)&quot;</span></span><br><span class="line">	waitReasonSemacquire                              <span class="comment">// &quot;semacquire&quot;</span></span><br><span class="line">	waitReasonSleep                                   <span class="comment">// &quot;sleep&quot;</span></span><br><span class="line">	waitReasonSyncCondWait                            <span class="comment">// &quot;sync.Cond.Wait&quot;</span></span><br><span class="line">	waitReasonTimerGoroutineIdle                      <span class="comment">// &quot;timer goroutine (idle)&quot;</span></span><br><span class="line">	waitReasonTraceReaderBlocked                      <span class="comment">// &quot;trace reader (blocked)&quot;</span></span><br><span class="line">	waitReasonWaitForGCCycle                          <span class="comment">// &quot;wait for GC cycle&quot;</span></span><br><span class="line">	waitReasonGCWorkerIdle                            <span class="comment">// &quot;GC worker (idle)&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><p>用一个例子来作为线索看其源码。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> ()</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(x, y <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    z := x + y</span><br><span class="line">		<span class="keyword">return</span> z </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    x := <span class="number">0x100</span></span><br><span class="line">    y := <span class="number">0x200</span></span><br><span class="line">		<span class="keyword">go</span> add(x, y) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//编译</span><br><span class="line">go build -o ex1 ex1.go</span><br><span class="line">go tool objdump -s &quot;main\.main&quot; ./ex1</span><br><span class="line">TEXT main.main(SB) /root/workspace/ex/ex1.go</span><br><span class="line">  ex1.go:6              0x4525d0                64488b0c25f8ffffff      MOVQ FS:0xfffffff8, CX</span><br><span class="line">  ex1.go:6              0x4525d9                483b6110                CMPQ 0x10(CX), SP</span><br><span class="line">  ex1.go:6              0x4525dd                7642                    JBE 0x452621</span><br><span class="line">  ex1.go:6              0x4525df                4883ec30                SUBQ $0x30, SP</span><br><span class="line">  ex1.go:6              0x4525e3                48896c2428              MOVQ BP, 0x28(SP)</span><br><span class="line">  ex1.go:6              0x4525e8                488d6c2428              LEAQ 0x28(SP), BP</span><br><span class="line">  ex1.go:9              0x4525ed                c7042418000000          MOVL $0x18, 0(SP)</span><br><span class="line">  ex1.go:9              0x4525f4                488d058d580200          LEAQ 0x2588d(IP), AX</span><br><span class="line">  ex1.go:9              0x4525fb                4889442408              MOVQ AX, 0x8(SP)</span><br><span class="line">  ex1.go:9              0x452600                48c744241000010000      MOVQ $0x100, 0x10(SP)</span><br><span class="line">  ex1.go:9              0x452609                48c744241800020000      MOVQ $0x200, 0x18(SP)</span><br><span class="line">  ex1.go:9              0x452612                e879b7fdff              CALL runtime.newproc(SB)</span><br><span class="line">  ex1.go:9              0x452617                488b6c2428              MOVQ 0x28(SP), BP</span><br><span class="line">  ex1.go:9              0x45261c                4883c430                ADDQ $0x30, SP</span><br><span class="line">  ex1.go:9              0x452620                c3                      RET</span><br><span class="line">  ex1.go:6              0x452621                e8da7affff              CALL runtime.morestack_noctxt(SB)</span><br><span class="line">  ex1.go:6              0x452626                eba8                    JMP main.main(SB)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到main.main部分的函数实际的汇编如上，做了一系列准备后，调用了runtime.newproc函数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gdb ex1</span><br><span class="line">(gdb) b runtime.newproc</span><br><span class="line">Breakpoint 2 at 0x42dd90: file /usr/local/go/src/runtime/proc.go, line 3251.</span><br></pre></td></tr></table></figure>
+
+<p>于是去上述文件里找到对应的函数观察(后续基本都是这样子找函数的，不再赘述。)</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//编译器讲go关键字转化成调用该函数，fn为goroutine要运行的函数，size为fn的参数的内存大小。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newproc</span><span class="params">(siz <span class="type">int32</span>, fn *funcval)</span></span> &#123;</span><br><span class="line">  <span class="comment">//在fn内存地址的基础上加上一个指针的长度（也就是fn存储的长度），由于这是栈，因此就可以指向在压fn之前的第一个参数的地址。</span></span><br><span class="line">	argp := add(unsafe.Pointer(&amp;fn), sys.PtrSize)</span><br><span class="line">	gp := getg()</span><br><span class="line">	pc := getcallerpc() <span class="comment">//获取当前groutine的PC，也就是go func的位置。</span></span><br><span class="line">	systemstack(<span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		newproc1(fn, (*<span class="type">uint8</span>)(argp), siz, gp, pc)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看看newproc1。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create a new g running fn with narg bytes of arguments starting</span></span><br><span class="line"><span class="comment">// at argp. callerpc is the address of the go statement that created</span></span><br><span class="line"><span class="comment">// this. The new g is put on the queue of g&#x27;s waiting to run.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newproc1</span><span class="params">(fn *funcval, argp *<span class="type">uint8</span>, narg <span class="type">int32</span>, callergp *g, callerpc <span class="type">uintptr</span>)</span></span> &#123;</span><br><span class="line">	_g_ := getg()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> fn == <span class="literal">nil</span> &#123;</span><br><span class="line">		_g_.m.throwing = <span class="number">-1</span> <span class="comment">// do not dump full stacks</span></span><br><span class="line">		throw(<span class="string">&quot;go of nil func value&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	acquirem() <span class="comment">// disable preemption because it can be holding p in a local var</span></span><br><span class="line">	siz := narg</span><br><span class="line">	siz = (siz + <span class="number">7</span>) &amp;^ <span class="number">7</span> <span class="comment">//内存对齐</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// We could allocate a larger initial stack if necessary.</span></span><br><span class="line">	<span class="comment">// Not worth it: this is almost always an error.</span></span><br><span class="line">	<span class="comment">// 4*sizeof(uintreg): extra space added below</span></span><br><span class="line">	<span class="comment">// sizeof(uintreg): caller&#x27;s LR (arm) or return address (x86, in gostartcall).</span></span><br><span class="line">	<span class="keyword">if</span> siz &gt;= _StackMin<span class="number">-4</span>*sys.RegSize-sys.RegSize &#123;</span><br><span class="line">		throw(<span class="string">&quot;newproc: function arguments too large for new goroutine&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//从当前p的空闲链表里获取goroutine,如果没有先从global runqueue里获取一批（保持32个）</span></span><br><span class="line">	_p_ := _g_.m.p.ptr()</span><br><span class="line">	newg := gfget(_p_)</span><br><span class="line">	<span class="keyword">if</span> newg == <span class="literal">nil</span> &#123; <span class="comment">//如果没获取到空闲goroutine，则创建一个goroutine</span></span><br><span class="line">		newg = malg(_StackMin)</span><br><span class="line">		casgstatus(newg, _Gidle, _Gdead)</span><br><span class="line">		allgadd(newg) <span class="comment">// publishes with a g-&gt;status of Gdead so GC scanner doesn&#x27;t look at uninitialized stack.</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> newg.stack.hi == <span class="number">0</span> &#123;</span><br><span class="line">		throw(<span class="string">&quot;newproc1: newg missing stack&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> readgstatus(newg) != _Gdead &#123;</span><br><span class="line">		throw(<span class="string">&quot;newproc1: new g is not Gdead&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	totalSize := <span class="number">4</span>*sys.RegSize + <span class="type">uintptr</span>(siz) + sys.MinFrameSize <span class="comment">// extra space in case of reads slightly beyond frame</span></span><br><span class="line">	totalSize += -totalSize &amp; (sys.SpAlign - <span class="number">1</span>)                  <span class="comment">// align to spAlign</span></span><br><span class="line">	sp := newg.stack.hi - totalSize</span><br><span class="line">	spArg := sp</span><br><span class="line">	<span class="keyword">if</span> usesLR &#123;</span><br><span class="line">		<span class="comment">// caller&#x27;s LR</span></span><br><span class="line">		*(*<span class="type">uintptr</span>)(unsafe.Pointer(sp)) = <span class="number">0</span></span><br><span class="line">		prepGoExitFrame(sp)</span><br><span class="line">		spArg += sys.MinFrameSize</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> narg &gt; <span class="number">0</span> &#123;</span><br><span class="line">		memmove(unsafe.Pointer(spArg), unsafe.Pointer(argp), <span class="type">uintptr</span>(narg))</span><br><span class="line">		<span class="comment">// This is a stack-to-stack copy. If write barriers</span></span><br><span class="line">		<span class="comment">// are enabled and the source stack is grey (the</span></span><br><span class="line">		<span class="comment">// destination is always black), then perform a</span></span><br><span class="line">		<span class="comment">// barrier copy. We do this *after* the memmove</span></span><br><span class="line">		<span class="comment">// because the destination stack may have garbage on</span></span><br><span class="line">		<span class="comment">// it.</span></span><br><span class="line">		<span class="keyword">if</span> writeBarrier.needed &amp;&amp; !_g_.m.curg.gcscandone &#123;</span><br><span class="line">			f := findfunc(fn.fn)</span><br><span class="line">			stkmap := (*stackmap)(funcdata(f, _FUNCDATA_ArgsPointerMaps))</span><br><span class="line">			<span class="keyword">if</span> stkmap.nbit &gt; <span class="number">0</span> &#123;</span><br><span class="line">				<span class="comment">// We&#x27;re in the prologue, so it&#x27;s always stack map index 0.</span></span><br><span class="line">				bv := stackmapdata(stkmap, <span class="number">0</span>)</span><br><span class="line">				bulkBarrierBitmap(spArg, spArg, <span class="type">uintptr</span>(bv.n)*sys.PtrSize, <span class="number">0</span>, bv.bytedata)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	memclrNoHeapPointers(unsafe.Pointer(&amp;newg.sched), unsafe.Sizeof(newg.sched))</span><br><span class="line">	newg.sched.sp = sp</span><br><span class="line">	newg.stktopsp = sp</span><br><span class="line">	newg.sched.pc = funcPC(goexit) + sys.PCQuantum <span class="comment">// +PCQuantum so that previous instruction is in same function</span></span><br><span class="line">	newg.sched.g = guintptr(unsafe.Pointer(newg))</span><br><span class="line">	gostartcallfn(&amp;newg.sched, fn)</span><br><span class="line">	newg.gopc = callerpc</span><br><span class="line">	newg.ancestors = saveAncestors(callergp)</span><br><span class="line">	newg.startpc = fn.fn</span><br><span class="line">	<span class="keyword">if</span> _g_.m.curg != <span class="literal">nil</span> &#123;</span><br><span class="line">		newg.labels = _g_.m.curg.labels</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> isSystemGoroutine(newg, <span class="literal">false</span>) &#123;</span><br><span class="line">		atomic.Xadd(&amp;sched.ngsys, +<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	newg.gcscanvalid = <span class="literal">false</span></span><br><span class="line">	casgstatus(newg, _Gdead, _Grunnable)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> _p_.goidcache == _p_.goidcacheend &#123;</span><br><span class="line">		<span class="comment">// Sched.goidgen is the last allocated id,</span></span><br><span class="line">		<span class="comment">// this batch must be [sched.goidgen+1, sched.goidgen+GoidCacheBatch].</span></span><br><span class="line">		<span class="comment">// At startup sched.goidgen=0, so main goroutine receives goid=1.</span></span><br><span class="line">		_p_.goidcache = atomic.Xadd64(&amp;sched.goidgen, _GoidCacheBatch)</span><br><span class="line">		_p_.goidcache -= _GoidCacheBatch - <span class="number">1</span></span><br><span class="line">		_p_.goidcacheend = _p_.goidcache + _GoidCacheBatch</span><br><span class="line">	&#125;</span><br><span class="line">	newg.goid = <span class="type">int64</span>(_p_.goidcache)</span><br><span class="line">	_p_.goidcache++</span><br><span class="line">	<span class="keyword">if</span> raceenabled &#123;</span><br><span class="line">		newg.racectx = racegostart(callerpc)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> trace.enabled &#123;</span><br><span class="line">		traceGoCreate(newg, newg.startpc)</span><br><span class="line">	&#125;</span><br><span class="line">	runqput(_p_, newg, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> atomic.Load(&amp;sched.npidle) != <span class="number">0</span> &amp;&amp; atomic.Load(&amp;sched.nmspinning) == <span class="number">0</span> &amp;&amp; mainStarted &#123;</span><br><span class="line">		wakep()</span><br><span class="line">	&#125;</span><br><span class="line">	releasem(_g_.m)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考<a target="_blank" rel="noopener" href="https://medium.com/@ankur_anand/illustrated-tales-of-go-runtime-scheduler-74809ef6d19b">Illustrated Tales of Go Runtime Scheduler.</a>和<a target="_blank" rel="noopener" href="https://morsmachine.dk/go-scheduler">The Go scheduler</a>，<a target="_blank" rel="noopener" href="https://morsmachine.dk/netpoller">The Go netpoller</a>，<a target="_blank" rel="noopener" href="https://yizhi.ren/2019/06/03/goscheduler/">golang scheduler</a>，<a target="_blank" rel="noopener" href="https://tonybai.com/2017/06/23/an-intro-about-goroutine-scheduler/">也谈goroutine调度器 </a></p>
+<h3 id="1-为什么会有goroutine？"><a href="#1-为什么会有goroutine？" class="headerlink" title="1.为什么会有goroutine？"></a>1.为什么会有goroutine？</h3><ol>
+<li>线程依旧太expensive（还有一些是不需要的逻辑，比如signal mask）</li>
+<li>gc的算法是stop the world，需要在数据一致时才能调用。如果单纯用thread的话，go runtime无法获取这一信息。</li>
+</ol>
+<h2 id="4-2-GMP"><a href="#4-2-GMP" class="headerlink" title="4.2 GMP"></a>4.2 GMP</h2><p>​    线程和Goroutine的映射关系模型有三种：1:1，M：1和M：N。GMP使用的是M：N模型，原因很简单，为了尽可能的压榨CPU的性能，缺点是调度器的设计会非常复杂。</p>
+<p>​    用大白话简单说就是：G代表goroutine，有三种状态，running，runable和waiting，分别是正在运行，可运行和阻塞。M代表machine，也就是实际执行体（对应os thread），P代表process，通过P来连接G和M，管理相应的资源和调度，因此每一个P都有自己的context。P通过维护一个runqueue来管理可运行状态的goroutine，一个个依次执行，遇到阻塞的就放入阻塞队列中去，等阻塞完成后修改goroutine的状态重新放回runqueue里去。很简单对不对？如果不涉及细节的话，这一套结构和OS的线程调度大同小异。</p>
+<p>​    深入一丢丢看看。</p>
+<h4 id="4-2-1-获取可运行goroutine"><a href="#4-2-1-获取可运行goroutine" class="headerlink" title="4.2.1 获取可运行goroutine"></a>4.2.1 获取可运行goroutine</h4><p>先往本地runqueue去获取待运行的goroutine，如果没有再去全局runqueue去获取，再没有就去别的线程里的global runqueue里获取。</p>
+<h4 id="4-2-2-阻塞goroutine的处理"><a href="#4-2-2-阻塞goroutine的处理" class="headerlink" title="4.2.2 阻塞goroutine的处理"></a>4.2.2 阻塞goroutine的处理</h4><p>阻塞的goroutine的情况无非是，channel接收和发送阻塞，请求锁，定时器，网络I&#x2F;O和阻塞的系统调用。</p>
+<p>可以分为两个部分：</p>
+<ol>
+<li>一个是用户级别的阻塞，以channel的操作为例，当某goroutine A发送数据到channel阻塞后，channel会主动gopark这个goroutine，正常情况下，一定会有另一个goroutine B接收channel里的数据成功，goroutine B会唤醒goroutine A将其加入对应的runqueue中去。因此，当goroutine阻塞时，thread是不会阻塞的。</li>
+<li>另一个是涉及系统调用。go的上层设计把所有的syscall封装一层，**runtime.entersyscall(SB)<strong>和</strong>runtime.exitsyscall(SB)**。如果系统调用是阻塞的，就把该M和P分离，让P去执行别的M里的G。后者则让M重新找到之前对应的P，让G加入其runqueue队列里继续执行。如果没找到就找一个idle的P，还没找到就将G加入global runqueue里去，然后将该M状态改为idle。</li>
+</ol>
+<h4 id="4-2-3-如何保证公平和效率？"><a href="#4-2-3-如何保证公平和效率？" class="headerlink" title="4.2.3 如何保证公平和效率？"></a>4.2.3 如何保证公平和效率？</h4><ol>
+<li>goroutine每运行10ms就会被标记成可抢占，然后在该goroutine的下一次函数调用入口有编译器插入的协作抢占点。但这不是preemptive的，也就是说如果没有这个协作抢占点入口，那么该goroutine是不会被替换的。（在1.13版本之前）。</li>
+<li>每隔N个调度就会去检查一下global runqueue，拉取一批goroutine去本地runqueue，防止饥饿。</li>
+<li>在runtime初始化的sysmom那个函数里，会定时把fd注册到netpoller上，而一旦fd准备好了，就异步通知goroutine，将其放入runqueue中。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/02/GMP/" data-id="cl0t1dd0x004d8slfaihi9p2q" data-title="goroutine详解" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/02/linux%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91%E5%A4%87%E5%BF%98%E5%BD%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          linux环境开发备忘录
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/30/golang%E8%AF%AD%E8%A8%80%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">golang语言深度解析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

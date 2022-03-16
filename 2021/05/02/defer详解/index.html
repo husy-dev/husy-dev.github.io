@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>defer详解 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. 前言defer关键字的作用是预先准备，延迟执行。主要是要注意三个关键问题：  defer是栈式存储，先声明的后执行。 defer会预先准备好参数和执行上下文。defer foo(a,b)和defer func()&amp;#123;foo(a,b)&amp;#125;是不一样的。 defer和return的执行顺序是，在return的ret汇编执行之前执行defer声明的函数。要注意return的底层操作包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="defer详解">
+<meta property="og:url" content="http://example.com/2021/05/02/defer%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. 前言defer关键字的作用是预先准备，延迟执行。主要是要注意三个关键问题：  defer是栈式存储，先声明的后执行。 defer会预先准备好参数和执行上下文。defer foo(a,b)和defer func()&amp;#123;foo(a,b)&amp;#125;是不一样的。 defer和return的执行顺序是，在return的ret汇编执行之前执行defer声明的函数。要注意return的底层操作包">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-02T09:01:39.000Z">
+<meta property="article:modified_time" content="2022-02-05T11:01:39.140Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-defer详解" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/02/defer%E8%AF%A6%E8%A7%A3/" class="article-date">
+  <time class="dt-published" datetime="2021-05-02T09:01:39.000Z" itemprop="datePublished">2021-05-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      defer详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>defer关键字的作用是预先准备，延迟执行。主要是要注意三个关键问题：</p>
+<ol>
+<li>defer是栈式存储，先声明的后执行。</li>
+<li>defer会预先准备好参数和执行上下文。<code>defer foo(a,b)</code>和<code>defer func()&#123;foo(a,b)&#125;</code>是不一样的。</li>
+<li>defer和return的执行顺序是，在return的ret汇编执行之前执行defer声明的函数。要注意return的底层操作包含三步，如果是匿名返回，就先声明和初始化一个匿名变量，然后将要返回出去的数据赋值给该变量，最后执行RET，才算是解释函数，将返回值又赋值给外部的接收者。可以参考[<a target="_blank" rel="noopener" href="https://my.oschina.net/henrylee2cn/blog/505535">Golang中defer、return、返回值之间执行顺序的坑</a>]，匿名返回值的那个匿名变量，我们是拿不到的，因此也就不存在会在return的过程中修改该匿名变量的可能。而有名返回值在函数调用时就已经被初始化了返回值，这个值defer是可以拿到的，也就可能在defer中改变了返回值（还要注意defer的取值是否是指针取值）。</li>
+</ol>
+<h2 id="2-例子"><a href="#2-例子" class="headerlink" title="2. 例子"></a>2. 例子</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">PrintTimeCost</span><span class="params">()</span></span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">  now:=time.Now()</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">    duration:=time.Since(now)</span><br><span class="line">    fmt.Printf(<span class="string">&quot;func costs:%v&quot;</span>,duration)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在想要记录耗时的函数里可以这么使用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">defer</span> PrintTimeCost()()</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就涉及到函数的闭包以及defer的准备工作。</p>
+<h2 id="3-defer原理剖析"><a href="#3-defer原理剖析" class="headerlink" title="3. defer原理剖析"></a>3. defer原理剖析</h2><p>首先写一个简单的测试用例来看一下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="built_in">recover</span>()</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="built_in">panic</span>(<span class="string">&quot;error&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按照golang语言深度解析里的方法，我们可以找到其汇编里的实现是先调用<code>runtime.deferprocStack</code>做一些数据准备，然后调用<code>runtime.deferreturn</code>调用执行。</p>
+<p>先看一下_defer的结构</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A _defer holds an entry on the list of deferred calls.</span></span><br><span class="line"><span class="comment">// If you add a field here, add code to clear it in freedefer and deferProcStack</span></span><br><span class="line"><span class="comment">// This struct must match the code in cmd/compile/internal/gc/reflect.go:deferstruct</span></span><br><span class="line"><span class="comment">// and cmd/compile/internal/gc/ssa.go:(*state).call.</span></span><br><span class="line"><span class="comment">// Some defers will be allocated on the stack and some on the heap.</span></span><br><span class="line"><span class="comment">// All defers are logically part of the stack, so write barriers to</span></span><br><span class="line"><span class="comment">// initialize them are not required. All defers must be manually scanned,</span></span><br><span class="line"><span class="comment">// and for heap defers, marked.</span></span><br><span class="line"><span class="keyword">type</span> _defer <span class="keyword">struct</span> &#123;</span><br><span class="line">	siz     <span class="type">int32</span> <span class="comment">// includes both arguments and results</span></span><br><span class="line">	started <span class="type">bool</span></span><br><span class="line">	heap    <span class="type">bool</span></span><br><span class="line">	<span class="comment">// openDefer indicates that this _defer is for a frame with open-coded</span></span><br><span class="line">	<span class="comment">// defers. We have only one defer record for the entire frame (which may</span></span><br><span class="line">	<span class="comment">// currently have 0, 1, or more defers active).</span></span><br><span class="line">	openDefer <span class="type">bool</span></span><br><span class="line">	sp        <span class="type">uintptr</span>  <span class="comment">// sp at time of defer</span></span><br><span class="line">	pc        <span class="type">uintptr</span>  <span class="comment">// pc at time of defer</span></span><br><span class="line">	fn        *funcval <span class="comment">// can be nil for open-coded defers</span></span><br><span class="line">	_panic    *_panic  <span class="comment">// panic that is running defer</span></span><br><span class="line">	link      *_defer</span><br><span class="line"></span><br><span class="line">	<span class="comment">// If openDefer is true, the fields below record values about the stack</span></span><br><span class="line">	<span class="comment">// frame and associated function that has the open-coded defer(s). sp</span></span><br><span class="line">	<span class="comment">// above will be the sp for the frame, and pc will be address of the</span></span><br><span class="line">	<span class="comment">// deferreturn call in the function.</span></span><br><span class="line">	fd   unsafe.Pointer <span class="comment">// funcdata for the function associated with the frame</span></span><br><span class="line">	varp <span class="type">uintptr</span>        <span class="comment">// value of varp for the stack frame</span></span><br><span class="line">	<span class="comment">// framepc is the current pc associated with the stack frame. Together,</span></span><br><span class="line">	<span class="comment">// with sp above (which is the sp associated with the stack frame),</span></span><br><span class="line">	<span class="comment">// framepc/sp can be used as pc/sp pair to continue a stack trace via</span></span><br><span class="line">	<span class="comment">// gentraceback().</span></span><br><span class="line">	framepc <span class="type">uintptr</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以deferprocStack实际上就是在当前运行的goroutine的_defer链表增加了一个_defer对象，因为是从链表头插入，因此可以解释为什么defer是先声明的后执行。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferprocStack</span><span class="params">(d *_defer)</span></span> &#123;</span><br><span class="line">	gp := getg()</span><br><span class="line">	<span class="keyword">if</span> gp.m.curg != gp &#123;</span><br><span class="line">		<span class="comment">// go code on the system stack can&#x27;t defer</span></span><br><span class="line">		throw(<span class="string">&quot;defer on system stack&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	d.started = <span class="literal">false</span></span><br><span class="line">	d.heap = <span class="literal">false</span></span><br><span class="line">	d.openDefer = <span class="literal">false</span></span><br><span class="line">	d.sp = getcallersp()</span><br><span class="line">	d.pc = getcallerpc()</span><br><span class="line">	d.framepc = <span class="number">0</span></span><br><span class="line">	d.varp = <span class="number">0</span></span><br><span class="line">	<span class="comment">// The lines below implement:</span></span><br><span class="line">	<span class="comment">//   d.panic = nil</span></span><br><span class="line">	<span class="comment">//   d.fd = nil</span></span><br><span class="line">	<span class="comment">//   d.link = gp._defer</span></span><br><span class="line">	<span class="comment">//   gp._defer = d</span></span><br><span class="line">	<span class="comment">// But without write barriers. The first three are writes to</span></span><br><span class="line">	<span class="comment">// the stack so they don&#x27;t need a write barrier, and furthermore</span></span><br><span class="line">	<span class="comment">// are to uninitialized memory, so they must not use a write barrier.</span></span><br><span class="line">	<span class="comment">// The fourth write does not require a write barrier because we</span></span><br><span class="line">	<span class="comment">// explicitly mark all the defer structures, so we don&#x27;t need to</span></span><br><span class="line">	<span class="comment">// keep track of pointers to them with a write barrier.</span></span><br><span class="line">	*(*<span class="type">uintptr</span>)(unsafe.Pointer(&amp;d._panic)) = <span class="number">0</span></span><br><span class="line">	*(*<span class="type">uintptr</span>)(unsafe.Pointer(&amp;d.fd)) = <span class="number">0</span></span><br><span class="line">	*(*<span class="type">uintptr</span>)(unsafe.Pointer(&amp;d.link)) = <span class="type">uintptr</span>(unsafe.Pointer(gp._defer))</span><br><span class="line">	*(*<span class="type">uintptr</span>)(unsafe.Pointer(&amp;gp._defer)) = <span class="type">uintptr</span>(unsafe.Pointer(d))</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Run a deferred function if there is one.</span></span><br><span class="line"><span class="comment">// The compiler inserts a call to this at the end of any</span></span><br><span class="line"><span class="comment">// function which calls defer.</span></span><br><span class="line"><span class="comment">// If there is a deferred function, this will call runtime·jmpdefer,</span></span><br><span class="line"><span class="comment">// which will jump to the deferred function such that it appears</span></span><br><span class="line"><span class="comment">// to have been called by the caller of deferreturn at the point</span></span><br><span class="line"><span class="comment">// just before deferreturn was called. The effect is that deferreturn</span></span><br><span class="line"><span class="comment">// is called again and again until there are no more deferred functions.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Declared as nosplit, because the function should not be preempted once we start</span></span><br><span class="line"><span class="comment">// modifying the caller&#x27;s frame in order to reuse the frame to call the deferred</span></span><br><span class="line"><span class="comment">// function.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// The single argument isn&#x27;t actually used - it just has its address</span></span><br><span class="line"><span class="comment">// taken so it can be matched against pending defers.</span></span><br><span class="line"><span class="comment">//go:nosplit</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferreturn</span><span class="params">(arg0 <span class="type">uintptr</span>)</span></span> &#123;</span><br><span class="line">	gp := getg()</span><br><span class="line">	d := gp._defer</span><br><span class="line">	<span class="keyword">if</span> d == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	sp := getcallersp()</span><br><span class="line">	<span class="keyword">if</span> d.sp != sp &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> d.openDefer &#123;</span><br><span class="line">		done := runOpenDeferFrame(gp, d)</span><br><span class="line">		<span class="keyword">if</span> !done &#123;</span><br><span class="line">			throw(<span class="string">&quot;unfinished open-coded defers in deferreturn&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		gp._defer = d.link</span><br><span class="line">		freedefer(d)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Moving arguments around.</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">// Everything called after this point must be recursively</span></span><br><span class="line">	<span class="comment">// nosplit because the garbage collector won&#x27;t know the form</span></span><br><span class="line">	<span class="comment">// of the arguments until the jmpdefer can flip the PC over to</span></span><br><span class="line">	<span class="comment">// fn.</span></span><br><span class="line">	<span class="keyword">switch</span> d.siz &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">		<span class="comment">// Do nothing.</span></span><br><span class="line">	<span class="keyword">case</span> sys.PtrSize:</span><br><span class="line">		*(*<span class="type">uintptr</span>)(unsafe.Pointer(&amp;arg0)) = *(*<span class="type">uintptr</span>)(deferArgs(d))</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		memmove(unsafe.Pointer(&amp;arg0), deferArgs(d), <span class="type">uintptr</span>(d.siz))</span><br><span class="line">	&#125;</span><br><span class="line">	fn := d.fn</span><br><span class="line">	d.fn = <span class="literal">nil</span></span><br><span class="line">	gp._defer = d.link</span><br><span class="line">	freedefer(d)</span><br><span class="line">	<span class="comment">// If the defer function pointer is nil, force the seg fault to happen</span></span><br><span class="line">	<span class="comment">// here rather than in jmpdefer. gentraceback() throws an error if it is</span></span><br><span class="line">	<span class="comment">// called with a callback on an LR architecture and jmpdefer is on the</span></span><br><span class="line">	<span class="comment">// stack, because the stack trace can be incorrect in that case - see</span></span><br><span class="line">	<span class="comment">// issue #8153).</span></span><br><span class="line">	_ = fn.fn</span><br><span class="line">	jmpdefer(fn, <span class="type">uintptr</span>(unsafe.Pointer(&amp;arg0)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-背景说明"><a href="#4-背景说明" class="headerlink" title="4. 背景说明"></a>4. 背景说明</h2><ol>
+<li>write barrier，可以参考golang垃圾回收的说明。</li>
+<li>Go:nosplit <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000016743220">Go 语言编译器的 “&#x2F;&#x2F;go:” 详解</a></li>
+<li>Open coded-defer</li>
+</ol>
+<h2 id="5-参考"><a href="#5-参考" class="headerlink" title="5. 参考"></a>5. 参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903936508297223">深入理解Go-defer的原理剖析</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/02/defer%E8%AF%A6%E8%A7%A3/" data-id="cl0t1dd0v00468slf4b4890co" data-title="defer详解" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/03/golang%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%A4%87%E5%BF%98%E5%BD%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          golang测试备忘录
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/28/pprof%E5%A4%87%E5%BF%98%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">pprof备忘录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Husy">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-【leetcode】刷题笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/07/31/%E3%80%90leetcode%E3%80%91%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2019-07-31T09:11:28.000Z" itemprop="datePublished">2019-07-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/07/31/%E3%80%90leetcode%E3%80%91%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/">【leetcode】刷题笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://leetcode.com/submissions/detail/158747775/">1. Two Sum</a>-98.73%</p>
+<ul>
+<li><p>暴力法很容易，但其实可以通过把数据存在哈希表里，或者二叉树的数据结构里，从而使得“找”这个操作更加快速。不需要像暴利法一样遍历所有的数据。</p>
+</li>
+<li><p>C++ stl里的map是一种红黑树，其找一个值的时间复杂度是O(logn)。而哈希表找一个值的时间复杂度是一个常数。会更快。但是这些都是牺牲空间复杂度来提高杂度。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/submissions/detail/158746345/">13 Roman to integer</a> -24.45%</p>
+<p>知识点：</p>
+<ul>
+<li>unordered_map的初始化方式</li>
+<li>string可以直接用下标表示</li>
+<li>s.back()表示返回stirng s的最后一个字符.</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/flipping-an-image/description/">832. Flipping an Image</a>-无分布数据16ms</p>
+<ul>
+<li>思路就是对每一个vector的头尾进行比较分类，相同的直接各自取反。不相同的则不需要变化。<ul>
+<li>一开始我直接对int取反，其实这是错误的。因为int不是一个bit，而是32个bit。取反后再转化成signed int的形式则会变成负数。所以不用按位取反，用逻辑否。</li>
+<li><code>reverse(x.begin(),x.end())</code>可以达到反转vector的效果，但是这个处理方式并没有比我手工的快。</li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/array-partition-i/description/">561. Array Partition I</a>-78.50%</p>
+<ul>
+<li>这个题的话其实仔细想一下就知道把序列排序一下，然后把偶数项加起来就可以获得最大的最小值之和。 但是的算法只是超过了70%多的人，也就是说还有更快的方法。<br>首先我们这里的排序是快排。然后循环一遍相加。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/toeplitz-matrix/description/">766. Toeplitz Matrix</a></p>
+<ul>
+<li><p>如果把这个矩阵看作的每一个看作（i，j）序列的话，就是要比较（i，j）与（i+1，j+1）……到（i+n,j+n)，这个n的边界就是看哪一个超过了这个输入向量的边界。 如果一个一个的看，一开始我直接很暴力的上三角，下三角来匹配。但这其实是人的思维。因为这样有两次for循环，性能不好。</p>
+</li>
+<li><p>再仔细观察，我其实不必每次都把整个斜线上的数都检查一遍，我可以每次两行两行的来，这样对数据的获取也容易一点。另外我观察到其实两行之间的比较就是第一行的前n-1个与第二行的第2到第n个之间的对比。根据<a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/container/vector/operator_cmp">这里</a>可知，两个vector是可以直接用&#x3D;&#x3D;来判断其元素是不是相等的。</p>
+</li>
+<li><p>std::bad_alloc’ what(): std::bad_alloc”错误。<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23444844/c-error-terminate-called-after-throwing-an-instance-of-stdbad-alloc">stackoverflow</a>上说是因为你把一个本地变量的内存地址存储起来。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;matrix.<span class="built_in">size</span>()<span class="number">-1</span>;++i)&#123;</span><br><span class="line">            <span class="type">int</span> m = matrix[i].<span class="built_in">size</span>();</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m1</span><span class="params">(matrix[i].begin(),matrix[i].end()<span class="number">-2</span>)</span></span>; <span class="comment">//当我把这里的额end()改成begin()的形式以后，就work了</span></span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m2</span><span class="params">(matrix[i+<span class="number">1</span>].begin()+<span class="number">1</span>,matrix[i+<span class="number">1</span>].end()<span class="number">-1</span>)</span></span>;</span><br><span class="line">            <span class="keyword">if</span>(m1!=m2) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<p>  也就是</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;matrix.<span class="built_in">size</span>()<span class="number">-1</span>;++i)&#123;</span><br><span class="line">            <span class="type">int</span> m = matrix[i].<span class="built_in">size</span>();</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m1</span><span class="params">(matrix[i].begin(),matrix[i].begin()+m<span class="number">-1</span>)</span></span>;</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">m2</span><span class="params">(matrix[i+<span class="number">1</span>].begin()+<span class="number">1</span>,matrix[i+<span class="number">1</span>].begin()+m)</span></span>;</span><br><span class="line">            <span class="keyword">if</span>(m1!=m2) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>其实这里并不是说end()不能用。而是当我们的的vector &lt;int&gt; 只有一个数的时候，end ()-2这样的表示是错误的。但是用begin()+m-1 就可以。</p>
+</li>
+<li><p>但是这样效率更低了。从超过55%降到超过37%。我想主要是新建vector m1和m2那里要复制数据（<strong>不确定是不是深拷贝，明天查。</strong>）花了时间。所以需要再改进。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/reverse-integer/description/">7. reverse integer</a>-98.39%</p>
+<p>知识点：</p>
+<ul>
+<li>INT_MAX 和INT_MIN表示int 的最大值和最小值,这是一个确定值.</li>
+<li>%的符号。 一般来讲%在有些语言里是求模，有些语言里时求余。这两个操作有一点细微的差别,会根据语言和甚至编译器的不同而不同。</li>
+</ul>
+<blockquote>
+<p>参考C++ primer 第5版里的说法：<br>对于除法来讲，一律向0取整； 对于%求余运算来讲，m%n的值与m同符号。和n的符号无关。只需要使得 ${m \over n} \times n+m%n&#x3D;m$</p>
+</blockquote>
+<p>更为细致一点的参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/solstice/article/details/5139302">带符号整数的除法与余数</a>。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-common-prefix/">14. Longest Common Prefix</a>-95.85%</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-parentheses/">20 Valid Parentheses</a>-95.53%</p>
+<ul>
+<li>要利用栈的特性</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-two-sorted-lists/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china">21. Merge Two Sorted Lists</a></p>
+<ul>
+<li>这里主要是联系链表的使用。一开始想在l1或者l2上直接变换，其实这样会比较复杂。在没有内存限制的情况下，可以另申请一个链表来存储。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/minimum-path-sum/description/">64. Minimum Path Sum</a></p>
+<ul>
+<li><p>一开始我的想法是从右下角往回推，但其实这是一种贪心算法，无法从全局来优化这个问题。做动态规划的时候子问题一定要代表着当前最优。</p>
+</li>
+<li><p>首先这里的矩阵长和高不一定相等，所以如果单纯的用一个变量比如dp(n)来表示minSum的话，有点不够。所以我们用dp(i,j)实际上就是一个二维数组来表示从(0，0)到(i，j)的minSum。</p>
+</li>
+<li><p>于是整个转换过程就很简单了：<br>$$<br>dp(i,j) &#x3D; min(dp(i-1,j),dp(i,j-1))+grid[i][j]<br>$$</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/palindromic-substrings/description/">647. Palindromic Substrings</a></p>
+<ul>
+<li>一开始我是这么想的，首先如果我们找到一个最长的回文，然后同时去掉两头，是不是又是一个新回文？所以如果我们知道了一个回文的长度是l，那么他就可以生成l&#x2F;2个新回文（因为我们默认每一个单独的字符都是一个回文，因此不考虑长度是奇数还是偶数）。所以问题转换为找不重叠的最长回文的个数以及其长度。但是这里有一个例外，比如我们找到一段回文是aaaaa，那么这个回文能生成的新回文数就不止2个了，而是9个。尽管我们可以分来来处理这两种情况，但应该还有更好的处理方式。</li>
+<li>如果用dp的思想，那么我们就应该找子问题。当然最直接的想法是通过字符的长度来构造，比如dp(n-1)表示n-1个字符串的回文数。但是如何通过dp(n-1)来表示dp(n)呢？<br>显然很难，我们可以这么想，我如果要知道一个n个字符的字符串的回文数，我需要哪些信息？</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/array-partition-i/description/">561. Array Partition I</a>-78.50%</p>
+<ul>
+<li>这个题的话其实仔细想一下就知道把序列排序一下，然后把偶数项加起来就可以获得最大的最小值之和。 但是的算法只是超过了70%多的人，也就是说还有更快的方法。<br>首先我们这里的排序是快排。然后循环一遍相加。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/">167. Two Sum II - Input array is sorted</a></p>
+<ul>
+<li><p>首先我们要知道vector的 <a target="_blank" rel="noopener" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/">查找</a> lower_bound会返回一个不小于某值的数。</p>
+</li>
+<li><p>思路很简单，就是找到小于target&#x2F;2.0的最大值，然后从两边开始加。大了就让左边的指针移一下，小了就让右边的指针移一下。</p>
+</li>
+<li><p>但是出现了一个错误：迭代器虽然我们知道本质是一种指针，但是它被封装成一个容器专属的数据类型，是不能直接赋值给独立的指针的。 </p>
+</li>
+<li><p>还有一个问题是，一开始我打算先找到大于target一半和小于target一般的部分，然后用两个指针来遍历。但是这样就有很多种情况要讨论，这其实就是不妥的。而且你考虑到这么分和用两个指针一个指头一个指尾的复杂度是差不多的。</p>
+</li>
+<li><p>比较这两种写法：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; numbers, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> start = <span class="number">1</span>, end = numbers.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] != target)&#123;</span><br><span class="line">            <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] &gt; target) </span><br><span class="line">                end--;</span><br><span class="line">            <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] &lt; target)  start++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> &#123;start, end&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li><p>这一种要慢一点，因为每一次我们都要先判断numbers[start - 1] + numbers[end - 1] !&#x3D; target然后才进行下面的判断。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; numbers, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> start = <span class="number">1</span>, end = numbers.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] != target)&#123;</span><br><span class="line">            <span class="keyword">if</span>(numbers[start - <span class="number">1</span>] + numbers[end - <span class="number">1</span>] &gt; target) </span><br><span class="line">                end--;</span><br><span class="line">            <span class="keyword">else</span>  start++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> &#123;start, end&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>  <a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-substring-without-repeating-characters/description/">3. Longest Substring Without Repeating Characters</a> </p>
+</li>
+<li><p>这个题思路其实很简单，就是遍历string s，然后往回找有没有出现过，出现过了就先把当前的substring长度记下来，再把substring的起始更新为第一次出现的位置后面那个字符。继续遍历。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/sqrtx/description/">69. Sqrt(x)</a></p>
+<ul>
+<li>首先要注意的是<a target="_blank" rel="noopener" href="https://coolshell.cn/articles/11466.html">整型溢出</a>。最好的注意方法是不要用乘法用除法。</li>
+<li>另一个就是<a target="_blank" rel="noopener" href="http://www.cnblogs.com/grandyang/p/6854825.html">二分查找法的应用</a>，一定要注意的是二分查找法的前提是有序。</li>
+<li>还有一种方法是<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20690553">牛顿方法</a>，虽然它的前提要求是开始循环的点要接近所求值，但是在求平方根时是无所谓的。</li>
+<li>但在<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Integer_square_root#Using_only_integer_division">求整数根值</a>的时候，初始点是从最大的来。才会有$x_n -x_{n+1}&#x3D;1$。很奇怪。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/">744. Find Smallest Letter Greater Than Target</a></p>
+<ul>
+<li>这个的话用二分法一开始我是这样的：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> l=<span class="number">0</span>,r=letters.<span class="built_in">size</span>(),m;</span><br><span class="line"><span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line">        m=l+(r-l)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(letters[m]&gt;target) r= m<span class="number">-1</span>;  <span class="comment">//注意这一条 </span></span><br><span class="line">        <span class="keyword">else</span> l=m;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> letters[r];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>这样子最后返回的是r所指向的位置，而经过上面的while可以保证此时的r+1所指向的位置是大于target的。但是有一个问题是r所指向的位置却不能保证是不是大于target的。比如考虑一个test：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">letters = [&quot;c&quot;, &quot;f&quot;, &quot;j&quot;]</span><br><span class="line">target = &quot;c&quot;</span><br><span class="line">Output: &quot;f&quot;</span><br></pre></td></tr></table></figure></li>
+<li>但是这里的输出就不是“f”,而是“c”。我们要返回的要保证大于target，其次再保证是最小的。因此我们应该在if语句那里调整一下。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-palindromic-substring/description/">5. Longest Palindromic Substring</a></p>
+<ul>
+<li>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaoli_nu/article/details/76694843">求区间中1的个数最多的数 若有多个输出最小的</a><br>有时候要反过来想，抓住能够固定的条件。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/find-all-duplicates-in-an-array/description/">442. Find All Duplicates in an Array</a></p>
+<ul>
+<li>这道题有一个特征可以利用的是1&lt;a[i]&lt;&#x3D;n(n&#x3D;size of array)。也就是说一个长为5的数组，其最大的值为5，最小的值为1。且都为正整数。</li>
+<li>可以利用这一特征，然后让nums[i]里的值当作nums的下表。如果有同样的值则会只想到nums里的同一个数，而第一次指向则改为负数，第二次指向的时候就是出现了重复值的时候，此时指向的值是负数。这个只需127ms。</li>
+<li>但我之前的思路是，一边遍历一边把数字放到hash_map<br>里去，然后一边检查hash map里有没有，一边加入。虽然hash map的find理论上只需要常数的时间，但比起前一种方法的比较大小，还是会要多费出时间。需要165ms。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/subsets/description/">78. Subsets</a></p>
+<ul>
+<li>这个题一开始出现一个memory  limited 的错误。这个错误其实很容易犯，就是在对vector做循环遍历的时候，在for的逻辑结构里我对这个vector又有了增加，于是导致那个循环条件i&lt;subset.size()一直出不去。从而一直在加。</li>
+<li>这个题的思路其实很简单，就是遇到一个数，我们就把这个数的先作为子集添加进去。然后对于每一个已经在子集里的vector都添加这个数，然后构成的新子集也添加进去。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/number-of-matching-subsequences/description/">792. Number of Matching Subsequences</a></p>
+<ul>
+<li><p>这个用暴力法肯定无法解决。查看讨论后得到一个非常巧妙的方法。主要是利用string用c_str这个转换成char数组后，最后一个元素是0。</p>
+</li>
+<li><p>有一个<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18481740/pointer-expressions-ptr-ptr-and-ptr">知识点</a>是++和*，*++p–*(++p)首先，++和*是同一个优先级，于是我们看结合性。都是从右到左，也就是都先和左边的结合，于是先++和p结合，然后*和++p结合。</p>
+</li>
+<li><p>我们可以构造出一个字典索引从a到b开头，把字典里的每一个string变成char数组放进去。然后把它看成是一个未与所求string S匹配的目录。然后一个个地遍历S的字符，从索引开始，遇到匹配的这个字符，就把这个char数组匹配的那个去掉，重新放入新的索引下。于是匹配到最后，如果都匹配完了，那么最终肯定会被放到0对应的索引下的。因为，string转char 数组最后一个字符的值是0。 </p>
+</li>
+<li><p>这个是代码：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numMatchingSubseq</span><span class="params">(string S, vector&lt;string&gt;&amp; words)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">const</span> <span class="type">char</span>*&gt; index[<span class="number">128</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;w:words)&#123; </span><br><span class="line">            index[w[<span class="number">0</span>]].<span class="built_in">push_back</span>(w.<span class="built_in">c_str</span>());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp; s:S)&#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(index[s].<span class="built_in">size</span>()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">auto</span> i:index[s])&#123;</span><br><span class="line">                    index[*++i].<span class="built_in">push_back</span>(i);</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="comment">//index[s].clear(); 加上这个就没有runtime error了，但是算出来的结果是错的。显然逻辑上要清除这个索引，因为我们已经比较完了。</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">return</span> index[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li><p>参考答案发现要把index[s].clear() 放在index[*++i].push_back(i);的前面，因为有可能有一个词语是aaaa，那么它刚刚加入又被清除了。所以就有错误。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/assign-cookies/description/">455. Assign Cookies</a></p>
+<ul>
+<li>这个没什么要说的。主要是了解到一个sort的用法，它默认是按从小到大排序，如果想要从大到小，就用greater<int>作为第三个参数。事实上这个参数是一个函数模板，可以用来决定两个object哪一个比较大。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/min-cost-climbing-stairs/description/">746. Min Cost Climbing Stairs</a></p>
+<ul>
+<li><p>首先要搞清一个题意就是，对于包含n个cost的序列，我们最后的落脚点只能是在cost[n-1]和cost[n-1]，也就是倒数第一个和倒数第二个。倒数第三个是不行的。</p>
+</li>
+<li><p>看起来似乎是每次往后check两个直，并选择小的那一个就行了。但考虑一种情况[1,2,9,1],首先我们考虑1和2，选择1，然后选择2，然后选择1，最后的结果是4.但是如果我们一开始在1和2中选择2，然后就选择1，那么结果是3. </p>
+</li>
+<li><p>如果我们从后往前推呢？实质是一样的。因此我们这里无法用贪心算法。要从全局来看就要用到DP。</p>
+<ul>
+<li><p>首先思考，一个n长的cost序列，我们遍历到下标n-1，或者n-2都可以看作是结束的标志，我们只需要比较这两种遍历哪一种cost最小。而这个问题的子问题就是，一个n-1长的cost序列，我们遍历到下标n-2，或者n-3都可以看作是结束的标志……。</p>
+</li>
+<li><p>于是不难想到，如果及L(n)为n长的cost序列的最小cost和，我们能不能构建一个状态转移函数？还有一些变数，那么我们假设DP(n)为在一个包含n个cost的序列里以最后一个作为最后的落脚点的方案所能达到的最小和。那么<br>  $$<br>  \begin{align*}<br>  &amp;DP(0)&#x3D;cost[0] \\<br>  &amp;DP(1)&#x3D;cost[1] \\<br>  &amp;DP(n) &#x3D; cost[n] +min(DP(n-1), DP(n-2))<br>  \end{align*}<br>  $$</p>
+</li>
+<li><p>因为cost[n]是一定要选的，然后再来看到底是从n-1跳，还是从n-2跳。</p>
+</li>
+</ul>
+</li>
+<li><p>总结一下，就是：</p>
+<ol>
+<li>首先要知道这是一个全局最优，那么就不能用贪心算法</li>
+<li>然后要巧妙地设置好状态，这样才能把状态转移函数写得简单。最重要的就是要固定住一些变量，比如这一题里，我们就不是简单的用L(n)而是用的DP(n)就把最后的落脚点固定住了，方便后面的分析。</li>
+<li>固定住变量以后，需要在最前面的初始化里体现。也就是这题里的dp[0]和dp[1].</li>
+</ol>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/climbing-stairs/description/">70. Climbing Stairs</a></p>
+<ul>
+<li><p>这一题我们同样可以用DP，比如假设DP(n)表示上n层楼梯拥有的方法数。那么DP(n+1)就可以用DP(n)来表示,但是显然我们的某些情况还是没有固定，比如最后一步是1 step和2 step会影响到我们的推导。因此我们通过设置DP1(n)和DP2(n)来表示，前者表示n层楼里，最后一步是1 step的方法数，后者表示最后一步是2 step的方法数。那么推导就好进行了。</p>
+<p>  $$<br>  \begin{align*}<br>  &amp;DP_0(n) &#x3D; DP_1(n)+DP_2(n) \\<br>  &amp;DP_1(n) &#x3D; DP_1(n-1)+DP_2(n-1) \\<br>  &amp;DP_2(n) &#x3D; DP_1(n-2)+DP_2(n-2)<br>  \end{align*}<br>  $$</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/range-sum-query-immutable/description/">303. Range Sum Query - Immutable</a></p>
+<ul>
+<li><p>第一个想法是通过建一个表来代替频繁的计算，用内存换时间。于是NumArray初始化的时候就可以建一个二维数组 sum[i][j]就表示从i到j的和，然后在sumRange这个方法里就只需要返回这个二维数组的某个值就好。</p>
+</li>
+<li><p>用vector创建二维数组的方式是：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; sum = <span class="keyword">new</span> vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;(len,<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">10</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>但是这样其实非常的繁琐，需要用到3个for。仔细想你会发现如果我用一个一维数组sum[I]表示从i开始到最后的累加和。那么从I到j的累加和就是sum[i]-sum[j]了。</p>
+</li>
+<li><p>要注意，一个空的vector无法用下标的方式扩充vector。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/">122. Best Time to Buy and Sell Stock II</a></p>
+<ul>
+<li>这就是一个贪心算法，看起来好似很多种情况要考虑。但其实我们只需要把当天买和第二天买的差价大于0的利润全加起来就是能赚到的总和。就是一个贪心算法。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/lemonade-change/description/">860. Lemonade Change</a></p>
+<ul>
+<li>这里要注意的就是20的找零，优先使用10块。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-anagram/description/">242. Valid Anagram</a></p>
+<ul>
+<li>一个往dict里添，一个往dict里拿，如果只是顺序重排，最后dict应该是没有变动。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/number-of-1-bits/description/">191. Number of 1 Bits</a></p>
+<ul>
+<li>最简单的就是循环，然后将n一位一位地右移。 但是还有一种骚操作——<a target="_blank" rel="noopener" href="http://6460646.blog.163.com/blog/static/27779875201132893614412/">n&amp;(n-1)的妙用</a>  </li>
+<li>其实就是把二进制数第一个不为0的那一位变为0，后面的位都变为1。然后做一个与运算的话，就把第一位不为0的改成了0.那么在判断的时候就不需要一个个地遍历了，只需要遍历1的个数的次数。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/power-of-three/description/">326. Power of Three</a></p>
+<ul>
+<li>可以简单地循环，但是有一个<a target="_blank" rel="noopener" href="http://www.aichengxu.com/other/2460321.htm">数学知识</a>可以快速解决它。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/counting-bits/description/">338. Counting Bits</a></p>
+<ul>
+<li><p>首先很容易想到的是，后一个状态是可以根据前一个状态得到的。从偶数+1变成奇数后的#（1）一定会加1，而奇数+1变成偶数就有一点麻烦。它会把第一个不是1的位的后面的1都变成0，而这个第一个不是1的位变成1.前面的1我们不会变，那么我们的任务其实就是数这个奇数第一个不为1的位后面有几个1以及前面有几个1.</p>
+</li>
+<li><p>但是这依然很麻烦，不如先写几个看一下规则，假设dp(n)表示数字n的二进制包含的1的个数。那么<br>$$<br>\begin{align*}<br>&amp;dp(0) &#x3D; 0  \\<br>&amp;dp(1) &#x3D; 1   \\<br>&amp;dp(2) &#x3D; 1 &#x3D; dp(2-0)+1 \\<br>&amp;dp(3) &#x3D; 2 &#x3D; dp(3-2)+1 \\<br>&amp;dp(4) &#x3D; 1   \\<br>&amp;dp(5) &#x3D; 2 &#x3D; dp(5-4)+1 \\<br>&amp;dp(6) &#x3D; 2 &#x3D; dp(6-4)+1 \\<br>&amp;dp(7) &#x3D; 3 &#x3D; dp(7-4)+1 \\<br>&amp;dp(8) &#x3D; 1 \\<br>&amp;dp(9) &#x3D; 2 &#x3D; dp(9-8)+1  \\<br>……<br>\end{align*}<br>$$</p>
+</li>
+<li><p>那么规则就出现了。为什么是这样呢? 首先那个+1其实是对应的$dp(2_i)$的值，因为它总是1，所以我们直接+1了。</p>
+</li>
+<li><p>所以规律是$dp(n) &#x3D; dp(n-2_i)+dp(2_i)$.把$2_i$作为起始点，因为它总是以一个1后面跟若干个0结尾。那么往上加1的话，它的1的个数就很好推断。仔细体会。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/power-of-four/description/">342. Power of Four</a></p>
+<ul>
+<li><p>4的n次方可以看作是n个4的相乘，而一个数乘以4相当于往左移2位（乘以2是往左移1位，以此类推）。</p>
+</li>
+<li><p>所以只需要检查当前数的二进制只有一个1，并且在其奇数位上。</p>
+</li>
+<li><p>由于int是32位,0101010101010101010101010101写成16进制是0x55555555</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (num&gt;<span class="number">0</span>) &amp;&amp;((num&amp;(num<span class="number">-1</span>))==<span class="number">0</span>)&amp;&amp;((num&amp;<span class="number">0x55555555</span>)==num);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/">121. Best Time to Buy and Sell Stock</a></p>
+<ul>
+<li><p>这里的优秀解法<a target="_blank" rel="noopener" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/discuss/39038/Kadane's-Algorithm-Since-no-one-has-mentioned-about-this-so-far-:">参考</a> 也就是把这个题转变成了一个求子串最大和的问题。</p>
+</li>
+<li><p>首先要理解这个公式： $maxSum(i) &#x3D; max(maxSum(i-1)+[i],[i])$。只能是这两个值之间的一个，因为紫川要是连续的，也就是说如果不能把[i]纳入maxSum里，那么就要重新开始计maxSum。</p>
+</li>
+<li><p>然后这样遍历一次最后得到的还不是真正的max，真正的max应该是从前面的各种maxSum里选一个最大的。</p>
+</li>
+<li><p>还有一个问题是，在这个题里，maxSum要大于0。为什么要这么设置是因为，我们可以通过一个子串也不选来达到最大的子串和。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/maximum-subarray/description/">53. Maximum Subarray</a></p>
+<ul>
+<li><p>这个套路差不多，但是这里有一个不同是，这里必须至少包含一个元素。也就是说如果都是负数，那么maxSum的返回值也会是负数。</p>
+</li>
+<li><p>还有一种方法是分而治之的方法：首先我们分析，最大和的子串能出现在哪：</p>
+<ol>
+<li>前半部分</li>
+<li>后半部分</li>
+<li>跨越中间部分</li>
+</ol>
+</li>
+<li><p>那么我们只需要找到这这三者的最大子串和的最大值就是整个子串的最大值。</p>
+</li>
+<li><p>前半部分和后半部分就是递归，暂且不管。看一下横跨中间的那部分。那么很显然，要横跨，就必须把最中间的值写入。然后往左边遍历，一直在中间累加，直到出现最大。这里的二分法的迭代要注意要有结束条件。也就是当len&#x3D;0，后者len&#x3D;1 的时候要能直接返回一个值而不是继续递归。因为我们的递归是针对len&gt;1 的情况来说的。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/intersection-of-two-arrays/discuss/139344/C++-2ms">349. Intersection of Two Arrays</a></p>
+<ul>
+<li>首先介绍一个数据结构unordered_set。它保存所有不同的值，但是不保证顺序。因为它内部也是一个hashtable。只不过它的值就是它的key。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/">26. Remove Duplicates from Sorted Array</a></p>
+<ul>
+<li>这个题很trick， 要明白cur下标和next下标的含义。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/07/31/%E3%80%90leetcode%E3%80%91%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/" data-id="cl0t1dcyk00158slf2aqb1j8m" data-title="【leetcode】刷题笔记" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-经典算法-二叉树的遍历" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/" class="article-date">
+  <time class="dt-published" datetime="2019-07-30T07:24:23.000Z" itemprop="datePublished">2019-07-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/">经典算法-二叉树的遍历</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h2><p>二叉树的遍历（中序，前序，后序，宽度优先）是基础，递归版本和非递归版本都要熟练掌握。递归版主要是要理解递归的思想，而非递归版主要是利用栈和队列来存储节点。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/univalued-binary-tree/">965. Univalued Binary Tree</a> 这个题就可以囊括树的遍历算法。包括：前序遍历，中序遍历，后序遍历以及DFS和BFS。可以参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/SHERO-Vae/p/5800363.html">二叉树的递归与非递归遍历（前序、中序、后序)</a></p>
+<h3 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h3><p>原题：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/">230. 二叉搜索树中第K小的元素</a> </p>
+<p>太基础了，直接上代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">kthSmallest</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        stack&lt;TreeNode*&gt; s;</span><br><span class="line">        <span class="comment">//先找到第一个应该访问的点，放在栈的最上面。</span></span><br><span class="line">        <span class="keyword">while</span>(root!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">            s.<span class="built_in">push</span>(root);</span><br><span class="line">            root=root-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(!s.<span class="built_in">empty</span>())&#123;</span><br><span class="line">            TreeNode *t = s.<span class="built_in">top</span>();</span><br><span class="line">            s.<span class="built_in">pop</span>();</span><br><span class="line">            k=k<span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">if</span> (k==<span class="number">0</span>) <span class="keyword">return</span> t-&gt;val;</span><br><span class="line">            <span class="keyword">if</span> (t-&gt;right!=<span class="literal">NULL</span>) &#123;</span><br><span class="line">                s.<span class="built_in">push</span>(t-&gt;right);</span><br><span class="line">                t = t-&gt;right-&gt;left; </span><br><span class="line">                <span class="comment">//这里记得要再一次找到最左边的点</span></span><br><span class="line">                <span class="keyword">while</span>(t!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">                    s.<span class="built_in">push</span>(t);</span><br><span class="line">                    t = t-&gt;left;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>主要是进阶问题：如果二叉搜索树经常被修改（插入&#x2F;删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化 kthSmallest 函数？</p>
+<p>这就涉及到了一些数据结构的知识，二叉搜索树是为了解决链表查找难而数组插入删除复杂度高的问题而产生的。但是为了维持住二叉搜索树的结构（左小右大），每次插入要先找到应该插入的地方。而且为了防止二叉树退化为链表，还要把插入后多余的子节点通过旋转重新恢复成平衡二叉搜索树。查找和插入的复杂度均为O(logn)。</p>
+<p>所以简单来讲，对于插入删除以及查找都有要求的情形使用平衡二叉树就很好了。</p>
+<p>如果还想要优化的话，可以从第K小的值下手。如果k的值是固定的，我们可以把构造一个B树，每一个节点的大小就是k个数。那么我们每次查找只需要读取根节点中存放的数组的最后一位就行，复杂度为O(1)。插入的话稍微复杂一点，但也可以在复杂度O(logn)范围内完成。</p>
+<h2 id="练一下手"><a href="#练一下手" class="headerlink" title="练一下手"></a>练一下手</h2><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/discuss/147960/C++-recursive-method-with-8ms">108. Convert Sorted Array to Binary Search Tree</a><br>因为这个序列是有序序列，最简单的就是中位数为根节点。然后左边部分的中位数为左结点，右边部分的中位数为右结点。递归版很简单，但是非递归版我们就可以用到栈。基本上树的很多操作都可以用到栈。<br>非递归创建的思路是先完成一个insert函数：</p>
+<ol>
+<li>当树为空树，则当前插入点为root</li>
+<li>if(root&gt;currentNode)插入左边，否则插入右边</li>
+<li>上面是一个循环的过程，root是一个叶结点为止。</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/minimum-distance-between-bst-nodes/description/">783. Minimum Distance Between BST Nodes</a><br>首先这个题目已经把输入放进了二叉搜索数里了，然后我们知道中序遍历是按照从小到大的顺序的，那么最小的差应该就在这个相邻的两个数之间。 最直观的思路就是先把树中序遍历一次放入一个数组，然后遍历数组得到最小差。<br>这里有一个知识点就是c++里的list的迭代器是没有+号操作符的。具体原因见<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/17556460/difference-in-behaviour-of-listintiterator-and-vectorintiterator">Difference in behaviour of list<int>::iterator and vector<int>::iterator</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/trim-a-binary-search-tree/description/">669. Trim a Binary Search Tree</a><br>首先要利用二叉搜索数的特性，然后可以使用递归。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/" data-id="cl0t1dcz6003i8slfceqwefoh" data-title="经典算法-二叉树的遍历" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-经典算法-左右指针" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%B7%A6%E5%8F%B3%E6%8C%87%E9%92%88/" class="article-date">
+  <time class="dt-published" datetime="2019-07-30T02:53:15.000Z" itemprop="datePublished">2019-07-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%B7%A6%E5%8F%B3%E6%8C%87%E9%92%88/">经典算法-左右指针</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/3sum/">原题</a> 给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c &#x3D; 0 ？找出所有满足条件且不重复的三元组。</p>
+<p>注意：答案中不可以包含重复的三元组。</p>
+<p>例如, 给定数组 nums &#x3D; [-1, 0, 1, 2, -1, -4]，<br>满足要求的三元组集合为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [-1, 0, 1],</span><br><span class="line">  [-1, -1, 2]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>不管怎么样，每遇到一个问题，先把暴力法的解法想出来，这样在面试的时候也不至于完全答不上来。你至少可以退而求其次地回答一个次优解。</p>
+<p>暴力法显然就是三个for循环，一层一层地固定好三个数，再来检查是不是和为0。复杂度为 $O(n^3)$ 。如果我们要优化一定是掌握了这些数字的某些规律可以让我们少比较一些组合(也就是剪枝)。</p>
+<p>不妨先把这些数字排序，那么三数之和一定是大中小三个数字组成，用h，m，l三个小写字母表示大，中，小的下标，大写字母H，M，L表示其代表的值。那么此时因为三个数我们有了排序，那么固定起来也有规律得多，不妨固定l和m，另m&#x3D;l+1，l从0开始遍历。</p>
+<p>有一个要注意的是不可以出现重复的三元组，也就是说一旦遇到一个三元组符合条件就可以不继续遍历h了，因为固定了l和m，再遍历获得的三元组肯定是一样的。另外，如果有两个数和以前相等，那么也要排除掉。</p>
+<p>上代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">threeSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">         vector&lt;vector&lt;<span class="type">int</span>&gt; &gt;res;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(),nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="comment">//排序以后最小的值都大于0或者最大的值都小于0，则不存在三个值之和为0的情况</span></span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">empty</span>() || nums.<span class="built_in">front</span>()&gt;<span class="number">0</span> || nums.<span class="built_in">back</span>()&lt;<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        <span class="comment">//开始固定住三个数中最小的数的下标</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;nums.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="type">int</span> fix=nums[i];</span><br><span class="line">            <span class="keyword">if</span>(fix&gt;<span class="number">0</span>)   <span class="keyword">break</span>;</span><br><span class="line">            <span class="comment">//这里保证了下一次while循环不会出现相同的三元组，剩下的我们只需要保证while里不一样了。</span></span><br><span class="line">            <span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; fix==nums[i<span class="number">-1</span>]) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">//对撞指针，让左边和右边永远从(i+1,len-1)之间遍历</span></span><br><span class="line">            <span class="type">int</span> l=i+<span class="number">1</span>,r=nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[l]+nums[r]==-fix)&#123;</span><br><span class="line">                  <span class="comment">//说明是第一次匹配上</span></span><br><span class="line">                    <span class="keyword">if</span>(l==i+<span class="number">1</span> || r==nums.<span class="built_in">size</span>()<span class="number">-1</span>)&#123;</span><br><span class="line">                        res.<span class="built_in">push_back</span>(vector&lt;<span class="type">int</span>&gt;&#123;nums[i],nums[l],nums[r]&#125;);</span><br><span class="line">                        l++;r--;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 说明此时的l和上次一样，因为while里面的i肯定是一样的，因此i，l，r这个三元组肯定是和之前相同。所以不能加入res里。</span></span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span>(nums[l]==nums[l<span class="number">-1</span>])</span><br><span class="line">                        l++;</span><br><span class="line">                    <span class="comment">//和上面同理</span></span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span>(nums[r]==nums[r+<span class="number">1</span>])</span><br><span class="line">                        r--;</span><br><span class="line">                    <span class="keyword">else</span>&#123;</span><br><span class="line">                        res.<span class="built_in">push_back</span>(vector&lt;<span class="type">int</span>&gt;&#123;nums[i],nums[l],nums[r]&#125;);</span><br><span class="line">                        l++;r--;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(nums[l]+nums[r]&lt;-fix)</span><br><span class="line">                    l++;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    r--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><p>原题：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/3sum-closest/">16. 最接近的三数之和</a>， 这里不仅仅需要判断是否是合适的三元组，还要计算离target数相差多少（也就是target-sum的绝对值最小）。思路类似的，先排序，然后计算三元组之和sum，然后计算abs(sum-target)与之前的最小值哪一个更小。</p>
+<p>注意到我们的遍历是从左到右的，因此三数之和总是越来越大的。一旦sum&gt;target，就不需要再遍历了，后面的离target肯定是越来越远。</p>
+<p>上代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">threeSumClosest</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(),nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="type">int</span> l,r,tmp,res,minDistance=INT_MAX;</span><br><span class="line">        <span class="type">int</span> len=nums.<span class="built_in">size</span>();</span><br><span class="line">        r=len<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;len<span class="number">-2</span>;++i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; nums[i]==nums[i<span class="number">-1</span>]) <span class="keyword">continue</span>;</span><br><span class="line">            l=i+<span class="number">1</span>;</span><br><span class="line">            r=len<span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line">                tmp=nums[i]+nums[l]+nums[r];</span><br><span class="line">                <span class="keyword">if</span>(tmp==target) <span class="keyword">return</span> tmp;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(tmp&lt;target) &#123;</span><br><span class="line">                    l++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> r--;</span><br><span class="line">                <span class="keyword">if</span>(minDistance&gt;<span class="built_in">abs</span>(tmp-target)) &#123;</span><br><span class="line">                    minDistance = <span class="built_in">abs</span>(tmp-target);</span><br><span class="line">                    res=tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%B7%A6%E5%8F%B3%E6%8C%87%E9%92%88/" data-id="cl0t1dd0q003w8slfg35x1jwk" data-title="经典算法-左右指针" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-经典算法-LRU缓存机制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/07/29/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time class="dt-published" datetime="2019-07-29T12:05:13.000Z" itemprop="datePublished">2019-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/07/29/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/">经典算法-LRU缓存机制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/lru-cache/">原题</a></p>
+<p>运用你所掌握的数据结构，设计和实现一个  LRU (最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 get 和 写入数据 put 。</p>
+<p>获取数据 get(key) - 如果密钥 (key) 存在于缓存中，则获取密钥的值（总是正数），否则返回 -1。<br>写入数据 put(key, value) - 如果密钥不存在，则写入其数据值。当缓存容量达到上限时，它应该在写入新数据之前删除最近最少使用的数据值，从而为新的数据值留出空间。</p>
+<p>进阶:<br>你是否可以在 O(1) 时间复杂度内完成这两种操作？</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="LRU机制是什么"><a href="#LRU机制是什么" class="headerlink" title="LRU机制是什么"></a>LRU机制是什么</h3><p>举个例子，你现在有一排书，按照你上一次看他们的时间的远近从左到右排列，用A B C D表示（最右边的最新）。这个书架的大小是可以放5本书。<br>当你新买了一本书E的时候，就可以把书放在最右边，也就是D的后面。此时书架的排列是A B C D E。<br>此时你又买了一本新书F，但是书架已经满了，那么你就把最旧的书A抽出来，留出空位把F插入E的后面。此时书架的排列是B C D E F。<br>如果你有一天想看C书，那么你就要抽出来看完以后插入F的后面。此时的书架排列是B D E F C。</p>
+<p>思想其实很简单易懂，这个算法一般都是用来做缓存处理的。因为计算机的内存大小有限，当缓存不够的时候，就可以用这个算法来决定把缓存里哪一个数据删掉。从而让程序执行每一次都可以缓存命中，加快程序执行速度。比如操作系统里的页置换算法。</p>
+<h3 id="怎么实现"><a href="#怎么实现" class="headerlink" title="怎么实现"></a>怎么实现</h3><p>高效率的实现无非就是一个构造数据结构的问题。这个算法需要插入，查找和删除的复杂度都为O (1)，而且要有大小排序。</p>
+<ol>
+<li>排序可以用数组，但是插入的复杂度就不是O(1); </li>
+<li>插入要O(1)可以用链表，但是查找的复杂度就不是O(1);</li>
+<li>查找要O(1)的就会想到哈希表，但显然哈希表的存储方式不足以支撑排序的要求。</li>
+</ol>
+<p>显然，没有一个现成的数据结构满足我们的要求，只能是自己组装。</p>
+<ol>
+<li>首先查找用哈希表，存储一个指针指向一个对象，那么就可以扩充存储方式了。</li>
+<li>然后我们把这个对象用双向链表的方式组织，加一个头加一个尾，有了排序特征的同时也保证了插入效率。</li>
+</ol>
+<p>上代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//用来存储key和value</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">node</span>&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="type">int</span> key, value;</span><br><span class="line">        node *next,*pre;</span><br><span class="line">        <span class="built_in">node</span>()&#123;</span><br><span class="line">            next=<span class="literal">NULL</span>;</span><br><span class="line">            pre=<span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">node</span>(<span class="type">int</span> k,<span class="type">int</span> v):<span class="built_in">key</span>(k),<span class="built_in">value</span>(v)&#123;</span><br><span class="line">            next=<span class="literal">NULL</span>;</span><br><span class="line">            pre=<span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LRUCache</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    </span><br><span class="line">    unordered_map&lt;<span class="type">int</span>,node*&gt; hm;</span><br><span class="line">    node *head,*tail;</span><br><span class="line">    <span class="type">int</span> size,capacity;</span><br><span class="line">    <span class="built_in">LRUCache</span>(<span class="type">int</span> capacity) &#123;</span><br><span class="line">        head = <span class="keyword">new</span> <span class="built_in">node</span>();</span><br><span class="line">        tail = <span class="keyword">new</span> <span class="built_in">node</span>();</span><br><span class="line">        head-&gt;next= tail;</span><br><span class="line">        tail-&gt;pre=head;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>-&gt;capacity = capacity;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get</span><span class="params">(<span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//检查有没有</span></span><br><span class="line">        std::unordered_map&lt;<span class="type">int</span>,node*&gt;::const_iterator got = hm.<span class="built_in">find</span>(key);</span><br><span class="line">        <span class="keyword">if</span> ( got == hm.<span class="built_in">end</span>() )</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//更新这个node的位置</span></span><br><span class="line">            node* t= got-&gt;second;</span><br><span class="line">            t-&gt;pre-&gt;next= t-&gt;next;</span><br><span class="line">            t-&gt;next-&gt;pre = t-&gt;pre;</span><br><span class="line">            tail-&gt;pre-&gt;next=t;</span><br><span class="line">            t-&gt;pre=tail-&gt;pre;</span><br><span class="line">            tail-&gt;pre=t;</span><br><span class="line">            t-&gt;next=tail;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> t-&gt;value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">put</span><span class="params">(<span class="type">int</span> key, <span class="type">int</span> value)</span> </span>&#123;</span><br><span class="line">        std::unordered_map&lt;<span class="type">int</span>,node*&gt;::iterator got = hm.<span class="built_in">find</span>(key);</span><br><span class="line">        <span class="comment">//找到了</span></span><br><span class="line">        <span class="keyword">if</span> ( got!= hm.<span class="built_in">end</span>() )&#123;</span><br><span class="line">            <span class="comment">//直接删除该node</span></span><br><span class="line">            node *tmp = got-&gt;second;</span><br><span class="line">            hm.<span class="built_in">erase</span>(tmp-&gt;key);</span><br><span class="line">            <span class="comment">//删除链表</span></span><br><span class="line">            tmp-&gt;pre-&gt;next=tmp-&gt;next;</span><br><span class="line">            tmp-&gt;next-&gt;pre= tmp-&gt;pre;</span><br><span class="line">            <span class="keyword">delete</span> tmp;</span><br><span class="line">            </span><br><span class="line">            size--;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//如果已经满了</span></span><br><span class="line">        <span class="keyword">if</span>(size&gt;=capacity)&#123;</span><br><span class="line">            <span class="comment">//开始删除head后面的第一个node</span></span><br><span class="line">            node *tmp = head-&gt;next;</span><br><span class="line">            hm.<span class="built_in">erase</span>(tmp-&gt;key);</span><br><span class="line">            <span class="comment">//删除链表</span></span><br><span class="line">            head-&gt;next=head-&gt;next-&gt;next;</span><br><span class="line">            head-&gt;next-&gt;pre=head;</span><br><span class="line">            <span class="keyword">delete</span> tmp;</span><br><span class="line">            size--;</span><br><span class="line">        &#125;</span><br><span class="line">        node *tmpNode=<span class="keyword">new</span> <span class="built_in">node</span>(key,value);</span><br><span class="line">        <span class="function">std::pair&lt;<span class="type">int</span>,node*&gt; <span class="title">tmppair</span><span class="params">(key,tmpNode)</span></span>;</span><br><span class="line">        hm.<span class="built_in">insert</span>(tmppair);</span><br><span class="line">        </span><br><span class="line">        tail-&gt;pre-&gt;next = tmpNode;</span><br><span class="line">        tmpNode-&gt;pre=tail-&gt;pre;</span><br><span class="line">        tmpNode-&gt;next=tail;</span><br><span class="line">        tail-&gt;pre=tmpNode;</span><br><span class="line">        </span><br><span class="line">        size++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/07/29/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" data-id="cl0t1dd0r003y8slfdl374lo4" data-title="经典算法-LRU缓存机制" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-【leetcode】腾讯50题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/07/29/%E3%80%90leetcode%E3%80%91%E8%85%BE%E8%AE%AF50%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2019-07-29T11:17:50.000Z" itemprop="datePublished">2019-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/07/29/%E3%80%90leetcode%E3%80%91%E8%85%BE%E8%AE%AF50%E9%A2%98/">【leetcode】腾讯50题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本系列是根据<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problemset/50/">腾讯精选练习50题</a>所产生的笔记，做完这50题足够你应付所有开发类的算法面试了。</p>
+<table>
+<thead>
+<tr>
+<th>题目</th>
+<th>标签</th>
+<th>笔记链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/lru-cache/">46. LRU缓存机制</a></td>
+<td>哈希表、链表</td>
+<td><a target="_blank" rel="noopener" href="https://husy1994.github.io/2019/07/29/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/">经典算法-LRU缓存机制</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/3sum/">15. 三数之和</a></td>
+<td>双指针</td>
+<td><a target="_blank" rel="noopener" href="https://husy1994.github.io/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%8F%8C%E6%8C%87%E9%92%88/">经典算法-左右指针</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/">230. 二叉搜索树中第K小的元素</a></td>
+<td>二叉树、递归、栈</td>
+<td><a target="_blank" rel="noopener" href="https://husy1994.github.io/2019/07/30/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/">经典算法-二叉树的遍历</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/climbing-stairs/solution/">70. 爬楼梯</a></td>
+<td>动态规划</td>
+<td><a target="_blank" rel="noopener" href="https://husy1994.github.io/2018/05/24/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">经典算法-动态规划</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle-ii/">142. 环形链表 II</a></td>
+<td>链表、快慢指针</td>
+<td><a href="">经典算法-快慢指针</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/combination-sum/">39.组合总和</a></td>
+<td>回溯算法</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="C-STL"><a href="#C-STL" class="headerlink" title="C++ STL"></a>C++ STL</h2><table>
+<thead>
+<tr>
+<th>结构体</th>
+<th>底层结构</th>
+<th>复杂度</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>priority_queue</td>
+<td>堆（优先队列的实际实现），是一种树的结构，子结点一定不小于父节点</td>
+<td>插入和删除都是$O(log{n})$</td>
+<td>push(123);pop()取出最大值。</td>
+</tr>
+<tr>
+<td>set</td>
+<td>二叉搜索树，左子树上的结点比父节点小，右子树上的比父节点大。</td>
+<td>插入和删除都是$O(log{n})$</td>
+<td>insert(123);find(123);erase(123);count(123);</td>
+</tr>
+<tr>
+<td>map</td>
+<td>二叉搜索树</td>
+<td>插入和删除都是$O(log{n})$</td>
+<td>Insert(make_pair(1,”123”));find(1);erase(1);</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/07/29/%E3%80%90leetcode%E3%80%91%E8%85%BE%E8%AE%AF50%E9%A2%98/" data-id="cl0t1dcyl00178slf8mvdgw9f" data-title="【leetcode】腾讯50题" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-【数据结构】二叉树备忘录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2019-03-24T03:37:26.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/">二叉树备忘录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="概念解释"><a href="#概念解释" class="headerlink" title="概念解释"></a>概念解释</h2><ol>
+<li>深度：边的条数，是以一个结点来讲的。</li>
+<li>高度：整个树的最大深度，从叶结点往上数</li>
+<li>等价二叉搜索树：若两颗搜索树的中序遍历序列相同，就说它们彼此等价。</li>
+<li>数据局部性原理：（包含时间局部性和空间局部性）<ul>
+<li>刚刚被访问的数据很有可能不久就会被再次访问</li>
+<li>将被访问的下一元素，极有可能就处于不久之前被访问的某个元素附近。</li>
+</ul>
+</li>
+</ol>
+<h2 id="大纲介绍"><a href="#大纲介绍" class="headerlink" title="大纲介绍"></a>大纲介绍</h2><ol>
+<li>为什么要引入二叉搜索树？<br> 因为线性结构要么静态查找很方便，动态删除插入不方便（比如序列）。要么动态插入删除方便，静态查找不方便（比如list）。于是就引出二叉搜索树这种半线性结构，在这两种操作之间达到均衡。</li>
+<li>为什么要引入平衡二叉树？<br> 因为二叉搜索树的形态很多，最坏的时候可以退化成一个序列。这样就毫无意义，因为很多操作的时间复杂度都与树高度的线性相关。于是为了保证树的高度不会太坏,我们引入一个平衡因子的指标。从而定义平衡二叉树。理想状态下当然是树的高度达到$\lfloor log_2 n \lfloor $也就是完全二叉树。</li>
+<li>为什么引入适当平衡？<br> 完全二叉树的要求未免太过严格，为了维持住这种形态所带来的重构的开销很有可能得不偿失。因此我们引入适当平衡——将树的高度不是绝对的等于$\lfloor log_2 n \lfloor $，而是渐进意义下的不超过$ O(log_2 n) $。于是,我们就可以介绍这一类型的树了：包括AVL，伸展树，红黑树，KD-树都是这一类型的变种。至于鼎鼎有名的B-树其实是完全二叉树的一种，因为她的外部结点的高度永远是一致的。</li>
+<li>那么各种树的优缺点和解决了什么问题呢？</li>
+</ol>
+<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h2><h3 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h3><ol>
+<li>要求：<ul>
+<li>除了叶结点，每个结点最多2个子结点</li>
+<li>左结点比其父结点要小，右结点比其父结点要大</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>这种规则的引入实际上就给搜索提供了遍历，本质上变成了一种二分法的搜索。</li>
+<li>另一方面，插入也变得简单。因为它的底层实现是一个链表，从而就不需要像序列一样有大规模的拷贝。</li>
+</ul>
+</li>
+</ol>
+<h2 id="（高度）平衡二叉树–-gt-B-树"><a href="#（高度）平衡二叉树–-gt-B-树" class="headerlink" title="（高度）平衡二叉树–&gt;B-树"></a>（高度）平衡二叉树–&gt;B-树</h2><ol>
+<li>思想就是把一个结点变为一个对象序列。用来解决数据量比较大的查找。</li>
+<li>背后的原理：<ul>
+<li>不同容量之间的读写速度是不一样的，内存里读取和磁盘里读取大概相差五个数量级</li>
+<li>在磁盘里读1b和读1kb的时间是差不多的，所以我们尽量一次多读一点。利用缓存实际上可以加快我们的速度</li>
+<li>对于数据量比较大，计算机是无法一次性把数据都放入内存的时候，于是在内存找不到的时候就去磁盘里找</li>
+<li>CPU的数据读取并不是一个字节一个字节，现代操作系统下，为了加快速度，它找到了就会加载一个页大小（通常是4KB）的数据放入它的缓存体系中。</li>
+<li>于是如果按照普通的一个结点一个抽象的数据对象（比如10Bytes），由于我们的树是一个链表，是通过new来获取创建的，它在磁盘和内存中的分布都是没有规律的。那么它周围的结点（父结点，子结点等等)不一定会一起读进内存。于是我们就需要频繁的从磁盘里读。而根据数据局部性原理，这样就会大大降低效率。</li>
+<li>但是，如果我们把一棵合适规模的子树（一般就是一个页大小）放在一个序列里，序列在内存或者磁盘里是顺序存放的。于是CPU每次读一个结点就读到了整个彼此逻辑上有联系的对象，于是就减少了对磁盘的读取次数。</li>
+<li>而另一方面，CPU对内存的读取速度之快，使得在4kb数据下对序列进行遍历所带来的开销微不足道。由于数据量之小，在这里我们甚至不采用查找的一些高级算法。</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>所以B-树的意义在于降低I&#x2F;O次数，虽然比较次数不会降低，渐进意义上的时间复杂度也不会降低。但是因为I&#x2F;O次数的降低使得整体查询时间的降低。</li>
+<li>外部结点是指叶结点的数值为NULl并不存在的孩子结点，B树的高度是相对于外部结点而言。引入外部结点的原因是可以对应于不同层次的存储结构。比如在内存的b树的外部结点是磁盘上的b树。</li>
+<li>B树的外部结点的深度一概一样。</li>
+<li>B树的阶次，m阶B树的内部结点<ul>
+<li>上限：有不超过m-1个的关键码，不超过m的分支。</li>
+<li>下限：根节点是大于2个分支；其余内部结点的分支是大于 向上取整的（m&#x2F;2)个</li>
+</ul>
+</li>
+<li>插入 -&gt;上溢 -&gt; 分裂 唯有分裂到了根节点才会导致树的高度增加</li>
+<li>删除 -&gt;下溢 -&gt; 合并或者旋转 唯有合并到了根结点导致树的高度减小</li>
+<li>值得注意的是：对于插入，永远是对叶结点的插入，因为把非叶结点都可以看做是一个范围，一个值是无法和一个范围匹配的。只有叶结点表示的是一个独立的值。而删除的话，有可能遇到的删除是删除非叶结点里的数，思路是可以<a target="_blank" rel="noopener" href="https://www.cnblogs.com/nullzx/p/8729425.html">参考</a>。B树的高度增加一定是由于分裂到根了，这样也就保证了b树的外部结点的深度一致。</li>
+<li>N个内部结点就有N+1个外部结点</li>
+</ul>
+</li>
+</ol>
+<h3 id="（适度）平衡二叉树"><a href="#（适度）平衡二叉树" class="headerlink" title="（适度）平衡二叉树"></a>（适度）平衡二叉树</h3><h4 id="AVL树"><a href="#AVL树" class="headerlink" title="AVL树"></a>AVL树</h4><ol>
+<li>要求：<ul>
+<li>本身首先是一棵二叉搜索树。</li>
+<li>平衡条件：每个结点的左右子树的高度之差的绝对值（平衡因子）最多为1。</li>
+</ul>
+</li>
+<li>特点:<ul>
+<li>如果因为插入删除导致平衡条件被破坏，我们可以通过单旋和双旋（这里涉及到等价二叉搜索树的概念，可以看下文参考）来重获平衡。</li>
+<li>这样就保证了二叉搜索树不会退化为一个序列。</li>
+</ul>
+</li>
+</ol>
+<h4 id="伸展树"><a href="#伸展树" class="headerlink" title="伸展树"></a>伸展树</h4><ol>
+<li>要求： <ul>
+<li>伸展树则利用了数据局部性原理，对于二叉搜索树来讲，我们只需要将刚被访问的结点，及时地“转移”至树根附近m，就可以加速后面的操作。</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>虽然它并没有一开始就要求平衡因子为1，但是不管哪一种初始结构，通过一个所谓的双层循环，不断地把所求的结点移到根结点。最后我们的树总是会处于一种高度平衡的状态。</li>
+<li>优点在于它体现了数据局部性的特征，并且通过双层伸展可以将当前查找结点上升到根节点的分摊成本降低至log(n),这和上面的avl的维持适度平衡需要的时间复杂度是差不多的。为什么单层伸展比双层伸展效率低呢？因为双层伸展把数的高度减小了</li>
+</ul>
+</li>
+</ol>
+<h4 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h4><ol>
+<li>要求<ol>
+<li>根结点和所有外部结点都是黑色</li>
+<li>红色结点的孩子都是黑色——&gt;也就是红色结点的孩子和父亲都是黑色</li>
+<li>外部结点到根的黑色结点数量是一致的。</li>
+</ol>
+</li>
+<li>红黑树在很多情况下，不妨先把它看作一个4阶B树，对我们逻辑理解有很大帮助。比如<ul>
+<li>一个红黑树通过提升就是一棵4阶B树。其黑高度就是一颗4阶B树的高度，也就是log(n)，于是考虑到红结点无法相邻，那么这个红黑树的高度最高也就是红结点间接插入黑结点中，也就是2倍log(n)的高度。由此可以证明红黑树的高度在渐进意义下也是log(n)</li>
+</ul>
+</li>
+<li>双红缺陷 与双黑缺陷</li>
+<li>其最大优点是: 它使得树的重构复杂度降为常数。</li>
+</ol>
+<h2 id="重要结论"><a href="#重要结论" class="headerlink" title="重要结论"></a>重要结论</h2><ol>
+<li>红黑树多用在内部排序，即全放在内存中的，微软STL的map和set的内部实现就是红黑树。B树多用在内存里放不下，大部分数据存储在外存上时。因为B树层数少，因此可以确保每次操作，读取磁盘的次数尽可能的少。在数据较小，可以完全放到内存中时，红黑树的时间复杂度比B树低。反之，数据量较大，外存中占主要部分时，B树因其读磁盘次数少，而具有更快的速度。</li>
+<li>STL里的map个set就是用的红黑树。而mysql里就是用的B+树。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/24/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="cl0t1dcxz00008slf7muz8d71" data-title="二叉树备忘录" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-4-计算机编程技巧" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/29/4-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" class="article-date">
+  <time class="dt-published" datetime="2018-07-29T14:35:17.000Z" itemprop="datePublished">2018-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/29/4-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/">4-计算机编程技巧</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="题目1"><a href="#题目1" class="headerlink" title="题目1"></a>题目1</h2><p>编程，如何交换两个数字，而不需要额外的内存空间（也就是不申明任何其它变量)</p>
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> swap1（<span class="type">int</span> &amp;i, <span class="type">int</span> &amp;j）&#123;</span><br><span class="line">  i=i+j;</span><br><span class="line">  j=i-j;</span><br><span class="line">  i=i-j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>又或者，利用XOR(^)对int数进行bit操作。int的二进制表示就是一串1和0的数字。X^X &#x3D; 0,而0^X&#x3D;X</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> swap2（<span class="type">int</span> &amp;i, <span class="type">int</span> &amp;j）&#123;</span><br><span class="line">  i=i^j; </span><br><span class="line">  j=i^j; </span><br><span class="line">  i=i^j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>具体可以参考<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/62003033">利用异或方式交换两个变量值的原理是什么？</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/29/4-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" data-id="cl0t1dcyu00208slfeau0ctdr" data-title="4-计算机编程技巧" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-【ucore】lab3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/22/%E3%80%90ucore%E3%80%91lab3/" class="article-date">
+  <time class="dt-published" datetime="2018-07-22T03:00:08.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/22/%E3%80%90ucore%E3%80%91lab3/">【ucore】lab3</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="实验目标"><a href="#实验目标" class="headerlink" title="实验目标"></a>实验目标</h2><p> 练习0：填写已有实验<br> 练习1：给未被映射的地址映射上物理页（需要编程）<br> 练习2：补充完成基于FIFO的页面替换算法（需要编程）<br> 扩展练习 Challenge：实现识别dirty bit的 extended clock页替换算法（需要编程）<br>数据结构分析<br>上一节已经设置好了物理内存以及分配方法.这一节主要是把虚拟内存和物理内存联系起来(也就是虚拟页和物理帧的对应,而物理帧我们有Pages数组来描述.所以其实是虚拟内存页的数据结构和ages的对应),并完成页面替换算法. 逻辑上来讲,我们要设立一个数据结构来描述虚拟内存,肯定要有下面的内容:</p>
+<ol>
+<li>对虚拟内存本身的描述: 起始位置(也许还有结束位置),某一写flags(可读可写?)<ol start="2">
+<li>对对应物理页的描述: 对应的页帧数, 对应的物理页的地址</li>
+<li>供页面替换算法使用的数据: 上一次访问时间,或者访问次数等等<br>看一下代码里是怎么写的:</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* *</span></span><br><span class="line"><span class="comment"> * struct Page - Page descriptor structures. Each Page describes one</span></span><br><span class="line"><span class="comment"> * physical page. In kern/mm/pmm.h, you can find lots of useful functions</span></span><br><span class="line"><span class="comment"> * that convert Page to other data types, such as phyical address.</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> ref;                        <span class="comment">// page frame&#x27;s reference counter</span></span><br><span class="line">    <span class="type">uint32_t</span> flags;                 <span class="comment">// array of flags that describe the status of the page frame</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> property;          <span class="comment">// the num of free block, used in first fit pm manager</span></span><br><span class="line">    <span class="type">list_entry_t</span> page_link;         <span class="comment">// free list link</span></span><br><span class="line">    <span class="type">list_entry_t</span> pra_page_link;     <span class="comment">// used for pra (page replace algorithm)</span></span><br><span class="line">    <span class="type">uintptr_t</span> pra_vaddr;            <span class="comment">// used for pra (page replace algorithm)</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// the virtual continuous memory area(vma), [vm_start, vm_end), </span></span><br><span class="line"><span class="comment">// addr belong to a vma means  vma.vm_start&lt;= addr &lt;vma.vm_end </span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">vma_struct</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mm_struct</span> *<span class="title">vm_mm</span>;</span> <span class="comment">// the set of vma using the same PDT </span></span><br><span class="line">    <span class="type">uintptr_t</span> vm_start;      <span class="comment">// start addr of vma      </span></span><br><span class="line">    <span class="type">uintptr_t</span> vm_end;        <span class="comment">// end addr of vma, not include the vm_end itself</span></span><br><span class="line">    <span class="type">uint32_t</span> vm_flags;       <span class="comment">// flags of vma</span></span><br><span class="line">    <span class="type">list_entry_t</span> list_link;  <span class="comment">// linear list link which sorted by start addr of vma</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// </span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mm_struct</span> &#123;</span></span><br><span class="line">    <span class="type">list_entry_t</span> mmap_list;        <span class="comment">// linear list link which sorted by start addr of vma</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">vma_struct</span> *<span class="title">mmap_cache</span>;</span> <span class="comment">// current accessed vma, used for speed purpose</span></span><br><span class="line">    <span class="type">pde_t</span> *pgdir;                  <span class="comment">// the PDT of these vma</span></span><br><span class="line">    <span class="type">int</span> map_count;                 <span class="comment">// the count of these vma</span></span><br><span class="line">    <span class="type">void</span> *sm_priv;                 <span class="comment">// the private data for swap manager</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="代码片段解析"><a href="#代码片段解析" class="headerlink" title="代码片段解析"></a>代码片段解析</h3><h4 id="练习一"><a href="#练习一" class="headerlink" title="练习一"></a>练习一</h4><p>这个实验是让我们处理do_pgfault函数的,而整个逻辑是:</p>
+<p>产生页访问异常后 –&gt; CPU把引起页访问异常的线性地址装到寄存器CR2中，并给出了出错码errorCode，说明了页访问异常的类型, OS把这个值保存在struct trapframe 中tf_err成员变量中。<br>中断服务例程会调用页访问异常处理函数do_pgfault进行具体处理<br>它根据从CPU的控制寄存器CR2中获取的页访问异常的物理地址以及根据errorCode的错误类型来查找此地址是否在某个VMA的地址范围内以及是否满足正确的读写权限<br>如果在此范围内并且权限也正确，这认为这是一次合法访问，但没有建立虚实对应关系。所以需要分配一个空闲的内存页，并修改页表完成虚地址到物理地址的映射，刷新TLB，然后调用iret中断，返回到产生页访问异常的指令处重新执行此指令。<br>如果该虚地址不在某VMA范围内，则认为是一次非法访问<br>首先页访问异常是CPU在找不到pa是的异常,这个异常是由硬件发出的. 那么我们代码可以不管.但是异常产生后,就是OS的责任来处理了.</p>
+<p>根据lab1的中断分析,我们知道最终是由下面的函数来处理所有中断</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">trap_dispatch</span><span class="params">(<span class="keyword">struct</span> trapframe *tf)</span> &#123;</span><br><span class="line">    <span class="type">char</span> c;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    <span class="keyword">switch</span> (tf-&gt;tf_trapno) &#123;</span><br><span class="line">    <span class="keyword">case</span> T_PGFLT:  <span class="comment">//page fault</span></span><br><span class="line">        <span class="keyword">if</span> ((ret = pgfault_handler(tf)) != <span class="number">0</span>) &#123;</span><br><span class="line">            print_trapframe(tf);</span><br><span class="line">            panic(<span class="string">&quot;handle pgfault failed. %e\n&quot;</span>, ret);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> IRQ_OFFSET + IRQ_TIMER:</span><br><span class="line">        <span class="keyword">if</span>(!(++ticks%TICK_NUM))&#123;</span><br><span class="line">			print_ticks();</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">   ......</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="comment">// in kernel, it must be a mistake</span></span><br><span class="line">        <span class="keyword">if</span> ((tf-&gt;tf_cs &amp; <span class="number">3</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            print_trapframe(tf);</span><br><span class="line">            panic(<span class="string">&quot;unexpected trap in kernel.\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>于是当中断号是T_PGFLT时,我们就调用pgfault_handler来处理,处理不成功就打印栈调用信息. 而pgfault_handler代码如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">pgfault_handler</span><span class="params">(<span class="keyword">struct</span> trapframe *tf)</span> &#123;</span><br><span class="line">    <span class="keyword">extern</span> <span class="class"><span class="keyword">struct</span> <span class="title">mm_struct</span> *<span class="title">check_mm_struct</span>;</span></span><br><span class="line">    print_pgfault(tf);</span><br><span class="line">    <span class="keyword">if</span> (check_mm_struct != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> do_pgfault(check_mm_struct, tf-&gt;tf_err, rcr2());</span><br><span class="line">    &#125;</span><br><span class="line">    panic(<span class="string">&quot;unhandled page fault.\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里就正式开始调用我们要填写的do_pgfault函数. 传入的参数是是一个mm_struct,一个中断里的错误,是由x86直接设置的,然后就是rcr2()函数, 这里有一个疑问,看遗留问题第二条. 有一个提示就是:</p>
+<p>[提示]页访问异常错误码有32位。位0为１表示对应物理页不存在；位１为１表示写异常（比如写了只读页；位２为１表示访问权限异常（比如用户态程序访问内核空间的数据）</p>
+<p>位2的访问权限异常在这个阶段还没有开始设置,因此这里暂且不说.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">do_pgfault</span><span class="params">(<span class="keyword">struct</span> mm_struct *mm, <span class="type">uint32_t</span> error_code, <span class="type">uintptr_t</span> addr)</span> &#123;</span><br><span class="line">    <span class="type">int</span> ret = -E_INVAL;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">vma_struct</span> *<span class="title">vma</span> =</span> find_vma(mm, addr); <span class="comment">//找到包含有addr的vma</span></span><br><span class="line">    pgfault_num++;</span><br><span class="line">    <span class="comment">//先判断一下当前的虚拟地址是不是在我们的mm控制的范围里,说明当前虚拟地址是不合法的</span></span><br><span class="line">    <span class="keyword">if</span> (vma == <span class="literal">NULL</span> || vma-&gt;vm_start &gt; addr) &#123;<span class="comment">//如果没找到,或者找到了但是地址不符合(一般是不会出现找到了但是地址不在vma所规定区间的)</span></span><br><span class="line">        cprintf(<span class="string">&quot;not valid addr %x, and  can not find it in vma\n&quot;</span>, addr);</span><br><span class="line">        <span class="keyword">goto</span> failed; <span class="comment">//返回-E_INVAL也就是-3,代表无效参数</span></span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="comment">//下面是找到了vma但是还是产生了访问页异常错误,我们根据error_code来判断是哪一种</span></span><br><span class="line">    <span class="keyword">switch</span> (error_code &amp; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">default</span>: <span class="comment">//error_code=011,也就是物理页面不存在并且有写异常,那么就留到switch下面去处理</span></span><br><span class="line">    <span class="keyword">case</span> <span class="number">2</span>: <span class="comment">//说明error_code是010,是写异常,物理页面存在</span></span><br><span class="line">        <span class="keyword">if</span> (!(vma-&gt;vm_flags &amp; VM_WRITE)) &#123; <span class="comment">//判断要访问的虚拟地址的vm_flags是不是真的不可写</span></span><br><span class="line">            cprintf(<span class="string">&quot;do_pgfault failed: error code flag = write AND not present, but the addr&#x27;s vma cannot write\n&quot;</span>);</span><br><span class="line">            <span class="keyword">goto</span> failed;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>: <span class="comment">//error_code=001,也就是对应物理页面不存在.</span></span><br><span class="line">        cprintf(<span class="string">&quot;do_pgfault failed: error code flag = read AND present\n&quot;</span>);</span><br><span class="line">        <span class="keyword">goto</span> failed;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">//error_code=000,也就是物理页面存在,也没有写异常,但是还是出现了访问异常,就要看看读和执行是不是有问题</span></span><br><span class="line">        <span class="keyword">if</span> (!(vma-&gt;vm_flags &amp; (VM_READ | VM_EXEC))) &#123;<span class="comment">//判断要访问的虚拟地址的vm_flags是不是真的不可读或者可执行.</span></span><br><span class="line">            cprintf(<span class="string">&quot;do_pgfault failed: error code flag = read AND not present, but the addr&#x27;s vma cannot read or exec\n&quot;</span>);</span><br><span class="line">            <span class="keyword">goto</span> failed;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//上面处理了一波后,执行到下面的要么是物理页面不存在,要么是访问权限异常,而写异常已经处理完了</span></span><br><span class="line">    <span class="type">uint32_t</span> perm = PTE_U;</span><br><span class="line">    <span class="keyword">if</span> (vma-&gt;vm_flags &amp; VM_WRITE) &#123;</span><br><span class="line">        perm |= PTE_W;</span><br><span class="line">    &#125;</span><br><span class="line">    addr = ROUNDDOWN(addr, PGSIZE);</span><br><span class="line">    ret = -E_NO_MEM; <span class="comment">//此时返回的错误代号是E_NO_MEM,意思是没有内存</span></span><br><span class="line"></span><br><span class="line">    <span class="type">pte_t</span> *ptep=<span class="literal">NULL</span>;</span><br><span class="line">    ptep =get_pte(mm-&gt;pgdir,addr,<span class="number">1</span>); <span class="comment">//通过addr这个线性地址(按照代码注释来),返回对应的pte,如果没有get_pte会创一个pt,但是ptep是还是空的.</span></span><br><span class="line">    <span class="keyword">if</span> (*ptep == <span class="number">0</span>) &#123; <span class="comment">//如果ptep是空的,说明此时对应的页表项还没有物理页面和它对应,就要分配一个页面</span></span><br><span class="line">  		pgdir_alloc_page(mm-&gt;pgdir,addr,perm)  <span class="comment">//分配一个物理页面,权限是用户态的可写  </span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123; <span class="comment">//也就是说页表里有对应的物理地址,但是在内存里没找到,说明被换入了swap空间中.</span></span><br><span class="line">     	 <span class="keyword">if</span>(swap_init_ok) &#123;</span><br><span class="line">                <span class="keyword">struct</span> Page *page=<span class="literal">NULL</span>;</span><br><span class="line">                <span class="keyword">if</span>(swap_in(mm,addr,&amp;page)!=<span class="number">0</span>)&#123;</span><br><span class="line">                	cprintf(<span class="string">&quot;swap_init_ok but swap in function is failed\n&quot;</span>);</span><br><span class="line">                	<span class="keyword">goto</span> failed;</span><br><span class="line">                &#125;</span><br><span class="line">                page_insert(mm-&gt;pgdir,page,addr,perm);</span><br><span class="line">                swap_map_swappable(mm,addr,page,<span class="number">1</span>); <span class="comment">//最后的swap_in=1应该是表示该页面可以换入swap里</span></span><br><span class="line">             	page-&gt;pra_vaddr = addr;<span class="comment">//这里很重要,我忘了写</span></span><br><span class="line">         	  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">         		  cprintf(<span class="string">&quot;no swap_init_ok but ptep is %x, failed\n&quot;</span>,*ptep);</span><br><span class="line">         		  <span class="keyword">goto</span> failed;</span><br><span class="line">         	  &#125;</span><br><span class="line">        &#125;</span><br><span class="line">   ret = <span class="number">0</span>;</span><br><span class="line">failed:</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="练习二"><a href="#练习二" class="headerlink" title="练习二"></a>练习二</h4><p>这个实验主要是构造一个先入先出的页替换算法,而真正的替换其实在练习一已经完成了.这里主要是两个函数</p>
+<p>_fifo_map_swappable: 维护FIFO算法所需要的数据结构,也就是mm-&gt;sm_priv所代表的一个list,把换进的页或者新读入物理内存的页放入这个list里.<br>_fifo_swap_out_victim:从上面的数据结构里得到应该换出的内存页,同时维护好这个list,也就是把换出的页从list里删掉<br>FIFO的话,其实就是每一次加入list的末尾, 链首的page就是应该换出的页.</p>
+<p>注意,这里的作用仅仅是维护FIFO的数据结构,至于换出的页所对应的pte需要把present标志位改成0,还是如何换出去都不是这个函数来实现的.</p>
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="操作系统理论"><a href="#操作系统理论" class="headerlink" title="操作系统理论"></a>操作系统理论</h3><ol>
+<li><p>产生页访问异常的原因主要有：</p>
+<ul>
+<li>目标页帧不存在（页表项全为0，即该线性地址与物理地址尚未建立映射或者已经撤销)；</li>
+<li>相应的物理页帧不在内存中（页表项非空，但Present标志位&#x3D;0，比如在swap分区或磁盘文件上)，这在本次实验中会出现，我们将在下面介绍换页机制实现时进一步讲解如何处理；</li>
+<li>不满足访问权限(此时页表项P标志&#x3D;1，但低权限的程序试图访问高权限的地址空间，或者有程序试图写只读页面).</li>
+</ul>
+</li>
+<li><p>请描述页目录项（Pag Director Entry）和页表（Page Table Entry）中组成部分对ucore实现页替换算法的潜在用处。<br> 我们在检测一个内存页是否是在物理内存里的方法就是通过PDE查找对应的PTE, 如果存在PTE(不全为0),但是present标志位为0,则说明我们需要进行页替换算法.</p>
+</li>
+<li><p>如果ucore的缺页服务例程在执行过程中访问内存，出现了页访问异常，请问硬件要做哪些事情？<br>要把页访问异常的错误代码压入到kernel stack中,然后把cs:ip指向中断服务例程.</p>
+</li>
+</ol>
+<h3 id="代码层面"><a href="#代码层面" class="headerlink" title="代码层面"></a>代码层面</h3><ol>
+<li>vma_struct里的list_link和mm_struct里的mmap_list是一个东西,逻辑上并无多大用处,只是为了代码上mm_struct能通过mmap_list访问所有的vma.以为如果vma_struct里只有数据部分,链接都由mm_struct来的话,其实是无法动态改变vma_struct这条链的,因为mmap_list只是提供一个入口,后面的部分要有vma_struct自己来.</li>
+<li>为了在页表项中区别 0 和 swap 分区的映射，将 swap 分区的一个 page 空出来不用. 这句话的意思是说 如果swap的24位映射是0的话,虽然是映射到swap分区的第0个扇区,但是由于此是全为0的pte与页目录不存在的pte看起来是一样的,所以干脆认为这个swap entry也是无效的. 是不可能存在某个内存页对应的物理内存是在swap空间的第0个扇区的.</li>
+</ol>
+<h2 id="遗留问题"><a href="#遗留问题" class="headerlink" title="遗留问题"></a>遗留问题</h2><ol>
+<li><p>cr2()的作用是返回一个从cr2寄存器里获取的页访问异常的物理地址.注意这里是的物理地址是指引起访问页异常的程序代码所在的物理地址,不是指当前要访问的但是却出现了异常没有获取到的物理地址.论坛是这么写的,但是代码里的注释写的是cr2里存放的是线性地址.见论坛</p>
+</li>
+<li><p>类似这种swap_manager的代码处理模式的原理是什么?为什么可以这样做?</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">swap_manager</span> <span class="title">swap_manager_fifo</span> =</span></span><br><span class="line">&#123;</span><br><span class="line">     .name            = <span class="string">&quot;fifo swap manager&quot;</span>,</span><br><span class="line">     .init            = &amp;_fifo_init,</span><br><span class="line">     .init_mm         = &amp;_fifo_init_mm,</span><br><span class="line">     .tick_event      = &amp;_fifo_tick_event,</span><br><span class="line">     .map_swappable   = &amp;_fifo_map_swappable,</span><br><span class="line">     .set_unswappable = &amp;_fifo_set_unswappable,</span><br><span class="line">     .swap_out_victim = &amp;_fifo_swap_out_victim,</span><br><span class="line">     .check_swap      = &amp;_fifo_check_swap,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>static int _fifo_map_swappable(struct mm_struct *mm, uintptr_t addr, struct Page *page, int swap_in)<br>这里面的swap_in是代表什么?代表可以换出的意思还是?实验三的代码里还没有体现.<br> page-&gt;pra_vaddr &#x3D; addr;&#x2F;&#x2F;这里很重要,我忘了写</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/22/%E3%80%90ucore%E3%80%91lab3/" data-id="cl0t1dcyr001r8slfg2lkad2r" data-title="【ucore】lab3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-3-归纳推理问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2018-07-17T14:32:23.000Z" itemprop="datePublished">2018-07-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/">3-归纳推理问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>将问题简化为子问题。</p>
+<h2 id="题目1：screwy-pirates"><a href="#题目1：screwy-pirates" class="headerlink" title="题目1：screwy pirates"></a>题目1：screwy pirates</h2><p>5个海盗分100个金币，分的规则如下：</p>
+<ol>
+<li>让最年长的海盗来分，如果要超过半数的（这个例子里是3个）海盗同意，就按这个规则分，否则就把这个海盗丢到海里喂鲨鱼。</li>
+<li>假设海盗都想要分得更多的钱，并且尽量杀死海盗。<br>那么怎么分？</li>
+</ol>
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><p>首先我们把问题简化一下，2个海盗的话，用数字表示，数字越大，越年长。</p>
+<ol>
+<li>1，2 ：  2先来分，由于他永远能得到自己的1票，也就是1&#x2F;2的人支持。所以他可以选择把所有的金币都给自己。</li>
+<li>1，2，3： 3先来分，这一轮3除了自己的一票，还需要争取到1票。争取1票的条件是把你杀死得到的金币要小于按照你的分法分到的金币。于是如果争取2的票，那么杀死3，2可以得到所有金币。那么3永远也得不到2的票。所以要争取1的票，那么杀死3，1一个金币也得不到，所以只需要给1 一个金币，1就会投你的票。</li>
+<li>1，2，3，4： 4先来分，这一轮4也依旧是要争取1票。杀死4，3可以得到99个金币，2什么也得不到，1可以得到1个金币，争取3的票需要给100个金币给3。争取2的话，只需要给1个。争取1的话给2个。所以我们争取2的票，最后得到99个金币</li>
+<li>1，2，3，4，5： 5先来分，这一轮需要争取额外的2票。考虑杀死5，4能得到99个金币，1，3一个金币也得不到，2能得到1个金币。所以争取1和3，也就是各给一个金币。自己得98个.</li>
+</ol>
+<p>所以这个答案就是给1和3各一个金币，5给自己98个。<br>那么如果是10个，11个海盗呢？我们能找到这里得规律么？<br>首先我们看到每增加一个更年长的海盗，我们的思路其实就是先考虑把这个新增加的海盗杀死剩下的海盗各自能分多少钱。自己再稍微试一下6，7，8等。其实分发就是对于最年长的海盗是第2N+1个的分法是：第1，3，5，……到2N-1个海盗各给一个金币，剩下的给自己。对于最年长的海盗是第2N个的话，分法是:第2，4，6，……2N-2个海盗各自分1个金币，剩下的给自己。</p>
+<p>可以用归纳法证明吗？很简单：</p>
+<ol>
+<li>首先列出2个海盗和3个海盗的分法。符合我们的假设。</li>
+<li>然后假设2N个海盗的分法和2N+1个海盗的分法。</li>
+<li>然后尝试推导出2N+2和2N+3个海盗的分法。<br>不多赘述。</li>
+</ol>
+<h2 id="题目2：Tiger-and-Sheep"><a href="#题目2：Tiger-and-Sheep" class="headerlink" title="题目2：Tiger and Sheep"></a>题目2：Tiger and Sheep</h2><p>100个老虎和1只羊，老虎可以吃草也可以吃羊（当然更喜欢吃羊），但是吃完羊的老虎自己会变成羊，又可以被其余老虎吃。假设老虎的第一要义是活下来，请问最初的这只羊会被吃掉吗?</p>
+<h3 id="解答-1"><a href="#解答-1" class="headerlink" title="解答"></a>解答</h3><ol>
+<li>首先考虑1个老虎，显然这只羊会被吃掉。</li>
+<li>两只老虎，老虎都会想，如果自己吃掉羊，另一只老虎就会把自己吃掉。所以老虎们都不会吃羊。</li>
+<li>三只老虎，老虎会想，如果自己吃掉羊，剩下的两个会陷入情况2，自己就不会被吃掉。因此最先想到这个的老虎会吃掉那只羊。</li>
+<li>四只老虎，老虎回想，如果自己吃掉羊，那么剩下的就会陷入情况3，从而自己会被吃掉。所以大家都不会吃羊。</li>
+</ol>
+<p>规律显而易见，如果老虎的个数是奇数，羊就会被吃掉，如果是偶数，羊就不会被吃掉。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/17/3-%E5%BD%92%E7%BA%B3%E6%8E%A8%E7%90%86%E9%97%AE%E9%A2%98/" data-id="cl0t1dcyv00218slf4aid6jfk" data-title="3-归纳推理问题" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-【ucore】lab2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" class="article-date">
+  <time class="dt-published" datetime="2018-07-12T03:38:18.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/12/%E3%80%90ucore%E3%80%91lab2/">【ucore】lab2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="实验目标"><a href="#实验目标" class="headerlink" title="实验目标"></a>实验目标</h2><ol>
+<li>首先了解如何发现系统中的物理内存；</li>
+<li>然后了解如何建立对物理内存的初步管理，即了解连续物理内存管理；</li>
+<li>最后了解页表相关的操作，即如何建立页表来实现虚拟内存到物理内存之间的映射，对段页式内存管理机制有一个比较全面的了解。</li>
+</ol>
+<h2 id="练习1：实现-first-fit-连续物理内存分配算法（需要编程）"><a href="#练习1：实现-first-fit-连续物理内存分配算法（需要编程）" class="headerlink" title="练习1：实现 first-fit 连续物理内存分配算法（需要编程）"></a>练习1：实现 first-fit 连续物理内存分配算法（需要编程）</h2><p>首先我们看一遍内存初始化的流程:<br>首先是&#x2F;kern&#x2F;init.c&#x2F;kern_init()里用pmm_init()初始化内存设置<br>pmm_init()是在kern&#x2F;mm&#x2F;pmm.c里, 主要做的事:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">init_pmm_manager</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    pmm_manager = &amp;default_pmm_manager;</span><br><span class="line">    cprintf(<span class="string">&quot;memory management: %s\n&quot;</span>, pmm_manager-&gt;name);</span><br><span class="line">    pmm_manager-&gt;init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里其实就是通过default_pmm_manager那个结构体设置好要pmm(page memory manager)的属性,比如它的名字,它分配内存用的方法,释放内存用的方法等.都在这里提供了统一的接口,我们只需要修改pmm_manager的值就好.</p>
+<p>然后就用pmm_manager里的init接口执行对应的初始化. page_init();</p>
+<p>这个函数主要是首先探测物理内存的大小,保留已经被使用的(比如硬件等),然后用pmm-&gt;init_memmap初始化空闲页的list</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">boot_alloc_page()  <span class="comment">//开始创建PDT,以及PT</span></span><br><span class="line">boot_map_segment <span class="comment">//做好PA和Va的映射.</span></span><br><span class="line">enable_paging<span class="comment">//通过改变enable page的标记通知硬件页表已经开始可以开始使用</span></span><br></pre></td></tr></table></figure>
+<p>细枝末节等后面再慢慢看.</p>
+<h3 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h3><p>我们根据default_pmm.c的注释来看看细节:</p>
+<p>首先是list_init,这个在list.h里</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">list_init</span><span class="params">(<span class="type">list_entry_t</span> *elm)</span> &#123;</span><br><span class="line">    elm-&gt;prev = elm-&gt;next = elm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个内联静态函数,和普通的初始化双链表没什么特别的.只是这里的链表单元是list_entry_t,其实也就是list_entry.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> *<span class="title">prev</span>, *<span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里不要有困惑,虽然看起来像是递归定义,实际上就是定义了两个指针作为一个结构体. 此时并没有在链表里存数据,只是单纯的构建一种前后连贯的关系.</p>
+<p>然后我们要了解这个对这个list的一些操作list_add,list_del等等.这都是普通的数据结构. 不细讲.</p>
+<p>但是这里的list_add_before和list_add_after对于这个free_area那个链来说,感觉是一样的.[TO-DO]</p>
+<p>然后我们要知道如何让这个链表转化成各种特殊结构的链表. 举个例子–le2page.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// convert list entry to page</span></span><br><span class="line">\<span class="meta">#<span class="keyword">define</span> le2page(le, member) to_struct((le), struct Page, member)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* *</span></span><br><span class="line"><span class="comment"> * to_struct - get the struct from a ptr</span></span><br><span class="line"><span class="comment"> * @ptr:    a struct pointer of member</span></span><br><span class="line"><span class="comment"> * @type:   the type of the struct this is embedded in</span></span><br><span class="line"><span class="comment"> * @member: the name of the member within the struct</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line">\<span class="meta">#<span class="keyword">define</span> to_struct(ptr, type, member) ((type *)((char *)(ptr) - offsetof(type, member)))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Return the offset of &#x27;member&#x27; relative to the beginning of a struct type */</span></span><br><span class="line">\<span class="meta">#<span class="keyword">define</span> offsetof(type, member) ((size_t)(&amp;((type *)0)-&gt;member))</span></span><br></pre></td></tr></table></figure>
+<p>这里是一个宏定义,to_struct的定义可以参考这个博客–利用宏来求结构体成员偏移值. 这个函数的作用就是当我们拿到一个地址时,我们就可以通过这个函数拿到这个地址所对应的页.</p>
+<p>default_init已经帮我们写好了,free_list就是我们上面说的list_entry这个双链表, 用来记录空闲的内存块,nr_free记录空闲内存块的个数. 所以数据结构是free_area_t是总的数据结构,用来记录整个空闲内存的情况,它通过成员list_entry来记录空闲页链表的头和nr_free记录总共有的空闲内存大小(可以看到单位是页的数量,而不是bytes). 而list_entry则是通过两个指针讲空闲内存的地址穿起来.<br>default_init_memmap也就是pmm-&gt;init_memmap接口的默认实现. 主要的作用是初始化第一个空闲内存块(由于这里还是操作系统的部署时间,此时什么应用程序都没有运行,所以此时的第一个空闲内存块就是整个应用程序可以使用的内存.) 那么就要用的页这个结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* *</span></span><br><span class="line"><span class="comment"> * struct Page - Page descriptor structures. Each Page describes one</span></span><br><span class="line"><span class="comment"> * physical page. In kern/mm/pmm.h, you can find lots of useful functions</span></span><br><span class="line"><span class="comment"> * that convert Page to other data types, such as phyical address.</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> ref;                <span class="comment">// page frame&#x27;s reference counter</span></span><br><span class="line">    <span class="type">uint32_t</span> flags;         <span class="comment">// array of flags that describe the status of the page frame</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> property;  <span class="comment">// the num of free block, used in first fit pm manager</span></span><br><span class="line">    <span class="type">list_entry_t</span> page_link;         <span class="comment">// free list link</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>初始化的过程是,首先应该根据内存大小创建好页的链表,然后把把ref都设为0,flags的PG位都设为保护模式. 然后property设为1,因为此时还只有一个free block. 随后page_link就是这个页的链表的入口.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">default_init_memmap</span><span class="params">(<span class="keyword">struct</span> Page *base, <span class="type">size_t</span> n)</span> &#123;</span><br><span class="line">    assert(n &gt; <span class="number">0</span>);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Page</span> *<span class="title">p</span> =</span> base;</span><br><span class="line">    <span class="keyword">for</span> (; p != base + n; p ++) &#123;</span><br><span class="line">        assert(PageReserved(p));</span><br><span class="line">        p-&gt;flags = p-&gt;property = <span class="number">0</span>;</span><br><span class="line">        set_page_ref(p, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    base-&gt;property = n;</span><br><span class="line">    SetPageProperty(base);</span><br><span class="line">    nr_free += n;</span><br><span class="line">    list_add(&amp;free_list, &amp;(base-&gt;page_link));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p># 在page_init的函数里调用代码是:<br>init_memmap(pa2page(begin), (end - begin) &#x2F; PGSIZE);<br>default_alloc_page这里就是我们内存分配的函数了. 我们的各种分配算法就是通过它来实现的.这个是练习一的内容.详情请看ucore-lab2-2.<br>然后我们看看页目录表和页表是如何创建的,</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// create boot_pgdir, an initial page directory(Page Directory Table, PDT)</span></span><br><span class="line">boot_pgdir = boot_alloc_page(); <span class="comment">//分配一个页面</span></span><br><span class="line"><span class="built_in">memset</span>(boot_pgdir, <span class="number">0</span>, PGSIZE);<span class="comment">// 清空这个页面</span></span><br><span class="line">boot_cr3 = PADDR(boot_pgdir); <span class="comment">//将该页面的物理地址返回给boot_cr3,其实这个物理地址就是页目录表的起始地址.这里的PADDR的代码其实就是虚拟地址-KERNBASE.因为前面entry.s里有设置pa=va-KERNBASE</span></span><br><span class="line">check_pgdir();<span class="comment">//检查页目录表</span></span><br><span class="line"><span class="keyword">static_assert</span>(KERNBASE % PTSIZE == <span class="number">0</span> &amp;&amp; KERNTOP % PTSIZE == <span class="number">0</span>);<span class="comment">//PTSIZE就是页表的大小,这里要对齐.因为我们是一个页表一个页表的创建虚拟内存,[TO-DO]</span></span><br><span class="line"><span class="comment">// recursively insert boot_pgdir in itself</span></span><br><span class="line"><span class="comment">// to form a virtual page table at virtual address VPT </span></span><br><span class="line">boot_pgdir[PDX(VPT)] = PADDR(boot_pgdir) | PTE_P | PTE_W;<span class="comment">//这里其实是让pdt的第PDX[VPT]项指向自己,来形成一个虚拟的页表我们叫VPT,事实上我们并没有再开一个页表.VPT=0xFAC00000,那么PDX[VPT]实际上就是1023,这是一个自映射的机制</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// map all physical memory to linear memory with base linear addr KERNBASE</span></span><br><span class="line"><span class="comment">//linear_addr KERNBASE~KERNBASE+KMEMSIZE = phy_addr 0~KMEMSIZE</span></span><br><span class="line"><span class="comment">//But shouldn&#x27;t use this map until enable_paging() &amp; gdt_init() finished.</span></span><br><span class="line">boot_map_segment(boot_pgdir, KERNBASE, KMEMSIZE, <span class="number">0</span>, PTE_W);<span class="comment">// 这个函数里有一个get_pte,实际上就创建了从KERBBASE映射到0二级页表.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//temporary map: </span></span><br><span class="line"><span class="comment">//virtual_addr 3G~3G+4M = linear_addr 0~4M = linear_addr 3G~3G+4M = phy_addr 0~4M </span></span><br><span class="line">boot_pgdir[<span class="number">0</span>] = boot_pgdir[PDX(KERNBASE)]; <span class="comment">//因为这时的页机制还没有打开,va=la+KERNBASE=pa+2*KERNBASE,所以需要暂时设置一下这个转换方式.方法是让va在页目录表里映射两次,从而找到对应的物理页表.</span></span><br><span class="line"></span><br><span class="line">enable_paging();<span class="comment">//打开页机制,那么此时就要用到上面的转化方式.</span></span><br><span class="line"><span class="comment">//reload gdt(third time,the last time) to map all physical memory</span></span><br><span class="line"><span class="comment">//virtual_addr 0~4G=liear_addr 0~4G</span></span><br><span class="line"><span class="comment">//then set kernel stack(ss:esp) in TSS, setup TSS in gdt, load TSS</span></span><br><span class="line">gdt_init();<span class="comment">//重新创建新的gdt</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//disable the map of virtual_addr 0~4M</span></span><br><span class="line">boot_pgdir[<span class="number">0</span>] = <span class="number">0</span>;<span class="comment">//设置好新的gdt后pa=va-KERNBASE且这个偏移来自于页机制</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//now the basic virtual memory map(see memalyout.h) is established.</span></span><br><span class="line"><span class="comment">//check the correctness of the basic virtual memory map.</span></span><br><span class="line">check_boot_pgdir();</span><br><span class="line"></span><br><span class="line">print_pgdir();</span><br><span class="line"></span><br><span class="line"><span class="comment">//-------------------------------------------------------------------------------//</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">boot_map_segment</span><span class="params">(<span class="type">pde_t</span> *pgdir, <span class="type">uintptr_t</span> la, <span class="type">size_t</span> size, <span class="type">uintptr_t</span> pa, <span class="type">uint32_t</span> perm)</span> &#123;</span><br><span class="line">    assert(PGOFF(la) == PGOFF(pa)); <span class="comment">//la和pa的偏移值应该是一样的</span></span><br><span class="line">    <span class="type">size_t</span> n = ROUNDUP(size + PGOFF(la), PGSIZE) / PGSIZE;<span class="comment">//</span></span><br><span class="line">    la = ROUNDDOWN(la, PGSIZE);</span><br><span class="line">    pa = ROUNDDOWN(pa, PGSIZE);</span><br><span class="line">    <span class="keyword">for</span> (; n &gt; <span class="number">0</span>; n --, la += PGSIZE, pa += PGSIZE) &#123;</span><br><span class="line">        <span class="type">pte_t</span> *ptep = get_pte(pgdir, la, <span class="number">1</span>);</span><br><span class="line">        assert(ptep != <span class="literal">NULL</span>);</span><br><span class="line">        *ptep = pa | PTE_P | perm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这个函数设置页表的过程是,通过get_pte设置好页目录表的内容(用alloc_page返回的page得到物理地址设置.),然后返回二级页表内容的地址,然后通过*ptep = pa | PTE_P | perm;设置好页表内容.所以页目录表里的页表起始地址以及页目录里的地址都是物理地址.</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一部分主要是两个部分,一个是物理内存页的分配和维护,一个是物理内存和虚拟地址的映射,也就是页表机制的维护.</p>
+<p>对于物理内存页,我们的做法是:<br>探测实际可用的物理内存<br>根据页的大小设置好Pages这个数组, 包含了所有页.在page_init函数里仅仅只是给每个页初始化了reserved这个属性.<br>然后我们开始设置好页目录表.<br>然后通过boot_map_segment把kernel所占用的页对应的页目录和页表设置好.因为就是把KERNBASE~KERNBASE+KMEMSIZE部分的线性地址和物理地址映射好.<br>所以我们做一个转换:<br>我们所谓的设置页目录表和页表就是让la和pa做一个映射.<br>当我们分配了一个内存页时,是先用alloc_page(),得到一个页的虚拟地址.然后根据这个虚拟地址去填写pte.<br>我们要释放一个内存页的操作就是让page的ref减1,然后把页表里的项删除.</p>
+<h2 id="遗留问题"><a href="#遗留问题" class="headerlink" title="遗留问题"></a>遗留问题</h2><ol>
+<li>default_init_memmap的调用链kern_init –&gt; pmm_init–&gt;page_init–&gt;init_memmap–&gt; pmm_manager-&gt;init_memmap,为什么要创一个init_memmap函数,然后再在这个函数里调用pmm_manager的init_memmap接口.为什么不直接在page_init里调用pmm_manager的init_memmap接口?</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/12/%E3%80%90ucore%E3%80%91lab2/" data-id="cl0t1dcyr001o8slffin0eftd" data-title="【ucore】lab2" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

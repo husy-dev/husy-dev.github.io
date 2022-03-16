@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>golang语言笔记 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. range关键字go语言坑之for range 简单来讲就是用for k,v:&#x3D;range data的方式获取元素的话，v变量只会创建一个，地址是一样的，所以坑就在于如果对v直接做什么操作的话是不会操作到真正的data里的元素上去的。 参考go官方文档  The iteration variables may be declared by the “range” clause using a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang语言笔记">
+<meta property="og:url" content="http://example.com/2021/01/06/golang%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. range关键字go语言坑之for range 简单来讲就是用for k,v:&#x3D;range data的方式获取元素的话，v变量只会创建一个，地址是一样的，所以坑就在于如果对v直接做什么操作的话是不会操作到真正的data里的元素上去的。 参考go官方文档  The iteration variables may be declared by the “range” clause using a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/Users/husyhu/Library/Mobile%20Documents/com~apple~CloudDocs/husy1994.github.io/source/_posts/image-20210318153230968.png">
+<meta property="article:published_time" content="2021-01-06T02:51:00.000Z">
+<meta property="article:modified_time" content="2021-07-16T07:43:15.898Z">
+<meta property="article:author" content="Husy">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/husyhu/Library/Mobile%20Documents/com~apple~CloudDocs/husy1994.github.io/source/_posts/image-20210318153230968.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-golang语言笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/06/golang%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2021-01-06T02:51:00.000Z" itemprop="datePublished">2021-01-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      golang语言笔记
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-range关键字"><a href="#1-range关键字" class="headerlink" title="1. range关键字"></a>1. range关键字</h2><p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/9701">go语言坑之for range</a> 简单来讲就是用<code>for k,v:=range data</code>的方式获取元素的话，v变量只会创建一个，地址是一样的，所以坑就在于如果对v直接做什么操作的话是不会操作到真正的data里的元素上去的。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://golang.org/ref/spec#RangeClause">go官方文档</a></p>
+<blockquote>
+<p>The iteration variables may be declared by the “range” clause using a form of <a target="_blank" rel="noopener" href="https://golang.org/ref/spec#Short_variable_declarations">short variable declaration</a> (<code>:=</code>). In this case their types are set to the types of the respective iteration values and their <a target="_blank" rel="noopener" href="https://golang.org/ref/spec#Declarations_and_scope">scope</a> is the block of the “for” statement; they are <strong>re-used</strong> in each iteration. If the iteration variables are declared outside the “for” statement, after execution their values will be those of the last iteration.</p>
+</blockquote>
+<p>因此好的习惯是，一般情况下用<code>for i,_:=range data</code>，用索引来取值防止一些错误，更重要的是防止不必要的实例创建。</p>
+<h2 id="2-引用类型"><a href="#2-引用类型" class="headerlink" title="2. 引用类型"></a>2. 引用类型</h2><p>slice是golang里的引用类型，但和C++里的引用毫无关系。其底层的实现实际上是</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// runtime/slice.go</span></span><br><span class="line"><span class="keyword">type</span> slice <span class="keyword">struct</span> &#123;</span><br><span class="line">    array unsafe.Pointer <span class="comment">// 指针</span></span><br><span class="line">    <span class="built_in">len</span>   <span class="type">int</span>            <span class="comment">// 长度 </span></span><br><span class="line">    <span class="built_in">cap</span>   <span class="type">int</span>            <span class="comment">// 容量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    可以看出，slice就是一个含有指针的结构体。因此也会有一些结构体传输的特点，比如传递一个切片，在修改某一个值时形参和实参会同时变化，因为指向的是同一个数组。但当操作涉及到修改数组长度的时候，由于runtime会另外开辟一个空间复制整个数组，因此形参和实参指向的数组就变化了。</p>
+<p>​    但是同为引用类型的map，chan就不一样了，它们的底层实现就是特定结构体的指针，因此不需要再去注意形参和实参的问题了。另外，map和chan一定要用make创建，不然其零值为nil。但是slice可以看出，不需要make创建，就算是单独声明一个也不是nil，而是一个array指针指向nil的slice对象。</p>
+<p>​    因此，传递slice的时候还是尽量用指针，传递map和chan的时候就不需要了。</p>
+<h2 id="3-闭包与参数传递"><a href="#3-闭包与参数传递" class="headerlink" title="3. 闭包与参数传递"></a>3. 闭包与参数传递</h2><p>​    <a target="_blank" rel="noopener" href="https://jingwei.link/2019/06/01/golang-outer-variable-in-clousure.html">Golang 闭包内的外部变量</a>，匿名闭包函数直接使用外部变量是地址传递，也就是在执行的时候是会根据变量的变化获取的数据也不一样。</p>
+<p>​    但是如果加上了go或defer关键字，则情况有所不同。因为在处理go或者defer时，编译器要准备好后面函数的参数堆栈，从而就要确定参数的值。也就是说defer和go关键字会先在声明处将参数堆栈等准备好，只是说延后了函数的执行。参考<a target="_blank" rel="noopener" href="https://tonybai.com/2018/03/23/the-analysis-of-the-param-evaluation-of-defer-functions/">defer函数参数求值简要分析</a></p>
+<p>​    总的来说就是外部变量如果是函数体内直接使用，实际上是获取其地址，在执行的时候才会去求值；而放在参数上的变量，在声明时就求值了，因为golang里所有参数传递都是值传递。</p>
+<h2 id="5-指针接收和结构体接收"><a href="#5-指针接收和结构体接收" class="headerlink" title="5. 指针接收和结构体接收"></a>5. 指针接收和结构体接收</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> bb <span class="keyword">struct</span>&#123;</span><br><span class="line">  Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(b *bb)</span></span> Read()&#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;Read  my name is %v\n&quot;</span>,b.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(b *bb)</span></span> Write(newName <span class="type">string</span>)&#123;</span><br><span class="line">    b.Name=newName</span><br><span class="line">    fmt.Printf(<span class="string">&quot;write my newName is %v\n&quot;</span>,b.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(b bb)</span></span> Read1()&#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;Read  my name is %v\n&quot;</span>,b.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(b bb)</span></span> Write1(newName <span class="type">string</span>)&#123;</span><br><span class="line">    b.Name=newName</span><br><span class="line">    fmt.Printf(<span class="string">&quot;write my newName is %v\n&quot;</span>,b.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   b1:=&amp;bb&#123;</span><br><span class="line">      Name:<span class="string">&quot;husy&quot;</span>,</span><br><span class="line">   &#125;</span><br><span class="line">   b2:=bb&#123;</span><br><span class="line">      Name:<span class="string">&quot;husy&quot;</span>,</span><br><span class="line">   &#125;</span><br><span class="line">   b1.Read()</span><br><span class="line">   b1.Write(<span class="string">&quot;husyhu&quot;</span>)</span><br><span class="line">   b1.Read()  </span><br><span class="line">  </span><br><span class="line">   b2.Read1()</span><br><span class="line">   b2.Write1(<span class="string">&quot;husyhu&quot;</span>)</span><br><span class="line">   b2.Read1()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Read  my name is husy</span></span><br><span class="line"><span class="comment">write my newName is husyhu</span></span><br><span class="line"><span class="comment">Read  my name is husyhu</span></span><br><span class="line"><span class="comment">Read  my name is husy</span></span><br><span class="line"><span class="comment">write my newName is husyhu</span></span><br><span class="line"><span class="comment">Read  my name is husy</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>​    由上可知，如果是结构体接收者，因为在调用的时候是把整个结构体赋给一个临时的结构体对象，然后进行操作。除非该结构体内的数据都是指针类型，否则基本上就意味着这个结构体内的数据只可读，并不能改变其值。一般来讲，应该用指针接受者。可以参考一个坑来帮助理解<a target="_blank" rel="noopener" href="https://tonybai.com/2018/03/20/the-analysis-of-output-results-of-a-go-code-snippet/">对一段Go语言代码输出结果的简要分析</a></p>
+<h2 id="6-interface与类型转换"><a href="#6-interface与类型转换" class="headerlink" title="6. interface与类型转换"></a>6. interface与类型转换</h2><p>​    还是以5的代码为例，若是有一个interface a声明了Read而没有声明Write，当把bb赋值给a类型的时候，但是通过a无法调用write了。这里虽然看起来像是一个动态类型转换，但其实调用reflect获取a的type和value和获取bb的一样，不会变。所以这里不是真正的动态类型转化，一旦声明了，其类型就是一个静态的不会变了。但转换的好处是，方便抽象化以及限制了不属于该接口的方法调用。</p>
+<p>​    有一个常见的设计模式是工厂模式，先声明一个interface{}变量A，然后根据实际情况来更换具体实现赋值给该变量A。这在C++里是很好的设计模式，在Golang里就不行了，因为变量A一旦被赋值了一个具体实现，其类型就确定了不能更改了。如果想替换成另一个具体实现，就要重新声明变量。</p>
+<h2 id="7-继承对象的初始化"><a href="#7-继承对象的初始化" class="headerlink" title="7. 继承对象的初始化"></a>7. 继承对象的初始化</h2><p>匿名对象的初始化必须遵循一层一层的初始化的逻辑，其类型名就是属性名。比如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">type Foo struct&#123;</span><br><span class="line">    A string</span><br><span class="line">    B int</span><br><span class="line">&#125;</span><br><span class="line">type Foo2 struct&#123;</span><br><span class="line">	Foo</span><br><span class="line">	C bool</span><br><span class="line">&#125;</span><br><span class="line">//此时要初始化Foo2的话</span><br><span class="line">a:=Foo2&#123;&#125;</span><br><span class="line">a.Foo=Foo&#123;A:&quot;a&quot;,B:1&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-逃逸分析"><a href="#8-逃逸分析" class="headerlink" title="8. 逃逸分析"></a>8. 逃逸分析</h2><p>​    为什么需要了解逃逸分析是因为</p>
+<blockquote>
+<p> <strong>stack allocation is cheap and heap allocation is expensive</strong>.</p>
+</blockquote>
+<p>​    所以目标就是尽量让能分配在stack上的分配在stack上。</p>
+<p>​    golang语言在编译时才会决定某个对象是分配在堆上还是栈上。按照C++的传统来说，除了用new分配的局部变量，其余的局部变量都会分配在栈上，退出函数后立即回收。但是Golang虽然也有new，但是无论是局部变量还是new的对象都会经过编译器的分析来决定放在堆上还是栈上。</p>
+<p>​    当然各个版本的编译会有细微差别，具体问题具体分析，可以用<code>go build -gcflags &quot;-m&quot;</code> 来查看。总结来讲，通过下面例子可以总结几点：</p>
+<p><img src="/Users/husyhu/Library/Mobile%20Documents/com~apple~CloudDocs/husy1994.github.io/source/_posts/image-20210318153230968.png" alt="image-20210318153230968"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//下面是输出结果</span><br><span class="line">go run -gcflags &quot;-m -l&quot; ex1.go</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">command-line-arguments</span></span><br><span class="line">./ex1.go:14:9: leaking param: title</span><br><span class="line">./ex1.go:15:16: do ... argument does not escape</span><br><span class="line">./ex1.go:15:16: title escapes to heap</span><br><span class="line">./ex1.go:9:8: func literal escapes to heap</span><br></pre></td></tr></table></figure>
+
+<p>​    任何一个函数调用都伴随着参数的传递，也就是内存的分配。</p>
+<ol>
+<li>main函数的s逃逸到了堆上，因为闭包函数引用了外部变量。编译器无法保证goroutine里的do函数什么时候会不需要s对象了，因此不敢放在栈上。</li>
+<li>do函数的参数title没有逃逸，它就在do函数的栈上。 等do函数执行完成，就会被回收。</li>
+<li>fmt.Println的参数title会逃逸到堆上，而不是在fmt.Println的栈上，因为这个函数的接收参数类型是interface{}，interface类型的参数也会直接分配到堆上。因为编译器不确定其类型。</li>
+<li>另外就是，如果栈内存不够了，也会分配到堆上。</li>
+<li>以及被发送到channel里的对象，也会全部在堆上。</li>
+<li>被slice，map和数组引用的对象。注意是每一个元素，不是slice或者map本身。</li>
+</ol>
+<h2 id="9-go-mod的replace"><a href="#9-go-mod的replace" class="headerlink" title="9. go.mod的replace"></a>9. go.mod的replace</h2><p>​    参考<a target="_blank" rel="noopener" href="https://seanxp.com/2019/05/go-module-note/">Go Module Notes</a>， 要理解顶层依赖和间接依赖，replace只能替换顶层依赖。也就是说自己的业务代码引用了A包，被替换成了B包，这是可以的。但是如果是引用的A包和B包，A包又引用了B包，那么A包引用的那个B包是间接依赖，go.mod的replace是不能替换的，这也是站在A包的角度考虑。</p>
+<h2 id="10-断言"><a href="#10-断言" class="headerlink" title="10. 断言"></a>10. 断言</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> foo1 <span class="keyword">struct</span> &#123;</span><br><span class="line">	A <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> foo2 <span class="keyword">struct</span> &#123;</span><br><span class="line">	B <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> a <span class="keyword">interface</span>&#123;&#125; = &amp;foo1&#123;A: <span class="number">1</span>&#125;</span><br><span class="line">	aa := a.(*foo2)</span><br><span class="line">	<span class="comment">// aa, ok := a.(*foo2)</span></span><br><span class="line">	<span class="comment">// if ok &#123;</span></span><br><span class="line">	<span class="comment">// 	fmt.Print(aa)</span></span><br><span class="line">	<span class="comment">// 	return</span></span><br><span class="line">	<span class="comment">// &#125;</span></span><br><span class="line">	fmt.Print(aa)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果有返回ok的判定，那么就不会引起panic，因此断言最好是加上ok的处理。</p>
+<h2 id="11-map"><a href="#11-map" class="headerlink" title="11. map"></a>11. map</h2><p>下面的代码是不会崩溃的，尽管map的默认初始化是nil。但是如果对<code>b[&quot;test&quot;]</code>赋值才会panic</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> b <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span></span><br><span class="line">	fmt.Println(b[<span class="string">&quot;test&quot;</span>] )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/06/golang%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0/" data-id="cl0t1dd10004l8slfehwh03nl" data-title="golang语言笔记" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/" rel="tag">golang</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/22/%E3%80%90CSAPP%E3%80%91Ch7-%E9%93%BE%E6%8E%A5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【csapp】Ch7-链接
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/12/02/mit6-824-lab2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">mit6.824-lab2</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSAPP%E7%B3%BB%E5%88%97/">CSAPP系列</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mit6-824/">mit6.824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/quant%E9%9D%A2%E8%AF%95%E7%BA%A2%E5%AE%9D%E4%B9%A6/">quant面试红宝书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/">数据结构笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AE%97%E6%B3%95%E5%AE%9D%E5%85%B8/">面试算法宝典</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/APUE/" rel="tag">APUE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algroithm/" rel="tag">Algroithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSAPP/" rel="tag">CSAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/" rel="tag">I&#x2F;O</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Leetcode/" rel="tag">Leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Network/" rel="tag">Network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/" rel="tag">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pprof/" rel="tag">Pprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Test/" rel="tag">Test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed/" rel="tag">distributed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gc/" rel="tag">gc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock-free/" rel="tag">lock-free</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/quant-interview/" rel="tag">quant interview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raft/" rel="tag">raft</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ucore/" rel="tag">ucore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/APUE/" style="font-size: 10px;">APUE</a> <a href="/tags/Algroithm/" style="font-size: 18.57px;">Algroithm</a> <a href="/tags/CSAPP/" style="font-size: 20px;">CSAPP</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Leetcode/" style="font-size: 18.57px;">Leetcode</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Pprof/" style="font-size: 10px;">Pprof</a> <a href="/tags/Test/" style="font-size: 10px;">Test</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/distributed/" style="font-size: 11.43px;">distributed</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/golang/" style="font-size: 12.86px;">golang</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/lock-free/" style="font-size: 10px;">lock-free</a> <a href="/tags/quant-interview/" style="font-size: 14.29px;">quant interview</a> <a href="/tags/raft/" style="font-size: 12.86px;">raft</a> <a href="/tags/ucore/" style="font-size: 17.14px;">ucore</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 12.86px;">双指针</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 10px;">并发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18.57px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">网络</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 11.43px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/12/csapp-ch3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/05/%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%E7%9A%84%E6%80%9D%E8%80%83/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/08/%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/26/Prometheus-Histograms-Observation%E7%9A%84%E6%97%A0%E9%94%81%E5%AE%9E%E7%8E%B0/">Prometheus Histograms Observation的无锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/09/k8s%E5%AE%9E%E6%93%8D%E7%AC%94%E8%AE%B0/">k8s实操笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Husy<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
